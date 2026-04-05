@@ -1,22 +1,89 @@
-import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowDown } from 'lucide-react';
 
-export function Hero() {
+export default function Hero() {
   return (
-    <div className="text-center mb-8">
-      <div className="relative w-32 h-32 mx-auto mb-6">
-        <img
-          src="https://yt3.googleusercontent.com/wRazIgaM9GtarKA--iuVTbTZIcj8CfApOH3jRDHHtdyE-TuZFYbhJ23eK3cmHQbNZTGTl6U2=s160-c-k-c0x00ffffff-no-rj"
-          alt="Leonardo Candiani"
-          className="rounded-full w-full h-full object-cover border-2 border-[#ff9900] shadow-lg"
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-dark via-dark to-dark-darker">
+        <motion.div
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
         />
-        <div className="absolute inset-0 rounded-full shadow-inner"></div>
+        <motion.div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-dim/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.5, 0.3, 0.5],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
       </div>
-      <h1 className="text-5xl font-semibold gradient-text mb-4 tracking-tight">
-        Leonardo Candiani
-      </h1>
-      <p className="text-xl text-white/80 font-light">
-        Especialista em Automação Low-Code e IA
-      </p>
-    </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold mb-6 leading-tight">
+            Leonardo
+            <br />
+            <span className="text-accent">Candiani</span>
+          </h1>
+        </motion.div>
+
+        <motion.p
+          className="text-xl md:text-2xl text-gray-400 mb-12 font-light tracking-wide"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          Construindo o futuro com IA
+        </motion.p>
+
+        <motion.div
+          className="flex gap-4 justify-center flex-wrap"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <a
+            href="#projects"
+            className="px-8 py-4 bg-accent hover:bg-accent-dim text-dark font-medium rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Ver Projetos
+          </a>
+          <a
+            href="#contact"
+            className="px-8 py-4 border-2 border-accent text-accent hover:bg-accent hover:text-dark font-medium rounded-full transition-all duration-300 hover:scale-105"
+          >
+            Entrar em Contato
+          </a>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        <ArrowDown className="w-6 h-6 text-accent" />
+      </motion.div>
+    </section>
   );
 }
