@@ -32,7 +32,10 @@ export default function Contact() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="contact" className="py-32 px-6 relative" ref={ref}>
+    <section id="contact" className="py-32 px-6 relative overflow-hidden" ref={ref}>
+      {/* Background */}
+      <img src="/images/bg-contact.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark pointer-events-none" />
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
