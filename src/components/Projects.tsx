@@ -6,20 +6,20 @@ import { ExternalLink } from 'lucide-react';
 const projects = [
   {
     title: 'SixClaw',
-    description: 'Framework multi-agente de IA para WhatsApp. Automação inteligente com múltiplos agentes trabalhando em conjunto.',
-    tech: ['AI', 'Multi-Agent', 'WhatsApp', 'Automation'],
+    description: 'Framework multi-agente de IA para WhatsApp. Cada empresa tem seu próprio "Jarvis" — filtra, prioriza, responde e delega.',
+    tech: ['AI Agents', 'WhatsApp', 'Claude', 'Bun'],
     gradient: 'from-amber-500/20 to-orange-600/20',
   },
   {
-    title: 'Proteauto',
-    description: 'Sistema de inspeção veicular impulsionado por IA. Análise automatizada de veículos com precisão.',
-    tech: ['Computer Vision', 'AI', 'Automotive'],
+    title: 'SixQuasar',
+    description: 'Empresa de tecnologia focada em IA aplicada. Produtos e soluções que resolvem problemas reais de empresas.',
+    tech: ['IA Aplicada', 'Automação', 'Produtos'],
     gradient: 'from-blue-500/20 to-cyan-600/20',
   },
   {
     title: 'SegSmart',
-    description: 'Plataforma de proteção veicular com automação completa. Gestão inteligente e eficiente.',
-    tech: ['Automation', 'SaaS', 'AI'],
+    description: 'Automação e IA aplicada a proteção veicular. CRM, vistorias com computer vision, dashboards e bots inteligentes.',
+    tech: ['Computer Vision', 'CRM', 'Automação'],
     gradient: 'from-purple-500/20 to-pink-600/20',
   },
 ];

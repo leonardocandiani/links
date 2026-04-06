@@ -46,33 +46,31 @@ export default function About() {
             
             <div className="space-y-4 text-gray-400 text-lg leading-relaxed">
               <p>
-                Especialista brasileiro em tecnologia e inteligência artificial, baseado em Maringá, PR.
+                Especialista em tecnologia e inteligência artificial, baseado em Maringá, PR.
+                Estudo automação desde 2018 e IA desde 2019.
               </p>
               
               <p>
-                Fundador e builder na <span className="text-white font-medium">SegSmart</span>, 
-                onde desenvolvo soluções de proteção veicular impulsionadas por automação com IA.
-              </p>
-              
-              <p>
-                Atualmente construindo o <span className="text-white font-medium">SixClaw</span>, 
-                um framework multi-agente de IA para WhatsApp, produto da SixQuasar.
+                Atuo na <span className="text-white font-medium">SegSmart</span> com 
+                automação e IA aplicada a proteção veicular, e estou construindo o{' '}
+                <span className="text-white font-medium">SixClaw</span> — um framework 
+                multi-agente de IA para WhatsApp, produto da SixQuasar.
               </p>
               
               <p className="text-accent font-medium">
-                Meu estilo: direto, sem enrolação, prático. Construo coisas reais com IA.
+                Direto, sem enrolação. Construo coisas reais com IA.
               </p>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-6 mt-12">
               <div className="border-l-4 border-accent pl-6">
-                <div className="text-4xl font-serif font-bold text-accent">1.3k+</div>
-                <div className="text-gray-500 mt-1">Seguidores Instagram</div>
+                <div className="text-4xl font-serif font-bold text-accent">7+</div>
+                <div className="text-gray-500 mt-1">Anos com automação</div>
               </div>
               <div className="border-l-4 border-accent pl-6">
-                <div className="text-4xl font-serif font-bold text-accent">3+</div>
-                <div className="text-gray-500 mt-1">Projetos Ativos</div>
+                <div className="text-4xl font-serif font-bold text-accent">2019</div>
+                <div className="text-gray-500 mt-1">Trabalhando com IA</div>
               </div>
             </div>
           </motion.div>
