@@ -11,15 +11,15 @@ const projects = [
     gradient: 'from-amber-500/20 to-orange-600/20',
   },
   {
-    title: 'SixQuasar',
-    description: 'Empresa de tecnologia focada em IA aplicada. Produtos e soluções que resolvem problemas reais de empresas.',
-    tech: ['IA Aplicada', 'Automação', 'Produtos'],
+    title: 'SegSmart',
+    description: 'Empresa de tecnologia especializada em automação e inteligência artificial para negócios.',
+    tech: ['Tecnologia', 'IA', 'Automação'],
     gradient: 'from-blue-500/20 to-cyan-600/20',
   },
   {
-    title: 'SegSmart',
-    description: 'Automação e IA aplicada a proteção veicular. CRM, vistorias com computer vision, dashboards e bots inteligentes.',
-    tech: ['Computer Vision', 'CRM', 'Automação'],
+    title: 'Proteauto',
+    description: 'Proteção veicular com tecnologia. Vistorias com computer vision, CRM inteligente, dashboards e bots.',
+    tech: ['Proteção Veicular', 'Computer Vision', 'CRM'],
     gradient: 'from-purple-500/20 to-pink-600/20',
   },
 ];

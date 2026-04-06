@@ -51,8 +51,9 @@ export default function About() {
               </p>
               
               <p>
-                Atuo na <span className="text-white font-medium">SegSmart</span> com 
-                automação e IA aplicada a proteção veicular, e estou construindo o{' '}
+                Atuo na <span className="text-white font-medium">SegSmart</span>, empresa 
+                de tecnologia, e na <span className="text-white font-medium">Proteauto</span>, 
+                de proteção veicular. Estou construindo o{' '}
                 <span className="text-white font-medium">SixClaw</span> — um framework 
                 multi-agente de IA para WhatsApp, produto da SixQuasar.
               </p>
