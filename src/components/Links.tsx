@@ -54,7 +54,7 @@ export default function Links() {
                 rel="noopener noreferrer"
                 className="group relative block"
               >
-                <div className="relative p-8 rounded-2xl border border-gray-800 bg-dark-darker/50 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
+                <div className="relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
                   {/* Background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-r ${link.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   

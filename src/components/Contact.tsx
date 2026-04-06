@@ -33,7 +33,7 @@ export default function Contact() {
     <section id="contact" className="py-32 px-6 relative overflow-hidden">
       {/* Background */}
       <img src="/images/bg-contact.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-dark/40 pointer-events-none" />
       <div className="max-w-5xl mx-auto">
         <div
           className="text-center mb-20"
@@ -57,7 +57,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="group relative"
               >
-                <div className="relative p-8 rounded-2xl border border-gray-800 bg-dark-darker/50 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden text-center">
+                <div className="relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden text-center">
                   {/* Background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${contact.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                   
@@ -96,7 +96,7 @@ export default function Contact() {
 
       {/* Footer */}
       <div
-        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-gray-800 text-center text-white/60"
+        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-white/10 text-center text-white/60"
       >
         <p className="mb-4">
           Feito com ❤️ e muita IA • Leonardo Candiani © {new Date().getFullYear()}

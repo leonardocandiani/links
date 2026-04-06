@@ -30,7 +30,7 @@ export default function Projects() {
     <section id="projects" className="py-32 px-6 relative overflow-hidden">
       {/* Background */}
       <img src="/images/bg-projects.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-dark via-transparent to-dark pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-transparent to-dark/50 pointer-events-none" />
       <div className="max-w-7xl mx-auto">
         <div
           className="text-center mb-20"
@@ -49,7 +49,7 @@ export default function Projects() {
               key={project.title}
               className="group relative"
             >
-              <div className="relative h-full p-8 rounded-2xl border border-gray-800 bg-dark-darker/50 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
+              <div className="relative h-full p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
                 {/* Background gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
                 
