@@ -43,7 +43,7 @@ export default function Projects() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Projetos em <span className="text-accent">Destaque</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Construindo o futuro com tecnologia e inteligência artificial
           </p>
         </motion.div>
@@ -67,7 +67,7 @@ export default function Projects() {
                     {project.title}
                   </h3>
                   
-                  <p className="text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-gray-300 mb-6 leading-relaxed">
                     {project.description}
                   </p>
 
@@ -85,7 +85,7 @@ export default function Projects() {
 
                   {/* Link icon */}
                   <div className="flex justify-end">
-                    <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-accent transition-colors" />
+                    <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-accent transition-colors" />
                   </div>
                 </div>
               </div>

@@ -5,23 +5,23 @@ import { Instagram as InstagramIcon } from 'lucide-react';
 
 const posts = [
   {
-    image: '/images/post-dificil.png',
+    image: '/images/post-dificil.jpg',
     title: 'Difícil não existe',
     description: 'Só existe o que você nunca fez.',
     featured: true,
   },
   {
-    image: '/images/post-claude-context.png',
+    image: '/images/post-claude-context.jpg',
     title: 'Claude 1M Context',
     description: 'Nova era da IA com contexto expandido',
   },
   {
-    image: '/images/post-anthropic-academy.png',
+    image: '/images/post-anthropic-academy.jpg',
     title: 'Anthropic Academy',
     description: 'Educação em IA de ponta',
   },
   {
-    image: '/images/post-meta-ai.png',
+    image: '/images/post-meta-ai.jpg',
     title: 'Meta Layoffs & AI',
     description: 'O impacto da IA no mercado',
   },
