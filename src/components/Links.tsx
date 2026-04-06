@@ -35,7 +35,7 @@ export default function Links() {
     <section id="links" className="py-32 px-6 relative" ref={ref}>
       <div className="max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
@@ -57,7 +57,7 @@ export default function Links() {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 1, x: -50 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative block"

@@ -35,7 +35,7 @@ export default function Instagram() {
     <section id="instagram" className="py-32 px-6 relative" ref={ref}>
       <div className="max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
@@ -66,7 +66,7 @@ export default function Instagram() {
                 href="https://instagram.com/leonardocandiani"
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 1, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="md:col-span-2 group relative overflow-hidden rounded-2xl aspect-[16/9]"
@@ -95,7 +95,7 @@ export default function Instagram() {
                 href="https://instagram.com/leonardocandiani"
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 1, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.6, delay: (index + 1) * 0.1 }}
                 className="group relative overflow-hidden rounded-2xl aspect-square"
@@ -118,7 +118,7 @@ export default function Instagram() {
 
         {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
           className="text-center mt-12"
