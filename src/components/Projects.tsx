@@ -29,8 +29,6 @@ export default function Projects() {
   return (
     <section id="projects" className="py-32 px-6 relative overflow-hidden">
       {/* Background */}
-      <img src="/images/bg-projects.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-transparent to-dark/50 pointer-events-none" />
       <div className="max-w-7xl mx-auto">
         <div
           className="text-center mb-20"
@@ -38,7 +36,7 @@ export default function Projects() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Projetos em <span className="text-accent">Destaque</span>
           </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
+          <p className="text-xl text-white max-w-2xl mx-auto">
             Construindo o futuro com tecnologia e inteligência artificial
           </p>
         </div>
@@ -59,7 +57,7 @@ export default function Projects() {
                     {project.title}
                   </h3>
                   
-                  <p className="text-white/80 mb-6 leading-relaxed">
+                  <p className="text-white mb-6 leading-relaxed">
                     {project.description}
                   </p>
 
@@ -77,7 +75,7 @@ export default function Projects() {
 
                   {/* Link icon */}
                   <div className="flex justify-end">
-                    <ExternalLink className="w-5 h-5 text-white/60 group-hover:text-accent transition-colors" />
+                    <ExternalLink className="w-5 h-5 text-white/80 group-hover:text-accent transition-colors" />
                   </div>
                 </div>
               </div>

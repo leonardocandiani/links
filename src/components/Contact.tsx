@@ -32,8 +32,6 @@ export default function Contact() {
   return (
     <section id="contact" className="py-32 px-6 relative overflow-hidden">
       {/* Background */}
-      <img src="/images/bg-contact.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-dark/40 pointer-events-none" />
       <div className="max-w-5xl mx-auto">
         <div
           className="text-center mb-20"
@@ -41,7 +39,7 @@ export default function Contact() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Vamos <span className="text-accent">Conversar?</span>
           </h2>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+          <p className="text-xl text-white max-w-2xl mx-auto">
             Tem um projeto em mente? Quer trocar ideias sobre IA? Estou sempre aberto para novas conexões.
           </p>
         </div>
@@ -70,7 +68,7 @@ export default function Contact() {
                     <h3 className="text-2xl font-serif font-bold mb-2 group-hover:text-accent transition-colors">
                       {contact.title}
                     </h3>
-                    <p className="text-white/80">{contact.description}</p>
+                    <p className="text-white">{contact.description}</p>
                   </div>
                 </div>
               </a>
@@ -96,7 +94,7 @@ export default function Contact() {
 
       {/* Footer */}
       <div
-        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-white/10 text-center text-white/60"
+        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-white/10 text-center text-white/80"
       >
         <p className="mb-4">
           Feito com ❤️ e muita IA • Leonardo Candiani © {new Date().getFullYear()}
