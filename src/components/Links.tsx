@@ -43,7 +43,7 @@ export default function Links() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Recursos <span className="text-accent">Gratuitos</span>
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-white/80">
             Templates, prompts e conteúdo para turbinar sua produtividade
           </p>
         </motion.div>
@@ -76,11 +76,11 @@ export default function Links() {
                       <h3 className="text-2xl font-serif font-bold mb-2 group-hover:text-accent transition-colors">
                         {link.title}
                       </h3>
-                      <p className="text-gray-300">{link.description}</p>
+                      <p className="text-white/80">{link.description}</p>
                     </div>
 
                     <svg 
-                      className="w-6 h-6 text-gray-400 group-hover:text-accent group-hover:translate-x-2 transition-all"
+                      className="w-6 h-6 text-white/60 group-hover:text-accent group-hover:translate-x-2 transition-all"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

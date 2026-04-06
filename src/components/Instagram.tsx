@@ -43,7 +43,7 @@ export default function Instagram() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Últimas do <span className="text-accent">Instagram</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto flex items-center justify-center gap-3">
+          <p className="text-xl text-white/60 max-w-2xl mx-auto flex items-center justify-center gap-3">
             <InstagramIcon className="w-6 h-6 text-accent" />
             <a 
               href="https://instagram.com/leonardocandiani" 
@@ -81,7 +81,7 @@ export default function Instagram() {
                   <h3 className="text-3xl md:text-4xl font-serif font-bold mb-3 group-hover:text-accent transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-gray-300 text-lg">{post.description}</p>
+                  <p className="text-white/80 text-lg">{post.description}</p>
                 </div>
               </motion.a>
             ))}
@@ -110,7 +110,7 @@ export default function Instagram() {
                   <h3 className="text-2xl font-serif font-bold mb-2">
                     {post.title}
                   </h3>
-                  <p className="text-gray-300 text-sm">{post.description}</p>
+                  <p className="text-white/80 text-sm">{post.description}</p>
                 </div>
               </motion.a>
             ))}

@@ -46,7 +46,7 @@ export default function Contact() {
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
             Vamos <span className="text-accent">Conversar?</span>
           </h2>
-          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
             Tem um projeto em mente? Quer trocar ideias sobre IA? Estou sempre aberto para novas conexões.
           </p>
         </motion.div>
@@ -78,7 +78,7 @@ export default function Contact() {
                     <h3 className="text-2xl font-serif font-bold mb-2 group-hover:text-accent transition-colors">
                       {contact.title}
                     </h3>
-                    <p className="text-gray-300">{contact.description}</p>
+                    <p className="text-white/80">{contact.description}</p>
                   </div>
                 </div>
               </motion.a>
@@ -110,7 +110,7 @@ export default function Contact() {
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8, delay: 0.6 }}
-        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-gray-800 text-center text-gray-400"
+        className="max-w-7xl mx-auto mt-32 pt-12 border-t border-gray-800 text-center text-white/60"
       >
         <p className="mb-4">
           Feito com ❤️ e muita IA • Leonardo Candiani © {new Date().getFullYear()}

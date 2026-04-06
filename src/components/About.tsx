@@ -21,7 +21,7 @@ export default function About() {
               <img
                 src="/images/profile-pic.jpg"
                 alt="Leonardo Candiani"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover" loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent" />
             </div>
@@ -38,7 +38,7 @@ export default function About() {
               Sobre <span className="text-accent">Mim</span>
             </h2>
             
-            <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <div className="space-y-4 text-white/80 text-lg leading-relaxed">
               <p>
                 Especialista em tecnologia e inteligência artificial, baseado em Maringá, PR.
                 Estudo automação desde 2018 e IA desde 2019.
@@ -61,11 +61,11 @@ export default function About() {
             <div className="grid grid-cols-2 gap-6 mt-12">
               <div className="border-l-4 border-accent pl-6">
                 <div className="text-4xl font-serif font-bold text-accent">7+</div>
-                <div className="text-gray-400 mt-1">Anos com automação</div>
+                <div className="text-white/60 mt-1">Anos com automação</div>
               </div>
               <div className="border-l-4 border-accent pl-6">
                 <div className="text-4xl font-serif font-bold text-accent">2019</div>
-                <div className="text-gray-400 mt-1">Trabalhando com IA</div>
+                <div className="text-white/60 mt-1">Trabalhando com IA</div>
               </div>
             </div>
           </motion.div>
