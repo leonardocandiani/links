@@ -6,7 +6,7 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image + animated overlay */}
       <div className="absolute inset-0">
-        <img src="/images/bg-hero.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <img src="/images/bg-hero.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-b from-dark/30 via-transparent to-dark" />
         <motion.div
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/8 rounded-full blur-3xl"

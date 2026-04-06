@@ -34,7 +34,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-32 px-6 relative overflow-hidden" ref={ref}>
       {/* Background */}
-      <img src="/images/bg-contact.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
+      <img src="/images/bg-contact.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-dark pointer-events-none" />
       <div className="max-w-5xl mx-auto">
         <motion.div
@@ -113,7 +113,7 @@ export default function Contact() {
         className="max-w-7xl mx-auto mt-32 pt-12 border-t border-gray-800 text-center text-gray-500"
       >
         <p className="mb-4">
-          Feito com ❤️ e muito ☕ • Leonardo Candiani © {new Date().getFullYear()}
+          Feito com ❤️ e muita IA • Leonardo Candiani © {new Date().getFullYear()}
         </p>
         <p className="text-sm">
           Construindo o futuro, uma linha de código por vez.

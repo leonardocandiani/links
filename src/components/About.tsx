@@ -25,13 +25,7 @@ export default function About() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent" />
             </div>
-            
-            {/* Decorative element */}
-            <motion.div
-              className="absolute -bottom-6 -right-6 w-48 h-48 border-4 border-accent rounded-2xl -z-10"
-              animate={{ rotate: [0, 5, 0] }}
-              transition={{ duration: 6, repeat: Infinity }}
-            />
+
           </motion.div>
 
           {/* Content */}
