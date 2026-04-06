@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+
+
 import { FileText, Youtube, Sparkles } from 'lucide-react';
 
 const links = [
@@ -28,16 +28,11 @@ const links = [
 ];
 
 export default function Links() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="links" className="py-32 px-6 relative" ref={ref}>
+    <section id="links" className="py-32 px-6 relative">
       <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 1, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+        <div
           className="text-center mb-20"
         >
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
@@ -46,20 +41,17 @@ export default function Links() {
           <p className="text-xl text-white/80">
             Templates, prompts e conteúdo para turbinar sua produtividade
           </p>
-        </motion.div>
+        </div>
 
         <div className="space-y-6">
           {links.map((link, index) => {
             const Icon = link.icon;
             return (
-              <motion.a
+              <a
                 key={link.title}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 1, x: -50 }}
-                animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative block"
               >
                 <div className="relative p-8 rounded-2xl border border-gray-800 bg-dark-darker/50 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
@@ -89,7 +81,7 @@ export default function Links() {
                     </svg>
                   </div>
                 </div>
-              </motion.a>
+              </a>
             );
           })}
         </div>

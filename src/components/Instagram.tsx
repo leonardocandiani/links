@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+
+
 import { Instagram as InstagramIcon } from 'lucide-react';
 
 const posts = [
@@ -28,16 +28,11 @@ const posts = [
 ];
 
 export default function Instagram() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="instagram" className="py-32 px-6 relative" ref={ref}>
+    <section id="instagram" className="py-32 px-6 relative">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 1, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+        <div
           className="text-center mb-20"
         >
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
@@ -54,21 +49,18 @@ export default function Instagram() {
               @leonardocandiani
             </a>
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Featured post - larger */}
           {posts
             .filter((post) => post.featured)
             .map((post, index) => (
-              <motion.a
+              <a
                 key={post.title}
                 href="https://instagram.com/leonardocandiani"
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 1, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="md:col-span-2 group relative overflow-hidden rounded-2xl aspect-[16/9]"
               >
                 <img
@@ -83,21 +75,18 @@ export default function Instagram() {
                   </h3>
                   <p className="text-white/80 text-lg">{post.description}</p>
                 </div>
-              </motion.a>
+              </a>
             ))}
 
           {/* Regular posts */}
           {posts
             .filter((post) => !post.featured)
             .map((post, index) => (
-              <motion.a
+              <a
                 key={post.title}
                 href="https://instagram.com/leonardocandiani"
                 target="_blank"
                 rel="noopener noreferrer"
-                initial={{ opacity: 1, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.6, delay: (index + 1) * 0.1 }}
                 className="group relative overflow-hidden rounded-2xl aspect-square"
               >
                 <img
@@ -112,15 +101,12 @@ export default function Instagram() {
                   </h3>
                   <p className="text-white/80 text-sm">{post.description}</p>
                 </div>
-              </motion.a>
+              </a>
             ))}
         </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 1, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
+        <div
           className="text-center mt-12"
         >
           <a
@@ -132,7 +118,7 @@ export default function Instagram() {
             <InstagramIcon className="w-5 h-5" />
             Ver todos os posts
           </a>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

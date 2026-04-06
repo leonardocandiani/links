@@ -1,20 +1,15 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+
+
 
 export default function About() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="py-32 px-6 relative" ref={ref}>
+    <section id="about" className="py-32 px-6 relative">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Image */}
-          <motion.div
-            initial={{ opacity: 1, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
+          <div
             className="relative"
           >
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
@@ -26,13 +21,10 @@ export default function About() {
               <div className="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent" />
             </div>
 
-          </motion.div>
+          </div>
 
           {/* Content */}
-          <motion.div
-            initial={{ opacity: 1, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+          <div
           >
             <h2 className="text-5xl md:text-6xl font-serif font-bold mb-6">
               Sobre <span className="text-accent">Mim</span>
@@ -68,7 +60,7 @@ export default function About() {
                 <div className="text-white/60 mt-1">Trabalhando com IA</div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

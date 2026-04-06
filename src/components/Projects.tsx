@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+
+
 import { ExternalLink } from 'lucide-react';
 
 const projects = [
@@ -25,19 +25,14 @@ const projects = [
 ];
 
 export default function Projects() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="projects" className="py-32 px-6 relative overflow-hidden" ref={ref}>
+    <section id="projects" className="py-32 px-6 relative overflow-hidden">
       {/* Background */}
       <img src="/images/bg-projects.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-dark via-transparent to-dark pointer-events-none" />
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 1, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
+        <div
           className="text-center mb-20"
         >
           <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
@@ -46,15 +41,12 @@ export default function Projects() {
           <p className="text-xl text-white/80 max-w-2xl mx-auto">
             Construindo o futuro com tecnologia e inteligência artificial
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <motion.div
+            <div
               key={project.title}
-              initial={{ opacity: 1, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
               className="group relative"
             >
               <div className="relative h-full p-8 rounded-2xl border border-gray-800 bg-dark-darker/50 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
@@ -89,7 +81,7 @@ export default function Projects() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
