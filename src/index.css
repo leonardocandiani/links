@@ -5,13 +5,13 @@
 @tailwind utilities;
 
 :root {
-  --bg-dark: #050508;
-  --bg-darker: #020204;
+  --bg-dark: #060609;
+  --bg-darker: #030305;
   --accent: #F59E0B;
   --accent-dim: #D97706;
-  --text-primary: #F9FAFB;
-  --text-secondary: #9CA3AF;
-  --text-tertiary: #6B7280;
+  --text-primary: #F4F4F5;
+  --text-secondary: #A1A1AA;
+  --text-tertiary: #71717A;
 }
 
 * {
@@ -25,7 +25,6 @@ html {
 }
 
 body {
-  margin: 0;
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -37,7 +36,7 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 /* Grain texture overlay */
@@ -54,9 +53,57 @@ body::before {
   z-index: 9999;
 }
 
-/* Custom scrollbar */
+/* Dot matrix — base layer */
+.dot-matrix {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1.3px, transparent 1.3px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+/* Dot matrix — hover reveal layer */
+.dot-matrix-hover {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(245, 158, 11, 0.55) 1.3px, transparent 1.3px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(260px at var(--mx, -100%) var(--my, -100%), black 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(260px at var(--mx, -100%) var(--my, -100%), black 0%, transparent 80%);
+  pointer-events: none;
+  transition: mask-position 0.05s;
+}
+
+/* Marquee infinite scroll */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee-scroll 50s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track-reverse {
+  animation: marquee-scroll 60s linear infinite reverse;
+  will-change: transform;
+}
+
+/* Radial pulse waves */
+@keyframes radial-pulse {
+  0% { transform: scale(0.3); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.radial-pulse {
+  animation: radial-pulse 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -65,15 +112,39 @@ body::before {
 
 ::-webkit-scrollbar-thumb {
   background: var(--accent-dim);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
 
-/* Selection */
 ::selection {
   background: var(--accent);
   color: var(--bg-dark);
+}
+
+/* Spotlight card effect */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    500px circle at var(--x, 50%) var(--y, 50%),
+    rgba(245, 158, 11, 0.07),
+    transparent 40%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+
+.spotlight-card:hover::after {
+  opacity: 1;
 }

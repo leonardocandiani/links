@@ -1,87 +1,92 @@
+import { useCallback } from 'react';
 import { motion } from 'framer-motion';
-
-
-import { FileText, Youtube, Sparkles } from 'lucide-react';
+import { FileText, Youtube, Sparkles, ChevronRight } from 'lucide-react';
+import AmbientBg from './AmbientBg';
+import ScrollPath from './ScrollPath';
 
 const links = [
   {
     icon: FileText,
     title: 'Templates',
-    description: 'Templates e recursos para produtividade',
+    description: 'Documentos e planilhas prontos pra você ganhar tempo',
     url: 'https://drive.google.com/drive/folders/1G1Tl5k01EDlUSDRx_sbuIUY5P14pHytz?usp=sharing',
-    color: 'from-blue-500 to-cyan-600',
   },
   {
     icon: Sparkles,
-    title: 'Prompts',
-    description: 'Prompts de IA para resultados incríveis',
+    title: 'Prompts de IA',
+    description: 'Prompts testados que geram resultado de verdade',
     url: 'https://drive.google.com/drive/folders/13CFux9alUBxCOZBA2U3erz_Mi_OiUlta?usp=drive_link',
-    color: 'from-purple-500 to-pink-600',
   },
   {
     icon: Youtube,
     title: 'YouTube',
-    description: 'Conteúdo sobre IA e tecnologia',
+    description: 'Aulas práticas sobre IA, automação e produtividade',
     url: 'https://youtube.com/@oleonardocandiani',
-    color: 'from-red-500 to-orange-600',
   },
 ];
 
+const spring = { type: 'spring' as const, stiffness: 80, damping: 20 };
+
 export default function Links() {
+  const handleSpotlight = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--x', `${e.clientX - rect.left}px`);
+    el.style.setProperty('--y', `${e.clientY - rect.top}px`);
+  }, []);
 
   return (
-    <section id="links" className="py-32 px-6 relative">
-      <div className="max-w-5xl mx-auto">
-        <div
-          className="text-center mb-20"
+    <section id="links" className="py-32 lg:py-40 px-6 relative overflow-hidden">
+      <AmbientBg variant={5} />
+      <ScrollPath variant={2} />
+      <div className="max-w-5xl mx-auto relative z-10">
+        <motion.div
+          className="mb-20"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={spring}
         >
-          <h2 className="text-5xl md:text-7xl font-serif font-bold mb-6">
-            Recursos <span className="text-accent">Gratuitos</span>
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-4 tracking-tight">
+            Recursos <span className="text-accent">gratuitos</span>
           </h2>
-          <p className="text-xl text-white/80">
-            Templates, prompts e conteúdo para turbinar sua produtividade
+          <p className="text-lg text-white/50 max-w-xl">
+            Tudo que eu uso no dia a dia pra escalar empresas com IA.
+            Pegue, aplique, colha o resultado.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="space-y-6">
-          {links.map((link, index) => {
+        <div className="space-y-4">
+          {links.map((link, i) => {
             const Icon = link.icon;
             return (
-              <a
+              <motion.a
                 key={link.title}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative block"
+                className="spotlight-card group block rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden"
+                onMouseMove={handleSpotlight}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ ...spring, delay: i * 0.1 }}
               >
-                <div className="relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500 overflow-hidden">
-                  {/* Background gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${link.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  {/* Content */}
-                  <div className="relative z-10 flex items-center gap-6">
-                    <div className={`p-4 rounded-xl bg-gradient-to-br ${link.color}`}>
-                      <Icon className="w-8 h-8 text-white" />
-                    </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-serif font-bold mb-2 group-hover:text-accent transition-colors">
-                        {link.title}
-                      </h3>
-                      <p className="text-white/80">{link.description}</p>
-                    </div>
-
-                    <svg 
-                      className="w-6 h-6 text-white/60 group-hover:text-accent group-hover:translate-x-2 transition-all"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                <div className="relative z-10 p-7 flex items-center gap-6">
+                  <div className="p-3.5 rounded-xl bg-accent/[0.08] border border-accent/10 shrink-0">
+                    <Icon className="w-6 h-6 text-accent" />
                   </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-serif font-bold group-hover:text-accent transition-colors duration-300">
+                      {link.title}
+                    </h3>
+                    <p className="text-white/50 text-sm mt-0.5">{link.description}</p>
+                  </div>
+
+                  <ChevronRight className="w-5 h-5 text-white/20 group-hover:text-accent group-hover:translate-x-1 transition-all duration-300 shrink-0" />
                 </div>
-              </a>
+              </motion.a>
             );
           })}
         </div>

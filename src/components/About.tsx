@@ -1,65 +1,108 @@
 import { motion } from 'framer-motion';
+import AmbientBg from './AmbientBg';
+import ScrollPath from './ScrollPath';
 
+const spring = { type: 'spring' as const, stiffness: 80, damping: 20 };
 
+const stats = [
+  { value: '7+', label: 'Anos com automação' },
+  { value: '2019', label: 'Trabalhando com IA' },
+  { value: '4', label: 'Empresas ativas' },
+];
 
 export default function About() {
-
   return (
-    <section id="about" className="py-32 px-6 relative">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Image */}
-          <div
+    <section id="about" className="py-32 lg:py-40 px-6 relative overflow-hidden">
+      <AmbientBg variant={2} />
+      <ScrollPath variant={1} />
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-20 items-center">
+          {/* Image — slightly oversized with overlap */}
+          <motion.div
             className="relative"
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ ...spring }}
           >
-            <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
               <img
                 src="/images/profile-pic.jpg"
                 alt="Leonardo Candiani"
-                className="w-full h-full object-cover" loading="lazy"
+                className="w-full h-full object-cover"
+                loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent" />
             </div>
-
-          </div>
+            {/* Accent bar */}
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 border-2 border-accent/20 rounded-2xl" />
+          </motion.div>
 
           {/* Content */}
-          <div
-          >
-            <h2 className="text-5xl md:text-6xl font-serif font-bold mb-6">
-              Sobre <span className="text-accent">Mim</span>
-            </h2>
-            
-            <div className="space-y-4 text-white/80 text-lg leading-relaxed">
+          <div>
+            <motion.h2
+              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-8 tracking-tight"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ ...spring }}
+            >
+              Quem <span className="text-accent">constrói</span> o seu futuro
+            </motion.h2>
+
+            <motion.div
+              className="space-y-5 text-white/70 text-lg leading-relaxed max-w-[55ch]"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ ...spring, delay: 0.15 }}
+            >
               <p>
-                Especialista em tecnologia e inteligência artificial, baseado em Maringá, PR.
-                Estudo automação desde 2018 e IA desde 2019.
+                Desde 2018 com automação e 2019 com IA, ajudo empresas a
+                transformar processos manuais em sistemas que rodam sozinhos —
+                com inteligência artificial de verdade, não hype.
               </p>
-              
               <p>
-                Atuo na <span className="text-white font-medium">SegSmart</span>, empresa 
-                de tecnologia, e na <span className="text-white font-medium">Proteauto</span>, 
-                de proteção veicular. Estou construindo o{' '}
-                <span className="text-white font-medium">SixClaw</span> — um framework 
-                multi-agente de IA para WhatsApp, produto da SixQuasar.
+                Trabalho na{' '}
+                <span className="text-white font-medium">SegSmart</span>{' '}
+                (tecnologia para corretores) e na{' '}
+                <span className="text-white font-medium">Proteauto</span>{' '}
+                (proteção veicular com computer vision). Sou fundador da{' '}
+                <span className="text-white font-medium">Six Quasar</span>,
+                criadora do <span className="text-white font-medium">SixClaw</span>{' '}
+                — framework multi-agente de IA para WhatsApp que hoje atende
+                milhares de clientes.
               </p>
-              
-              <p className="text-accent font-medium">
-                Direto, sem enrolação. Construo coisas reais com IA.
+              <p className="text-accent/90 font-medium text-base tracking-wide">
+                Se você é empresário e quer aplicar IA no seu negócio, esse é o
+                lugar certo.
               </p>
-            </div>
+            </motion.div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-6 mt-12">
-              <div className="border-l-4 border-accent pl-6">
-                <div className="text-4xl font-serif font-bold text-accent">7+</div>
-                <div className="text-white/60 mt-1">Anos com automação</div>
-              </div>
-              <div className="border-l-4 border-accent pl-6">
-                <div className="text-4xl font-serif font-bold text-accent">2019</div>
-                <div className="text-white/60 mt-1">Trabalhando com IA</div>
-              </div>
-            </div>
+            <motion.div
+              className="grid grid-cols-3 gap-6 mt-14"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ ...spring, delay: 0.3 }}
+            >
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  className="border-l border-accent/30 pl-5"
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ ...spring, delay: 0.4 + i * 0.1 }}
+                >
+                  <div className="text-3xl md:text-4xl font-serif font-bold text-accent">
+                    {stat.value}
+                  </div>
+                  <div className="text-white/50 text-sm mt-1">{stat.label}</div>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </div>
