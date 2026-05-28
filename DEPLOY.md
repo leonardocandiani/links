@@ -35,10 +35,26 @@ Build output directory: dist
 Root directory: /
 ```
 
-**Environment variables** (se necessário):
+**Environment variables**:
 ```
-NODE_VERSION = 18
+NODE_VERSION = 20
 ```
+
+Opcional, pra deixar os números do GitHub sempre frescos:
+```
+GITHUB_TOKEN = <um personal access token, escopo public_repo basta>
+```
+
+### Dados do GitHub no build
+
+O `npm run build` roda antes o `scripts/fetch-github.mjs` (passo `prebuild`).
+Ele atualiza os repos públicos pela API pública do GitHub e, se existir um
+`GITHUB_TOKEN` no ambiente, atualiza também o calendário de contribuições.
+
+Sem token o build continua funcionando: os números de contribuição usam o
+último snapshot salvo em `src/data/github.json` (commitado no repo). Ou seja,
+o deploy nunca quebra por causa de rede ou limite de API. Pra ter as
+contribuições sempre atualizadas a cada deploy, basta setar o `GITHUB_TOKEN`.
 
 ### 4. Deploy
 

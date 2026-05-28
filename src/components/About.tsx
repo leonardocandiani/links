@@ -5,9 +5,9 @@ import ScrollPath from './ScrollPath';
 const spring = { type: 'spring' as const, stiffness: 80, damping: 20 };
 
 const stats = [
-  { value: '7+', label: 'Anos com automação' },
-  { value: '2019', label: 'Trabalhando com IA' },
-  { value: '4', label: 'Empresas ativas' },
+  { value: '7+', label: 'anos com automação' },
+  { value: '2019', label: 'trabalhando com IA' },
+  { value: '4', label: 'empresas ativas' },
 ];
 
 export default function About() {
@@ -36,18 +36,32 @@ export default function About() {
             </div>
             {/* Accent bar */}
             <div className="absolute -bottom-4 -right-4 w-24 h-24 border-2 border-accent/20 rounded-2xl" />
+            {/* Selo de localizacao */}
+            <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full bg-dark/70 backdrop-blur-md border border-white/10">
+              <span className="font-mono text-xs text-white/70">Maringá · PR · Brasil</span>
+            </div>
           </motion.div>
 
           {/* Content */}
           <div>
+            <motion.span
+              className="eyebrow text-accent/70 block"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              // sobre mim
+            </motion.span>
+
             <motion.h2
-              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mb-8 tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold mt-4 mb-8 tracking-tight"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ ...spring }}
             >
-              Quem <span className="text-accent">constrói</span> o seu futuro
+              Quem <span className="text-gradient-amber">constrói</span> o seu futuro
             </motion.h2>
 
             <motion.div
@@ -58,30 +72,41 @@ export default function About() {
               transition={{ ...spring, delay: 0.15 }}
             >
               <p>
-                Desde 2018 com automação e 2019 com IA, ajudo empresas a
-                transformar processos manuais em sistemas que rodam sozinhos —
-                com inteligência artificial de verdade, não hype.
+                Estou com automação desde 2018 e com IA desde 2019. Ajudo
+                empresas a trocar processo manual por sistema que roda sozinho,
+                com inteligência artificial de verdade, longe do hype.
               </p>
               <p>
-                Trabalho na{' '}
-                <span className="text-white font-medium">SegSmart</span>{' '}
-                (tecnologia para corretores) e na{' '}
-                <span className="text-white font-medium">Proteauto</span>{' '}
-                (proteção veicular com computer vision). Sou fundador da{' '}
-                <span className="text-white font-medium">Six Quasar</span>,
-                criadora do <span className="text-white font-medium">SixClaw</span>{' '}
-                — framework multi-agente de IA para WhatsApp que hoje atende
-                milhares de clientes.
-              </p>
-              <p className="text-accent/90 font-medium text-base tracking-wide">
-                Se você é empresário e quer aplicar IA no seu negócio, esse é o
-                lugar certo.
+                Sou cofundador da{' '}
+                <span className="text-white font-medium">SixQuasar</span> e criador
+                do <span className="text-white font-medium">SixClaw</span>, a
+                plataforma multi-agente que opera venda e atendimento da{' '}
+                <span className="text-white font-medium">Proteauto</span> e da{' '}
+                <span className="text-white font-medium">SegSmart</span> no
+                WhatsApp. O que aprendo no caminho vira conteúdo no YouTube.
               </p>
             </motion.div>
 
+            {/* Filosofia */}
+            <motion.blockquote
+              className="mt-10 pl-6 border-l-2 border-accent/40"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ ...spring, delay: 0.25 }}
+            >
+              <p className="font-serif text-2xl md:text-3xl italic text-white/85 leading-snug">
+                Shipar vence perfeição.
+              </p>
+              <p className="text-white/45 text-base mt-2 max-w-[48ch]">
+                Construo ferramentas pra resolver problema real do mercado, e
+                depois descubro como escalar.
+              </p>
+            </motion.blockquote>
+
             {/* Stats */}
             <motion.div
-              className="grid grid-cols-3 gap-6 mt-14"
+              className="grid grid-cols-3 gap-6 mt-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
@@ -96,7 +121,7 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ ...spring, delay: 0.4 + i * 0.1 }}
                 >
-                  <div className="text-3xl md:text-4xl font-serif font-bold text-accent">
+                  <div className="text-3xl md:text-4xl font-serif font-bold text-gradient-amber">
                     {stat.value}
                   </div>
                   <div className="text-white/50 text-sm mt-1">{stat.label}</div>

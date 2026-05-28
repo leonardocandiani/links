@@ -50,11 +50,11 @@ export default function Contact() {
           transition={spring}
         >
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-6 tracking-tight">
-            Sua empresa merece <span className="text-accent">IA de verdade</span>
+            Sua empresa merece <span className="text-gradient-amber">IA de verdade</span>
           </h2>
           <p className="text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed mb-3">
-            Se você é empresário e quer parar de depender de processos manuais,
-            atendentes sobrecarregados e planilhas que ninguém atualiza — bora
+            Se você é empresário e quer parar de depender de processo manual,
+            atendente sobrecarregado e planilha que ninguém atualiza, bora
             conversar.
           </p>
           <p className="text-base text-white/40 max-w-xl">
@@ -128,7 +128,7 @@ export default function Contact() {
           Leonardo Candiani &middot; {new Date().getFullYear()}
         </p>
         <p className="text-white/25 text-xs">
-          Construindo o futuro, uma linha de código por vez.
+          Do interior do Paraná pro mundo.
         </p>
       </motion.footer>
     </section>

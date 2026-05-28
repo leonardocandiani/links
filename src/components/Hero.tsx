@@ -38,6 +38,7 @@ function useTextScramble(text: string, delay = 0) {
 }
 
 const spring = { type: 'spring' as const, stiffness: 80, damping: 20 };
+const operations = ['SixQuasar', 'SixClaw', 'Proteauto', 'SegSmart', 'IACall'];
 
 export default function Hero() {
   const firstName = useTextScramble('Leonardo', 400);
@@ -72,14 +73,14 @@ export default function Hero() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...spring, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 text-xs tracking-[0.2em] uppercase text-accent/90 border border-accent/20 rounded-full mb-10 bg-accent/[0.03] backdrop-blur-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 eyebrow text-accent/90 border border-accent/20 rounded-full mb-10 bg-accent/[0.03] backdrop-blur-sm"
           >
             <motion.span
               className="w-1.5 h-1.5 rounded-full bg-accent"
               animate={{ opacity: [0.4, 1, 0.4], scale: [1, 1.3, 1] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
-            IA & Automação para Empresas
+            IA & Automação para empresas
           </motion.span>
 
           <motion.h1
@@ -88,8 +89,8 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.3 }}
           >
-            <span className="block text-white/95">{firstName || '\u00A0'}</span>
-            <span className="block text-accent mt-1">{lastName || '\u00A0'}</span>
+            <span className="block text-white/95">{firstName || ' '}</span>
+            <span className="block text-gradient-amber mt-1">{lastName || ' '}</span>
           </motion.h1>
 
           <motion.p
@@ -99,7 +100,7 @@ export default function Hero() {
             transition={{ ...spring, delay: 0.8 }}
           >
             Transformo empresas em <span className="text-white font-medium">máquinas de IA</span>.
-            Agentes que atendem, vendem e escalam — enquanto você dorme.
+            Agentes que atendem, vendem e escalam enquanto você dorme.
           </motion.p>
 
           <motion.p
@@ -108,7 +109,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...spring, delay: 0.9 }}
           >
-            Sem enrolação. Sem hype. Resultado real, em semanas, não meses.
+            Sem enrolação, sem hype. Resultado real, em semanas, não meses.
           </motion.p>
 
           <motion.div
@@ -119,7 +120,7 @@ export default function Hero() {
           >
             <a
               href="#contact"
-              className="group px-8 py-4 bg-accent text-dark font-semibold rounded-full transition-all duration-300 hover:bg-accent-dim active:scale-[0.97] active:translate-y-[1px] shadow-[0_8px_32px_-8px_rgba(245,158,11,0.4)]"
+              className="group px-8 py-4 bg-accent text-dark font-semibold rounded-full transition-all duration-300 hover:bg-accent-dim active:scale-[0.97] active:translate-y-[1px] shadow-amber-md"
             >
               Aplicar IA na minha empresa
             </a>
@@ -127,8 +128,25 @@ export default function Hero() {
               href="#projects"
               className="px-8 py-4 border border-white/20 text-white/80 hover:text-accent hover:border-accent/40 font-medium rounded-full transition-all duration-300 active:scale-[0.97] active:translate-y-[1px] backdrop-blur-sm"
             >
-              Ver projetos
+              Ver o que eu construo
             </a>
+          </motion.div>
+
+          {/* Barra de credibilidade */}
+          <motion.div
+            className="mt-14 flex flex-wrap items-center gap-x-4 gap-y-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.6 }}
+          >
+            <span className="eyebrow text-white/30">opera ponta a ponta</span>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              {operations.map((op) => (
+                <span key={op} className="font-mono text-xs text-white/50">
+                  {op}
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>

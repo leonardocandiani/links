@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +9,7 @@
   --bg-darker: #030305;
   --accent: #F59E0B;
   --accent-dim: #D97706;
+  --accent-bright: #FBBF24;
   --text-primary: #F4F4F5;
   --text-secondary: #A1A1AA;
   --text-tertiary: #71717A;
@@ -51,6 +52,16 @@ body::before {
   opacity: 0.03;
   pointer-events: none;
   z-index: 9999;
+}
+
+/* Vignette de borda pra dar profundidade editorial */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(120% 120% at 50% 0%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Dot matrix — base layer */
@@ -147,4 +158,113 @@ body::before {
 
 .spotlight-card:hover::after {
   opacity: 1;
+}
+
+/* === Camada premium === */
+
+/* Texto com gradiente ambar (titulos de destaque) */
+.text-gradient-amber {
+  background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 45%, #D97706 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Label monospace pra detalhes tecnicos */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Borda com brilho que percorre (conic) nos cards de destaque */
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--angle, 0deg),
+    transparent 0%,
+    rgba(245, 158, 11, 0.5) 12%,
+    transparent 28%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.glow-border:hover::before {
+  opacity: 1;
+  animation: rotate-angle 4s linear infinite;
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-angle {
+  to { --angle: 360deg; }
+}
+
+/* Shimmer pra texto/divisores */
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    rgba(244, 244, 245, 0.55) 0%,
+    rgba(245, 158, 11, 1) 50%,
+    rgba(244, 244, 245, 0.55) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* Divisor com fade lateral */
+.hairline {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 158, 11, 0.35) 50%,
+    transparent
+  );
+}
+
+/* Heatmap de contribuicoes */
+.heat-cell {
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+.heat-cell:hover {
+  transform: scale(1.4);
+}
+
+/* Reduz movimento pra quem pediu */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

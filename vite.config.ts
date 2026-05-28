@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    // pre-bundla o lucide-react num modulo so. Sem isso, o dev server serve
+    // ~1000 icones individuais e o navegador fica em branco enquanto carrega.
+    include: ['lucide-react'],
   },
 });
