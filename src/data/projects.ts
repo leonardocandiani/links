@@ -141,6 +141,14 @@ export const clusters: Cluster[] = [
     tagline: 'O que eu construo e devolvo pra comunidade.',
     projects: [
       {
+        name: 'wascii',
+        blurb:
+          'A arte de ASCII no WhatsApp: boxes, barras, charts e leaderboards monospace que alinham de verdade no celular. Skill do Claude com as regras, o palette seguro de Unicode e uma galeria pronta pra colar.',
+        tags: ['WhatsApp', 'Claude', 'ASCII'],
+        url: 'https://github.com/leonardocandiani/wascii',
+        openSource: true,
+      },
+      {
         name: 'setup-projeto-qualidade',
         blurb:
           'Skill do Claude Code que aplica arquitetura de qualidade alta em qualquer projeto git: rules estruturadas, CI/CD com auto-review e deploy adaptado à stack.',
