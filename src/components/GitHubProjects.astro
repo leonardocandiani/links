@@ -1,0 +1,415 @@
+---
+import githubSnapshot from "../data/github-snapshot.json";
+import type { GitHubRepository, GitHubSnapshot } from "../types/site";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  ui: SiteUiCopy["github"];
+};
+
+const { ui } = Astro.props;
+
+const snapshot = githubSnapshot as GitHubSnapshot;
+const repositories = snapshot.repositories;
+const featuredNames = ["scratchmate", "krit", "keepwright"] as const;
+const featuredToneByIndex = ["ink", "sky", "cotton"] as const;
+const githubProfileUrl = "https://github.com/leonardocandiani";
+
+function isGitHubRepository(repository: GitHubRepository | undefined): repository is GitHubRepository {
+  return Boolean(repository);
+}
+
+const featuredRepositories = featuredNames
+  .map((name) => repositories.find((repository) => repository.name === name))
+  .filter(isGitHubRepository);
+const featuredNameSet = new Set(featuredRepositories.map((repository) => repository.name));
+const recentRepositories = repositories
+  .filter((repository) => !featuredNameSet.has(repository.name))
+  .slice(0, 4);
+
+function formatDate(date: string) {
+  return new Intl.DateTimeFormat(ui.dateLocale, {
+    day: "2-digit",
+    month: "short",
+    timeZone: "America/Sao_Paulo",
+    year: "numeric"
+  }).format(new Date(date));
+}
+
+function formatStars(stars: number) {
+  return stars === 1 ? ui.oneStar : ui.manyStars.replace("{count}", String(stars));
+}
+
+function formatDescription(repository: GitHubRepository) {
+  if (repository.name === "keepwright" && ui.keepwrightDescription) {
+    return ui.keepwrightDescription;
+  }
+
+  return repository.description;
+}
+---
+
+<section id="github" class="github-projects section paper" aria-labelledby="github-title">
+  <div class="page-width github-shell">
+    <div class="github-heading" data-reveal>
+      <p class="eyebrow">{ui.eyebrow}</p>
+      <div class="github-heading-copy">
+        <h2 id="github-title" class="section-title">{ui.title}</h2>
+        <a
+          class="github-profile-link pressable"
+          href={githubProfileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {ui.profileLabel}
+        </a>
+      </div>
+    </div>
+
+    {
+      repositories.length === 0 ? (
+        <div class="github-empty">
+          <p>{ui.emptyMessage}</p>
+          <a
+            class="github-profile-link pressable"
+            href={githubProfileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {ui.profileLabel}
+          </a>
+        </div>
+      ) : (
+        <>
+          {featuredRepositories.length > 0 && (
+            <div class="github-featured-grid" aria-label={ui.featuredLabel}>
+              <figure class="github-visual">
+                <img
+                  src="/images/open-source-workbench.webp"
+                  alt={ui.imageAlt}
+                  width="1672"
+                  height="941"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              {featuredRepositories.map((repository, index) => (
+                <article class={`github-featured-card tone-${featuredToneByIndex[index] ?? "paper"}`}>
+                  <div class="github-card-meta">
+                    <span>{repository.language ?? ui.languageFallback}</span>
+                    <span>{formatStars(repository.stars)}</span>
+                  </div>
+                  <h3>
+                    <a href={repository.url} target="_blank" rel="noopener noreferrer">
+                      {repository.name}
+                    </a>
+                  </h3>
+                  <p>{formatDescription(repository)}</p>
+                  <time datetime={repository.pushedAt}>{formatDate(repository.pushedAt)}</time>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {recentRepositories.length > 0 && (
+            <div class="github-recent" aria-label={ui.recentLabel}>
+              <p class="github-recent-title">{ui.recentTitle}</p>
+              <div class="github-recent-list">
+                {recentRepositories.map((repository) => (
+                  <article class="github-recent-item">
+                    <div>
+                      <h3>
+                        <a href={repository.url} target="_blank" rel="noopener noreferrer">
+                          {repository.name}
+                        </a>
+                      </h3>
+                      <p>{formatDescription(repository)}</p>
+                    </div>
+                    <div class="github-recent-meta">
+                      <span>{repository.language ?? ui.languageFallback}</span>
+                      <time datetime={repository.pushedAt}>{formatDate(repository.pushedAt)}</time>
+                      {repository.stars > 0 && <span>{formatStars(repository.stars)}</span>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .github-projects {
+    background: var(--color-paper);
+  }
+
+  .github-shell {
+    display: grid;
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .github-heading {
+    display: grid;
+    max-width: 58rem;
+    gap: 1.35rem;
+  }
+
+  .github-heading-copy {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+
+  .github-heading .section-title {
+    max-width: 17ch;
+  }
+
+  .github-profile-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding-inline: 1.1rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-control);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-size: .96rem;
+    font-weight: 720;
+    letter-spacing: 0;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .github-profile-link:hover {
+    background: var(--color-graphite);
+  }
+
+  .github-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .github-visual {
+    grid-column: span 7;
+    min-height: 25rem;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-surface);
+    background: var(--color-cotton);
+  }
+
+  .github-visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .github-featured-card {
+    grid-column: span 5;
+    display: grid;
+    align-content: start;
+    min-height: 24rem;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-surface);
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .github-featured-card:nth-of-type(3) {
+    grid-column: span 7;
+  }
+
+  .github-card-meta,
+  .github-recent-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .55rem .75rem;
+    color: var(--color-muted);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+
+  .github-featured-card h3,
+  .github-recent-item h3 {
+    margin: 0;
+    color: inherit;
+    letter-spacing: 0;
+  }
+
+  .github-featured-card h3 {
+    margin-top: clamp(3rem, 7vw, 5.75rem);
+    font-size: clamp(1.85rem, 1.55rem + 1.1vw, 2.65rem);
+    font-weight: 690;
+    line-height: 1;
+  }
+
+  .github-featured-card p,
+  .github-recent-item p,
+  .github-empty p {
+    margin: .85rem 0 0;
+    color: var(--color-muted);
+    font-size: 1rem;
+    letter-spacing: 0;
+    line-height: 1.5;
+  }
+
+  .github-featured-card time {
+    align-self: end;
+    margin-top: clamp(2rem, 5vw, 4rem);
+    color: var(--color-graphite);
+    font-size: .92rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+
+  .github-featured-card a,
+  .github-recent-item a {
+    display: inline-flex;
+    align-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+
+  .github-featured-card a:hover,
+  .github-recent-item a:hover {
+    text-decoration-thickness: .08em;
+    text-underline-offset: .18em;
+  }
+
+  .tone-ink {
+    border-color: rgb(251 250 247 / 18%);
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .tone-ink .github-card-meta,
+  .tone-ink p {
+    color: rgb(242 238 231 / 86%);
+  }
+
+  .tone-ink time {
+    color: rgb(251 250 247 / 86%);
+  }
+
+  .tone-sky {
+    background: var(--color-sky-light);
+  }
+
+  .tone-cotton {
+    background: var(--color-cotton);
+  }
+
+  .github-recent {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .github-recent-title {
+    margin: 0;
+    color: var(--color-graphite);
+    font-size: .9rem;
+    font-weight: 760;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .github-recent-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 6vw, 6rem);
+  }
+
+  .github-recent-item {
+    display: grid;
+    gap: 1.25rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .github-recent-item h3 {
+    font-size: clamp(1.2rem, 1.08rem + .5vw, 1.55rem);
+    font-weight: 680;
+    line-height: 1.1;
+  }
+
+  .github-recent-item p {
+    max-width: 58rem;
+  }
+
+  .github-recent-meta {
+    align-content: start;
+    justify-content: start;
+    text-align: left;
+  }
+
+  .github-empty {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    max-width: 40rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-surface);
+    background: var(--color-cotton);
+  }
+
+  @media (max-width: 52rem) {
+    .github-heading,
+    .github-recent-list,
+    .github-recent-item {
+      grid-template-columns: 1fr;
+    }
+
+    .github-featured-grid {
+      display: flex;
+      width: calc(100% + var(--space-page));
+      padding-right: var(--space-page);
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+    }
+
+    .github-featured-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .github-visual,
+    .github-featured-card,
+    .github-featured-card:nth-of-type(3) {
+      flex: 0 0 82vw;
+      scroll-snap-align: start;
+    }
+
+    .github-visual {
+      min-height: 21rem;
+    }
+
+    .github-visual + .github-featured-card,
+    .github-featured-card + .github-featured-card {
+      margin-left: 1rem;
+    }
+
+    .github-recent-meta {
+      justify-content: start;
+      text-align: left;
+    }
+
+    .github-featured-card {
+      min-height: 18rem;
+    }
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+import FeaturedWork from "./FeaturedWork.astro";
+import ContactFooter from "./ContactFooter.astro";
+import CultureManifesto from "./CultureManifesto.astro";
+import EducationSection from "./EducationSection.astro";
+import GitHubProjects from "./GitHubProjects.astro";
+import HeroPortrait from "./HeroPortrait.astro";
+import JarvisCaseStudy from "./jarvis/JarvisCaseStudy.astro";
+import PublicPresence from "./PublicPresence.astro";
+import SiteHeader from "./SiteHeader.astro";
+import VisionSection from "./VisionSection.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { SiteContent, SiteLocale } from "../types/site";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  locale: SiteLocale;
+  content: SiteContent;
+  ui: SiteUiCopy;
+};
+
+const { locale, content, ui } = Astro.props;
+---
+
+<BaseLayout locale={locale} ui={ui}>
+  <SiteHeader navigation={content.navigation} ui={ui.header} />
+  <main id="conteudo">
+    <HeroPortrait hero={content.hero} ui={ui.hero} />
+    <VisionSection about={content.about} ui={ui.about} />
+    <CultureManifesto culture={content.culture} ui={ui.culture} />
+    <FeaturedWork repertoire={content.repertoire} ui={ui.repertoire} />
+    <JarvisCaseStudy jarvis={content.jarvis} locale={locale} ui={ui.jarvis} />
+    <EducationSection education={content.education} ui={ui.education} />
+    <GitHubProjects ui={ui.github} />
+    <PublicPresence links={content.links} ui={ui.presence} />
+  </main>
+  <ContactFooter ui={ui.contact} />
+</BaseLayout>

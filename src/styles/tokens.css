@@ -1,0 +1,23 @@
+:root {
+  --color-sky: #708ca1;
+  --color-boundary: var(--color-sky);
+  --color-sky-light: #dfe9ee;
+  --color-cotton: #f2eee7;
+  --color-paper: #fbfaf7;
+  --color-ink: #171513;
+  --color-graphite: #45332a;
+  --color-line: rgb(23 21 19 / 12%);
+  --color-muted: rgb(23 21 19 / 62%);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --space-page: clamp(1.25rem, 4vw, 4rem);
+  --space-section: clamp(4.75rem, 9vw, 8.5rem);
+  --content-wide: 90rem;
+  --content-copy: 48rem;
+  --radius-surface: 1.75rem;
+  --radius-control: 999px;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --duration-press: 140ms;
+  --duration-ui: 240ms;
+  --shadow-float: 0 1.5rem 5rem rgb(32 40 45 / 14%);
+}

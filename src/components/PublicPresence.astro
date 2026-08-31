@@ -1,0 +1,108 @@
+---
+import type { PublicLink } from "../types/site";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  links: PublicLink[];
+  ui: SiteUiCopy["presence"];
+};
+
+const { links, ui } = Astro.props;
+const publicLinks = links.filter((link) => link.href !== "https://wa.me/5544998893474");
+---
+
+<section class="public-presence section sky-light" aria-labelledby="presence-title">
+  <div class="page-width presence-shell">
+    <div class="presence-content">
+      <p class="presence-kicker">{ui.kicker}</p>
+      <h2 id="presence-title" class="section-title">{ui.title}</h2>
+      <p class="body-large">{ui.description}</p>
+    </div>
+    <div class="presence-links" aria-label={ui.linksLabel}>
+      {
+        publicLinks.map((link) => (
+          <a class="presence-link pressable" href={link.href} target="_blank" rel="noopener noreferrer">
+            <span>{link.label}</span>
+            <span aria-hidden="true">{ui.openLabel}</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .public-presence {
+    background: var(--color-sky-light);
+  }
+
+  .presence-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(20rem, .75fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+  }
+
+  .presence-shell .section-title {
+    max-width: 14ch;
+  }
+
+  .presence-content {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+
+  .presence-kicker {
+    margin: 0;
+    color: var(--color-graphite);
+    font-size: .92rem;
+    font-weight: 580;
+    line-height: 1.3;
+  }
+
+  .presence-content .body-large {
+    max-width: 36rem;
+    color: rgb(23 21 19 / 72%);
+  }
+
+  .presence-links {
+    display: grid;
+    gap: .75rem;
+  }
+
+  .presence-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.75rem;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid rgb(23 21 19 / 14%);
+    border-radius: .75rem;
+    background: rgb(251 250 247 / 58%);
+    color: var(--color-ink);
+    font-size: clamp(1.08rem, 1rem + .4vw, 1.35rem);
+    font-weight: 690;
+    letter-spacing: 0;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .presence-link span[aria-hidden="true"] {
+    color: var(--color-graphite);
+    font-size: .9rem;
+    font-weight: 740;
+  }
+
+  .presence-link:hover {
+    border-color: rgb(23 21 19 / 28%);
+    background: var(--color-paper);
+  }
+
+  @media (max-width: 48rem) {
+    .presence-shell {
+      grid-template-columns: 1fr;
+    }
+
+  }
+</style>

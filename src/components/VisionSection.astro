@@ -1,0 +1,247 @@
+---
+import type { SiteContent } from "../types/site";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  about: SiteContent["about"];
+  ui: SiteUiCopy["about"];
+};
+
+const { about, ui } = Astro.props;
+---
+
+<section id="sobre" class="about section paper" aria-labelledby="about-title">
+  <div class="page-width about-shell">
+    <div class="about-heading" data-reveal>
+      <p class="about-index">{ui.index}</p>
+      <h2 id="about-title" class="section-title">{about.title}</h2>
+      <p class="about-lead">{about.lead}</p>
+    </div>
+
+    <div class="about-story">
+      <figure class="about-portrait" data-media-reveal>
+        <picture>
+          <source media="(min-width: 48rem)" srcset="/images/leonardo-portrait-wide.webp" type="image/webp" />
+          <img
+            src="/images/leonardo-portrait-mobile.webp"
+            alt={ui.imageAlt}
+            width="640"
+            height="963"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      </figure>
+      <div class="about-copy">
+        {about.body.map((paragraph) => <p>{paragraph}</p>)}
+        <blockquote>{about.quote}</blockquote>
+      </div>
+    </div>
+
+    <dl class="about-stats" aria-label={ui.statsLabel} tabindex="0">
+      {about.stats.map((stat) => (
+        <div>
+          <dt>{stat.label}</dt>
+          <dd>{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .about {
+    background: var(--color-paper);
+  }
+
+  .about-shell {
+    display: grid;
+    gap: clamp(3rem, 7vw, 6.5rem);
+  }
+
+  .about-heading {
+    display: grid;
+    grid-template-columns: minmax(10rem, .42fr) minmax(0, 1.08fr);
+    gap: 1.25rem clamp(2rem, 7vw, 8rem);
+    align-items: start;
+  }
+
+  .about-index {
+    margin: .5rem 0 0;
+    color: var(--color-muted);
+    font-size: .92rem;
+    font-weight: 560;
+    line-height: 1.4;
+  }
+
+  .about .section-title {
+    max-width: 11ch;
+  }
+
+  .about-lead {
+    grid-column: 2;
+    max-width: 52rem;
+    margin: 0;
+    color: var(--color-graphite);
+    font-size: clamp(1.35rem, 1.15rem + 1vw, 2rem);
+    font-weight: 480;
+    line-height: 1.35;
+  }
+
+  .about-story {
+    position: relative;
+    display: grid;
+    min-height: clamp(35rem, 55vw, 48rem);
+    overflow: hidden;
+    border-radius: var(--radius-surface);
+    background: var(--color-sky-light);
+    isolation: isolate;
+  }
+
+  .about-portrait {
+    position: relative;
+    grid-area: 1 / 1;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-surface);
+    background: var(--color-sky-light);
+  }
+
+  .about-portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-copy {
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    display: grid;
+    align-self: center;
+    gap: 1.5rem;
+    width: min(38rem, calc(100% - 3rem));
+    margin-left: clamp(1.5rem, 5vw, 5rem);
+    padding: clamp(1.5rem, 3vw, 2.75rem);
+    border: 1px solid rgb(251 250 247 / 48%);
+    border-radius: calc(var(--radius-surface) - .5rem);
+    background: rgb(251 250 247 / 90%);
+    box-shadow: 0 1.5rem 4rem rgb(23 21 19 / 10%);
+  }
+
+  .about-copy p,
+  .about-copy blockquote {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: clamp(1.08rem, 1rem + .4vw, 1.3rem);
+    line-height: 1.62;
+  }
+
+  .about-copy blockquote {
+    margin-top: clamp(1rem, 3vw, 2.5rem);
+    padding-top: clamp(1.25rem, 3vw, 2rem);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-ink);
+    font-size: clamp(1.5rem, 1.25rem + 1.25vw, 2.5rem);
+    font-weight: 540;
+    line-height: 1.18;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border-block: 1px solid var(--color-line);
+  }
+
+  .about-stats div {
+    display: grid;
+    gap: 2.5rem;
+    min-height: 12rem;
+    padding: 1.5rem clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .about-stats div + div {
+    border-left: 1px solid var(--color-line);
+  }
+
+  .about-stats dt {
+    color: var(--color-muted);
+    font-size: .9rem;
+    font-weight: 560;
+    line-height: 1.3;
+  }
+
+  .about-stats dd {
+    align-self: end;
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(3rem, 2.35rem + 3.2vw, 6.5rem);
+    font-weight: 560;
+    letter-spacing: -.055em;
+    line-height: .86;
+  }
+
+  @media (max-width: 48rem) {
+    .about-heading {
+      grid-template-columns: 1fr;
+    }
+
+    .about-heading {
+      gap: 1rem;
+    }
+
+    .about-lead {
+      grid-column: 1;
+    }
+
+    .about-story {
+      display: grid;
+      min-height: 0;
+      overflow: visible;
+      gap: 2rem;
+      background: transparent;
+    }
+
+    .about-portrait {
+      grid-area: auto;
+      width: 100%;
+      min-height: 34rem;
+    }
+
+    .about-portrait img {
+      object-position: center 20%;
+    }
+
+    .about-copy {
+      grid-area: auto;
+      width: auto;
+      margin: -5rem 1rem 0;
+      padding: 1.35rem;
+      border-radius: 1.25rem;
+      background: rgb(251 250 247 / 96%);
+    }
+
+    .about-stats {
+      grid-template-columns: repeat(3, 73vw);
+      width: calc(100% + var(--space-page));
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+    }
+
+    .about-stats::-webkit-scrollbar {
+      display: none;
+    }
+
+    .about-stats div {
+      min-height: 11rem;
+      scroll-snap-align: start;
+    }
+
+  }
+</style>

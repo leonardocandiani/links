@@ -1,0 +1,9 @@
+---
+import PortfolioPage from "../components/PortfolioPage.astro";
+import { getLocalizedSite } from "../data/i18n";
+
+const locale = "pt-BR" as const;
+const { content, ui } = getLocalizedSite(locale);
+---
+
+<PortfolioPage locale={locale} content={content} ui={ui} />

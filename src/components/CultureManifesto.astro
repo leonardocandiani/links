@@ -1,0 +1,270 @@
+---
+import type { SiteContent } from "../types/site";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  culture: SiteContent["culture"];
+  ui: SiteUiCopy["culture"];
+};
+
+const { culture, ui } = Astro.props;
+const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
+---
+
+<section id="cultura" class="culture section" aria-labelledby="culture-title">
+  <div class="page-width culture-shell">
+    <div class="culture-stage">
+      <div class="culture-copy" data-reveal>
+        <p class="eyebrow">{culture.eyebrow}</p>
+        <h2 id="culture-title">{titlePrefix} <span class="culture-limit-word">{culture.limitWord}</span></h2>
+        <p class="culture-description">{culture.description}</p>
+      </div>
+
+      <figure class="culture-media" data-media-reveal>
+        <img
+          src="/images/vision-architecture.webp"
+          alt={ui.imageAlt}
+          width="1672"
+          height="941"
+          loading="lazy"
+          decoding="async"
+        />
+        <figcaption>{culture.imageCaption}</figcaption>
+      </figure>
+    </div>
+
+    <div class="culture-bridge" data-reveal>
+      <p class="culture-bridge-title">{culture.bridgeTitle}</p>
+      <ul class="culture-echoes" aria-label={ui.echoesLabel}>
+        {
+          culture.echoes.map((echo) => (
+            <li>
+              <p class="culture-echo-label">{echo.label}</p>
+              <h3>{echo.title}</h3>
+              <p>{echo.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .culture {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .culture-shell {
+    display: grid;
+    gap: clamp(3.25rem, 7vw, 6.5rem);
+  }
+
+  .culture-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 48%) minmax(0, 52%);
+    min-height: clamp(34rem, 48vw, 43rem);
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-surface);
+    background: var(--color-paper);
+  }
+
+  .culture-copy {
+    display: grid;
+    align-content: center;
+    min-width: 0;
+    gap: clamp(1.25rem, 2.4vw, 1.75rem);
+    padding: clamp(2rem, 5vw, 5rem);
+  }
+
+  .culture-copy .eyebrow {
+    margin: 0;
+    color: var(--color-graphite);
+  }
+
+  .culture-copy h2 {
+    max-width: 9.6ch;
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(3.25rem, 3rem + 3vw, 6rem);
+    font-weight: 590;
+    letter-spacing: -.057em;
+    line-height: .92;
+  }
+
+  .culture-limit-word {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+    font-weight: 660;
+  }
+
+  .culture-limit-word::after {
+    position: absolute;
+    z-index: -1;
+    top: 57%;
+    left: -.1em;
+    width: 100vw;
+    height: 1px;
+    background: var(--color-boundary);
+    content: "";
+    pointer-events: none;
+  }
+
+  .culture-description {
+    max-width: 39ch;
+    margin: 0;
+    color: var(--color-graphite);
+    font-size: clamp(1rem, .95rem + .3vw, 1.2rem);
+    line-height: 1.56;
+  }
+
+  .culture-media {
+    position: relative;
+    min-width: 0;
+    min-height: clamp(34rem, 48vw, 43rem);
+    margin: 0;
+    overflow: hidden;
+    background: var(--color-sky-light);
+  }
+
+  .culture-media::after {
+    position: absolute;
+    inset: auto 0 0;
+    height: 30%;
+    background: linear-gradient(to top, rgb(14 20 23 / 54%), transparent);
+    content: "";
+    pointer-events: none;
+  }
+
+  .culture-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 67% center;
+  }
+
+  .culture-media figcaption {
+    position: absolute;
+    z-index: 1;
+    right: clamp(1.25rem, 3vw, 2rem);
+    bottom: clamp(1.25rem, 3vw, 2rem);
+    left: clamp(1.25rem, 3vw, 2rem);
+    color: var(--color-paper);
+    font-size: .85rem;
+    font-weight: 520;
+    line-height: 1.4;
+  }
+
+  .culture-bridge {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.25rem);
+  }
+
+  .culture-bridge-title {
+    max-width: 22ch;
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(2rem, 1.65rem + 1.7vw, 3.5rem);
+    font-weight: 570;
+    letter-spacing: -.04em;
+    line-height: 1.04;
+  }
+
+  .culture-echoes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+    list-style: none;
+  }
+
+  .culture-echoes li {
+    min-height: 13rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1rem, 3vw, 2.5rem) 1.5rem 0;
+  }
+
+  .culture-echoes li + li {
+    padding-left: clamp(1rem, 3vw, 2.5rem);
+    border-left: 1px solid var(--color-line);
+  }
+
+  .culture-echo-label {
+    margin: 0 0 clamp(1.5rem, 3vw, 2.25rem);
+    color: var(--color-graphite);
+    font-size: .75rem;
+    font-weight: 720;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .culture-echoes h3 {
+    margin: 0 0 .75rem;
+    color: var(--color-ink);
+    font-size: clamp(1.2rem, 1.1rem + .45vw, 1.55rem);
+    font-weight: 610;
+    letter-spacing: -.025em;
+    line-height: 1.12;
+  }
+
+  .culture-echoes p:not(.culture-echo-label) {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: .95rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 58rem) {
+    .culture-stage {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .culture-copy {
+      min-height: 32rem;
+      padding: clamp(2rem, 8vw, 3.5rem) clamp(1.5rem, 6vw, 3rem);
+    }
+
+    .culture-copy h2 {
+      font-size: clamp(2.8rem, 14vw, 5.25rem);
+    }
+
+    .culture-limit-word::after {
+      left: 0;
+      width: 100%;
+    }
+
+    .culture-media {
+      min-height: clamp(21rem, 84vw, 34rem);
+    }
+
+    .culture-echoes {
+      grid-template-columns: 1fr;
+    }
+
+    .culture-echoes li {
+      min-height: 0;
+      padding: 1.5rem 0 1.75rem;
+    }
+
+    .culture-echoes li + li {
+      padding-left: 0;
+      border-top: 1px solid var(--color-line);
+      border-left: 0;
+    }
+
+    .culture-echo-label {
+      margin-bottom: .85rem;
+    }
+  }
+
+  @media (max-width: 22rem) {
+    .culture-copy h2 {
+      font-size: clamp(2.45rem, 12.5vw, 3rem);
+    }
+  }
+
+</style>

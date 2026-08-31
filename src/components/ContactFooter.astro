@@ -1,0 +1,110 @@
+---
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  ui: SiteUiCopy["contact"];
+};
+
+const { ui } = Astro.props;
+const whatsappHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.message)}`;
+---
+
+<footer id="contato" class="contact-footer" aria-labelledby="contact-title">
+  <div class="page-width contact-shell">
+    <div>
+      <h2 id="contact-title" class="section-title">{ui.title}</h2>
+    </div>
+    <div class="contact-action">
+      <a class="contact-whatsapp pressable" href={whatsappHref}>{ui.ctaLabel}</a>
+      <p class="contact-meta">
+        <span class="brand-signature">
+          <span class="brand-signature__given">Leonardo </span>
+          <span class="brand-signature__surname">Candiani</span>
+        </span>
+        <span>, {ui.country}</span>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .contact-footer {
+    position: relative;
+    display: grid;
+    min-height: 72svh;
+    align-items: end;
+    padding-block: clamp(6rem, 12vw, 9rem) clamp(2rem, 5vw, 4rem);
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgb(17 16 15 / 96%) 0%, rgb(17 16 15 / 78%) 44%, rgb(17 16 15 / 8%) 76%),
+      url("/images/contact-horizon.webp") center / cover no-repeat,
+      var(--color-graphite);
+    color: var(--color-paper);
+  }
+
+  .contact-shell {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr minmax(18rem, .42fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+  }
+
+  .contact-footer .section-title {
+    max-width: 15ch;
+    color: var(--color-paper);
+  }
+
+  .contact-action {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+
+  .contact-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding-inline: 1.2rem;
+    border-radius: var(--radius-control);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-size: 1rem;
+    font-weight: 740;
+    letter-spacing: 0;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .contact-whatsapp:hover {
+    background: var(--color-cotton);
+  }
+
+  .contact-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem .8rem;
+    margin: 0;
+    color: rgb(251 250 247 / 76%);
+    font-size: .95rem;
+    letter-spacing: 0;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 48rem) {
+    .contact-footer {
+      min-height: 78svh;
+      background:
+        linear-gradient(180deg, rgb(17 16 15 / 96%) 0%, rgb(17 16 15 / 70%) 52%, rgb(17 16 15 / 12%) 86%),
+        url("/images/contact-horizon.webp") 67% center / cover no-repeat,
+        var(--color-graphite);
+    }
+
+    .contact-shell {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+  }
+</style>

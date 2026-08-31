@@ -1,4 +1,12 @@
 node_modules
 dist
+.astro
+playwright-report
+test-results
+coverage
 .DS_Store
+.superpowers
+.vercel
 *.local
+.env*
+!.env.example

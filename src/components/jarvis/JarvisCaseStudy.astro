@@ -1,0 +1,306 @@
+---
+import JarvisDemo from "./JarvisDemo";
+import type { SiteContent, SiteLocale } from "../../types/site";
+import type { SiteUiCopy } from "../../data/ui";
+
+type Props = {
+  jarvis: SiteContent["jarvis"];
+  locale: SiteLocale;
+  ui: SiteUiCopy["jarvis"];
+};
+
+const { jarvis, locale, ui } = Astro.props;
+---
+
+<section id="jarvis" class="jarvis-case section" aria-labelledby="jarvis-title">
+  <div class="page-width jarvis-case-shell">
+    <div class="jarvis-visual">
+      <img
+        src="/images/jarvis-intelligence.webp"
+        alt={ui.imageAlt}
+        width="1672"
+        height="941"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="jarvis-intro" data-reveal>
+        <p class="eyebrow">{jarvis.eyebrow}</p>
+        <h2 id="jarvis-title" class="section-title">{jarvis.title}</h2>
+        <p class="body-large">{jarvis.description}</p>
+      </div>
+    </div>
+
+    <div class="jarvis-story">
+      <div class="jarvis-demo-sticky">
+        <div class="jarvis-demo-shell">
+          <JarvisDemo locale={locale} client:load />
+        </div>
+      </div>
+
+      <div class="jarvis-narrative">
+        <p class="jarvis-narrative-lead">{ui.narrativeLead}</p>
+        <ol class="jarvis-steps" aria-label={ui.stepsLabel} tabindex="0">
+          {
+            jarvis.steps.map((step, index) => (
+              <li>
+                <span class="jarvis-step-number">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <span class="jarvis-step-label">{step.label}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        <aside class="jarvis-proof" aria-label={ui.proofAriaLabel}>
+          <p class="jarvis-proof-label">{ui.proofLabel}</p>
+          <h3>{ui.proofTitle}</h3>
+          <p>{ui.proofDescription}</p>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .jarvis-case {
+    overflow: hidden;
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  .jarvis-case-shell {
+    display: grid;
+    gap: clamp(3rem, 7vw, 6.5rem);
+  }
+
+  .jarvis-intro {
+    position: absolute;
+    inset: clamp(2rem, 5vw, 4.5rem) auto auto clamp(1.5rem, 5vw, 4.5rem);
+    z-index: 1;
+    display: grid;
+    width: min(37rem, calc(100% - 3rem));
+    gap: 1.35rem;
+  }
+
+  .jarvis-intro .eyebrow {
+    color: #dfe9ee;
+  }
+
+  .jarvis-intro .section-title {
+    max-width: 12ch;
+    color: var(--color-paper);
+  }
+
+  .jarvis-intro .body-large {
+    max-width: 52rem;
+    color: rgb(251 250 247 / 82%);
+  }
+
+  .jarvis-visual {
+    position: relative;
+    min-height: clamp(38rem, 62vw, 54rem);
+    overflow: hidden;
+    border: 1px solid rgb(251 250 247 / 12%);
+    border-radius: var(--radius-surface);
+    background: #111617;
+    isolation: isolate;
+  }
+
+  .jarvis-visual::after {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(90deg, rgb(17 22 23 / 98%) 0%, rgb(17 22 23 / 86%) 34%, rgb(17 22 23 / 18%) 68%, transparent 100%);
+    content: "";
+    pointer-events: none;
+  }
+
+  .jarvis-visual img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% center;
+  }
+
+  .jarvis-demo-shell {
+    width: 100%;
+    padding: clamp(.35rem, 1vw, .65rem);
+    border: 1px solid rgb(251 250 247 / 16%);
+    border-radius: 1.25rem;
+    background: var(--color-paper);
+    box-shadow: 0 2rem 5rem rgb(0 0 0 / 24%);
+  }
+
+  .jarvis-story {
+    display: grid;
+    gap: clamp(3.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .jarvis-demo-sticky {
+    position: static;
+  }
+
+  .jarvis-narrative {
+    display: grid;
+    grid-template-columns: minmax(16rem, .65fr) minmax(0, 1.35fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+
+  .jarvis-narrative-lead {
+    max-width: 19ch;
+    margin: 0;
+    color: var(--color-paper);
+    font-size: clamp(2rem, 1.55rem + 2vw, 3.75rem);
+    font-weight: 540;
+    letter-spacing: -.035em;
+    line-height: 1.04;
+  }
+
+  .jarvis-steps {
+    display: grid;
+    grid-column: 2;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .jarvis-steps li {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    align-content: start;
+    gap: 1.25rem;
+    min-height: 15rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) 0;
+    border-top: 1px solid rgb(251 250 247 / 20%);
+  }
+
+  .jarvis-step-number {
+    margin-top: .2rem;
+    color: #dfe9ee;
+    font-size: .88rem;
+    font-weight: 760;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .jarvis-step-label {
+    margin-bottom: .8rem;
+    color: rgb(251 250 247 / 66%);
+    font-size: .78rem;
+    font-weight: 780;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .jarvis-steps h3,
+  .jarvis-proof h3 {
+    margin: 0;
+    color: var(--color-paper);
+    font-size: clamp(1.2rem, 1.08rem + .5vw, 1.65rem);
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .jarvis-steps p,
+  .jarvis-proof p {
+    margin: .85rem 0 0;
+    color: rgb(251 250 247 / 70%);
+    font-size: 1rem;
+    letter-spacing: 0;
+    line-height: 1.5;
+  }
+
+  .jarvis-proof {
+    display: grid;
+    grid-column: 2;
+    max-width: 48rem;
+    padding-top: clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid rgb(251 250 247 / 20%);
+  }
+
+  .jarvis-proof-label {
+    margin: 0 0 1rem;
+    color: #dfe9ee;
+    font-size: 1rem;
+    font-weight: 680;
+    letter-spacing: 0;
+    line-height: 1.35;
+  }
+
+  .jarvis-proof h3 {
+    max-width: 22ch;
+    font-size: clamp(1.65rem, 1.35rem + 1.5vw, 3rem);
+  }
+
+  .jarvis-proof p:not(.eyebrow) {
+    max-width: 44rem;
+    font-size: clamp(1.05rem, 1rem + .3vw, 1.25rem);
+  }
+
+  @media (max-width: 58rem) {
+    .jarvis-visual {
+      min-height: 44rem;
+    }
+
+    .jarvis-visual::after {
+      background: linear-gradient(180deg, rgb(17 22 23 / 98%) 0%, rgb(17 22 23 / 84%) 48%, rgb(17 22 23 / 16%) 82%);
+    }
+
+    .jarvis-intro {
+      inset: 1.5rem 1.5rem auto;
+      width: auto;
+    }
+
+    .jarvis-narrative {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      min-width: 0;
+    }
+
+    .jarvis-steps {
+      grid-column: 1;
+      display: flex;
+      width: calc(100% + var(--space-page));
+      padding-right: var(--space-page);
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-width: none;
+    }
+
+    .jarvis-steps::-webkit-scrollbar {
+      display: none;
+    }
+
+    .jarvis-steps li {
+      flex: 0 0 82vw;
+      min-height: 15rem;
+      padding-right: 1.5rem;
+      scroll-snap-align: start;
+    }
+
+    .jarvis-steps li + li {
+      margin-left: 1rem;
+    }
+
+    .jarvis-proof {
+      grid-column: 1;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .jarvis-demo-shell {
+      box-shadow: none;
+    }
+  }
+</style>
