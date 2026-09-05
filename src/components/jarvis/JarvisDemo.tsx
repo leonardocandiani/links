@@ -42,14 +42,15 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
   const [activeScenario, setActiveScenario] = useState<JarvisScenario | null>(null);
   const [question, setQuestion] = useState("");
   const [customQuestion, setCustomQuestion] = useState("");
+  const [runId, setRunId] = useState(0);
+  const controlRef = useRef<HTMLElement>(null);
+  const questionInputRef = useRef<HTMLInputElement>(null);
   const conversationRef = useRef<HTMLElement>(null);
-  const runIdRef = useRef(0);
   const reducedMotion = usePrefersReducedMotion();
   const ui = jarvisUiByLocale[locale];
   const scenarioList = Object.values(jarvisScenariosByLocale[locale]);
 
   useEffect(() => {
-    const runId = runIdRef.current;
     let nextEvent: JarvisEvent | null = null;
     let delay = 0;
 
@@ -72,13 +73,11 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
     }
 
     const timer = window.setTimeout(() => {
-      if (runIdRef.current === runId) {
-        dispatch(nextEvent);
-      }
+      dispatch(nextEvent);
     }, reducedMotion ? 30 : delay);
 
     return () => window.clearTimeout(timer);
-  }, [activeScenario?.id, reducedMotion, step]);
+  }, [reducedMotion, runId, step]);
 
   function moveToConversation() {
     if (window.innerWidth > 928 || !conversationRef.current) {
@@ -92,7 +91,7 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
   }
 
   function startScenario(scenario: JarvisScenario, submittedQuestion = scenario.question) {
-    runIdRef.current += 1;
+    setRunId((currentRun) => currentRun + 1);
     setActiveScenario(scenario);
     setQuestion(submittedQuestion);
     dispatch({ type: "START" });
@@ -108,10 +107,10 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
     }
 
     const scenario = routeJarvisQuestion(normalizedQuestion, locale);
-    runIdRef.current += 1;
     setQuestion(normalizedQuestion);
 
     if (!scenario) {
+      setRunId((currentRun) => currentRun + 1);
       setActiveScenario(null);
       dispatch({ type: "UNSUPPORTED" });
       window.requestAnimationFrame(moveToConversation);
@@ -122,11 +121,22 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
   }
 
   function resetDemo() {
-    runIdRef.current += 1;
+    setRunId((currentRun) => currentRun + 1);
     setActiveScenario(null);
     setQuestion("");
     setCustomQuestion("");
     dispatch({ type: "RESET" });
+    window.requestAnimationFrame(() => {
+      controlRef.current?.querySelector<HTMLButtonElement>(".jarvis-scenario")?.focus({ preventScroll: true });
+      if (window.innerWidth <= 928) {
+        controlRef.current?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      }
+    });
+  }
+
+  function focusQuestionInput() {
+    questionInputRef.current?.focus({ preventScroll: true });
+    questionInputRef.current?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
   }
 
   const hasQuestion = step !== "idle";
@@ -146,7 +156,7 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
         </div>
 
         <div className="jarvis-demo-grid">
-          <section className="jarvis-control" aria-labelledby="jarvis-control-title">
+          <section className="jarvis-control" ref={controlRef} aria-labelledby="jarvis-control-title">
             <div>
               <p className="jarvis-kicker">{ui.control.kicker}</p>
               <h3 id="jarvis-control-title">{ui.control.title}</h3>
@@ -177,6 +187,7 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
               </label>
               <input
                 id="jarvis-question"
+                ref={questionInputRef}
                 type="text"
                 maxLength={96}
                 value={customQuestion}
@@ -286,7 +297,9 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
                 ) : null}
               </div>
 
-              <div className="jarvis-input-bar" aria-hidden="true"><span>{ui.phone.inputPlaceholder}</span><b>{ui.phone.sendSymbol}</b></div>
+              <button className="jarvis-input-bar" type="button" aria-controls="jarvis-question" onClick={focusQuestionInput}>
+                <span>{ui.phone.inputPlaceholder}</span><b aria-hidden="true">{ui.phone.sendSymbol}</b>
+              </button>
             </div>
 
             {step === "consulting" && activeScenario ? (
@@ -383,7 +396,8 @@ const styles = `
     gap: 1.3rem;
     padding: clamp(1.35rem, 3vw, 2.4rem);
     border-right: 1px solid rgb(244 240 233 / 12%);
-    background: radial-gradient(circle at 16% 12%, rgb(144 173 191 / 15%), transparent 34%), #201e1b;
+    background: #201e1b;
+    scroll-margin-top: 5.5rem;
   }
 
   .jarvis-kicker {
@@ -460,7 +474,7 @@ const styles = `
   }
 
   .jarvis-scenario small {
-    color: rgb(244 240 233 / 46%);
+    color: #bcb6ae;
     font-size: .7rem;
   }
 
@@ -508,8 +522,9 @@ const styles = `
 
   .jarvis-demo-note {
     margin: -.65rem 0 0;
-    color: rgb(244 240 233 / 34%);
-    font-size: .6rem;
+    color: #bcb6ae;
+    font-size: .78rem;
+    line-height: 1.5;
   }
 
   .jarvis-experience {
@@ -518,7 +533,7 @@ const styles = `
     place-items: center;
     min-width: 0;
     padding: clamp(1rem, 2.5vw, 2rem);
-    background: radial-gradient(circle at 82% 14%, rgb(197 140 109 / 13%), transparent 31%), #292621;
+    background: #292621;
     scroll-margin-top: 5.5rem;
   }
 
@@ -818,10 +833,26 @@ const styles = `
   .jarvis-input-bar {
     display: grid;
     grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
     gap: .45rem;
     padding: .65rem;
+    border: 0;
     border-top: 1px solid rgb(244 240 233 / 12%);
     background: #1d1b18;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .jarvis-input-bar:hover {
+    background: #292621;
+  }
+
+  .jarvis-input-bar:focus-visible {
+    outline: 2px solid #90adbf;
+    outline-offset: -3px;
   }
 
   .jarvis-input-bar span {
@@ -829,7 +860,7 @@ const styles = `
     border-radius: 999px;
     background: rgb(244 240 233 / 6%);
     color: rgb(244 240 233 / 64%);
-    font-size: .62rem;
+    font-size: .85rem;
   }
 
   .jarvis-input-bar b {

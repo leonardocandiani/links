@@ -8,6 +8,11 @@ type Props = {
 };
 
 const { education, ui } = Astro.props;
+const isPortuguese = ui.firstMetricContext === "mais rápido";
+const trainingMessage = isPortuguese
+  ? "Olá, Leonardo. Quero conversar sobre um treinamento de IA para a minha equipe."
+  : "Hi Leonardo. I would like to discuss AI training for my team.";
+const trainingHref = `https://wa.me/5544998893474?text=${encodeURIComponent(trainingMessage)}`;
 ---
 
 <section id="educacao" class="education section" aria-labelledby="education-title">
@@ -22,12 +27,14 @@ const { education, ui } = Astro.props;
         decoding="async"
       />
       <div class="education-intro-copy">
+        <p class="eyebrow">{education.eyebrow}</p>
         <h2 id="education-title" class="section-title">{education.title}</h2>
         <p class="body-large">{education.description}</p>
       </div>
     </div>
 
-    <div class="education-leverage" aria-label={ui.leverageLabel} tabindex="0">
+    <p class="education-ambition">{isPortuguese ? "A ambição: ampliar a capacidade de cada pessoa." : "The ambition: expand what each person can do."}</p>
+    <div class="education-leverage" aria-label={ui.leverageLabel}>
       {
         education.leverage.map((item, index) => (
           <div class="education-leverage-item">
@@ -42,6 +49,8 @@ const { education, ui } = Astro.props;
         ))
       }
     </div>
+
+    <p class="education-note">{education.note}</p>
 
     <ol class="education-method" aria-label={ui.methodLabel}>
       {
@@ -58,51 +67,51 @@ const { education, ui } = Astro.props;
     </ol>
 
     <div class="education-footer">
-      <p>{education.note}</p>
-      <a class="education-cta pressable" href="#contato">{education.ctaLabel}</a>
+      <p>{isPortuguese ? "Vamos desenhar o treinamento a partir dos desafios da sua equipe." : "Let's design the training around your team's challenges."}</p>
+      <a class="education-cta pressable" href={trainingHref}>{education.ctaLabel}</a>
     </div>
   </div>
 </section>
 
 <style>
   .education {
-    background: var(--color-sky-light);
+    background: var(--color-paper);
     color: var(--color-ink);
   }
 
   .education-shell {
     display: grid;
-    gap: clamp(3rem, 6vw, 5.5rem);
+    gap: clamp(2rem, 4vw, 3.5rem);
   }
 
   .education-intro {
     position: relative;
-    min-height: clamp(37rem, 56vw, 48rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+    min-height: 0;
     overflow: hidden;
     border-radius: var(--radius-surface);
-    background: var(--color-cotton);
+    background: transparent;
     isolation: isolate;
   }
 
   .education-intro-copy {
-    position: absolute;
-    inset: clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.5rem) auto auto;
+    position: relative;
     z-index: 1;
     display: grid;
-    width: min(35rem, calc(100% - 3rem));
+    width: 100%;
     gap: 1.4rem;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-    border: 1px solid rgb(251 250 247 / 48%);
-    border-radius: calc(var(--radius-surface) - .5rem);
-    background: rgb(251 250 247 / 94%);
-    box-shadow: 0 1rem 3rem rgb(23 21 19 / 10%);
+    padding-block: 1rem;
   }
 
   .education-intro > img {
-    position: absolute;
-    inset: 0;
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 4 / 4.6;
+    border-radius: var(--radius-surface);
     object-fit: cover;
     object-position: center;
   }
@@ -125,7 +134,7 @@ const { education, ui } = Astro.props;
   .education-leverage-item {
     display: grid;
     align-content: start;
-    min-height: 25rem;
+    min-height: 17rem;
     padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2.75rem);
   }
 
@@ -138,13 +147,13 @@ const { education, ui } = Astro.props;
     flex-wrap: wrap;
     align-items: baseline;
     gap: .4rem .8rem;
-    margin: 0 0 clamp(3rem, 7vw, 6rem);
+    margin: 0 0 1.75rem;
     color: var(--color-ink);
     letter-spacing: 0;
   }
 
   .education-metric-value {
-    font-size: clamp(5rem, 4rem + 6vw, 11rem);
+    font-size: clamp(4rem, 4rem + 3vw, 7rem);
     font-weight: 680;
     line-height: .82;
   }
@@ -190,7 +199,7 @@ const { education, ui } = Astro.props;
     display: grid;
     align-content: start;
     gap: clamp(1.5rem, 4vw, 3rem);
-    min-height: 17rem;
+    min-height: 12rem;
     padding: clamp(1.25rem, 2.5vw, 2rem);
     border-top: 1px solid rgb(23 21 19 / 16%);
     border-right: 1px solid rgb(23 21 19 / 12%);
@@ -245,6 +254,10 @@ const { education, ui } = Astro.props;
     background: var(--color-graphite);
   }
 
+  .education-ambition { margin: 1rem 0 -1.5rem; color: var(--color-graphite); font-size: .95rem; }
+  .education-note { max-width: 72ch; margin: -1.5rem 0 0; font-size: .85rem; line-height: 1.6; color: var(--color-muted); }
+  .education-intro .eyebrow { margin: 0; }
+
   @media (max-width: 58rem) {
     .education-method {
       grid-template-columns: 1fr;
@@ -252,6 +265,7 @@ const { education, ui } = Astro.props;
 
     .education-intro {
       display: grid;
+      grid-template-columns: 1fr;
       min-height: 0;
       overflow: visible;
       background: transparent;
@@ -259,7 +273,7 @@ const { education, ui } = Astro.props;
 
     .education-intro > img {
       position: static;
-      aspect-ratio: 4 / 5;
+      aspect-ratio: 16 / 11;
       border-radius: var(--radius-surface);
       object-position: 37% center;
     }
@@ -268,20 +282,15 @@ const { education, ui } = Astro.props;
       position: relative;
       inset: auto;
       width: auto;
-      margin: -4rem 1rem 0;
-      padding: 1.35rem;
-      border-radius: 1.25rem;
+      margin: 0;
+      padding: 0;
     }
 
     .education-leverage {
-      display: flex;
-      width: calc(100% + var(--space-page));
-      padding-right: var(--space-page);
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
       border: 0;
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: inline mandatory;
-      scrollbar-width: none;
     }
 
     .education-leverage::-webkit-scrollbar {
@@ -289,17 +298,15 @@ const { education, ui } = Astro.props;
     }
 
     .education-leverage-item {
-      flex: 0 0 82vw;
-      min-height: 23rem;
+      min-height: 0;
       padding: 1.5rem;
       border: 1px solid rgb(23 21 19 / 16%);
       border-radius: 1.25rem;
-      background: rgb(251 250 247 / 42%);
-      scroll-snap-align: start;
+      background: var(--color-sky-light);
     }
 
     .education-leverage-item + .education-leverage-item {
-      margin-left: 1rem;
+      margin-top: 1rem;
       border-left: 1px solid rgb(23 21 19 / 16%);
     }
 
@@ -318,6 +325,8 @@ const { education, ui } = Astro.props;
       white-space: normal;
       text-align: center;
     }
+
+    .education-ambition { margin-bottom: -.75rem; }
   }
 
 </style>

@@ -1,0 +1,180 @@
+---
+import youtubeSnapshot from "../data/youtube-snapshot.json";
+import { validateYouTubeSnapshot, YOUTUBE_CHANNEL_URL } from "../../scripts/youtube-data.mjs";
+
+type Props = { locale: "pt-BR" | "en" };
+const { locale } = Astro.props;
+validateYouTubeSnapshot(youtubeSnapshot);
+
+const copy = locale === "pt-BR" ? {
+  eyebrow: "No YouTube",
+  title: "Construindo com IA e automação.",
+  description: "Tutoriais de n8n, agentes de IA e fluxos que você pode acompanhar passo a passo.",
+  channel: "Explorar o canal",
+  latest: "Último vídeo publicado",
+  more: "Mais vídeos do canal",
+  play: "Reproduzir vídeo",
+  open: "Abrir no YouTube",
+  privacy: "O player do YouTube só carrega quando você aperta play."
+} : {
+  eyebrow: "On YouTube",
+  title: "Building with AI and automation.",
+  description: "Walk through n8n tutorials, AI agents, and automation workflows. Videos are in Portuguese.",
+  channel: "Explore the channel",
+  latest: "Latest published video",
+  more: "More from the channel",
+  play: "Play video",
+  open: "Open on YouTube",
+  privacy: "The YouTube player only loads when you press play."
+};
+const [featured, ...otherVideos] = youtubeSnapshot.videos;
+const recentVideos = otherVideos.slice(0, 3);
+const dateFormatter = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric", timeZone: "America/Sao_Paulo" });
+---
+
+<section id="youtube" class="youtube-section section" aria-labelledby="youtube-title">
+  <div class="page-width">
+    <header class="youtube-heading" data-reveal>
+      <div class="youtube-heading-copy">
+        <p class="eyebrow">{copy.eyebrow}</p>
+        <h2 id="youtube-title" class="section-title">{copy.title}</h2>
+        <p class="youtube-description">{copy.description}</p>
+      </div>
+      <a class="youtube-channel-link" href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer">{copy.channel}</a>
+    </header>
+
+    <div class="youtube-layout" data-reveal>
+      <article class="youtube-featured" aria-labelledby="youtube-featured-title">
+        <div class="youtube-player" data-youtube-player>
+          <a
+            class="youtube-play"
+            href={featured.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-video-id={featured.id}
+            data-video-title={featured.title}
+            data-play-label={copy.play}
+            aria-label={`${copy.open}: ${featured.title}`}
+          >
+            <img src={`https://i.ytimg.com/vi/${featured.id}/maxresdefault.jpg`} data-youtube-fallback={featured.thumbnail} alt="" width="1280" height="720" loading="lazy" decoding="async" />
+            <span class="youtube-play-label"><span class="youtube-play-icon" aria-hidden="true"></span><span class="youtube-play-text">{copy.open}</span></span>
+          </a>
+        </div>
+        <div class="youtube-featured-meta"><span>{copy.latest}</span><time datetime={featured.publishedAt}>{dateFormatter.format(new Date(featured.publishedAt))}</time></div>
+        <h3 id="youtube-featured-title" lang="pt-BR">{featured.title}</h3>
+        <a class="youtube-watch-link" href={featured.url} target="_blank" rel="noopener noreferrer">{copy.open}</a>
+        <p class="youtube-privacy">{copy.privacy}</p>
+      </article>
+
+      <aside class="youtube-more" aria-labelledby="youtube-more-title">
+        <h3 id="youtube-more-title">{copy.more}</h3>
+        <ol class="youtube-list">
+          {recentVideos.map((video) => (
+            <li>
+              <a class="youtube-list-link" href={video.url} target="_blank" rel="noopener noreferrer">
+                <div class="youtube-list-image"><img src={video.thumbnail} alt="" width="480" height="360" loading="lazy" decoding="async" /></div>
+                <div class="youtube-list-copy">
+                  <time datetime={video.publishedAt}>{dateFormatter.format(new Date(video.publishedAt))}</time>
+                  <h4 lang="pt-BR">{video.title}</h4>
+                  <span class="youtube-list-action">{copy.open}</span>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLImageElement>("[data-youtube-fallback]").forEach((image) => {
+    const fallback = image.dataset.youtubeFallback;
+    let usedFallback = false;
+    const useFallback = () => {
+      if (usedFallback || !fallback) return;
+      usedFallback = true;
+      image.src = fallback;
+    };
+    image.addEventListener("error", useFallback, { once: true });
+    image.addEventListener("load", () => {
+      if (image.naturalWidth <= 120) useFallback();
+    });
+    if (image.complete && image.naturalWidth <= 120) useFallback();
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>("a.youtube-play").forEach((link) => {
+    const id = link.dataset.videoId;
+    const player = link.closest("[data-youtube-player]");
+    const playLabel = link.dataset.playLabel;
+    if (!id || !/^[A-Za-z0-9_-]{11}$/.test(id) || !player || !playLabel) return;
+    const button = document.createElement("button");
+    for (const attribute of link.attributes) {
+      if (!["href", "target", "rel"].includes(attribute.name)) button.setAttribute(attribute.name, attribute.value);
+    }
+    button.type = "button";
+    button.setAttribute("aria-label", `${playLabel}: ${link.dataset.videoTitle ?? "YouTube"}`);
+    button.append(...link.childNodes);
+    const label = button.querySelector(".youtube-play-text");
+    if (label) label.textContent = playLabel;
+    button.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.title = button.dataset.videoTitle ?? "YouTube";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      iframe.tabIndex = 0;
+      player.replaceChildren(iframe);
+      iframe.focus();
+    }, { once: true });
+    const hadFocus = document.activeElement === link;
+    link.replaceWith(button);
+    if (hadFocus) button.focus({ preventScroll: true });
+  });
+</script>
+
+<style>
+  .youtube-section { background: var(--color-cotton); }
+  .youtube-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2.5rem; margin-bottom: clamp(2rem, 4vw, 4rem); }
+  .youtube-heading-copy { max-width: 50rem; }
+  .youtube-heading .section-title { max-width: 16ch; }
+  .youtube-description { max-width: 38rem; margin: 1.4rem 0 0; color: var(--color-graphite); font-size: 1.1rem; line-height: 1.65; }
+  .youtube-channel-link { display: inline-flex; align-items: center; gap: .6rem; flex-shrink: 0; min-height: 2.75rem; font-size: .95rem; font-weight: 600; }
+  .youtube-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(2rem, 4vw, 4.25rem); }
+  .youtube-featured { min-width: 0; }
+  .youtube-player { overflow: hidden; aspect-ratio: 16 / 9; border-radius: .6rem; background: var(--color-ink); }
+  .youtube-play { position: relative; display: block; width: 100%; height: 100%; padding: 0; border: 0; background: var(--color-ink); cursor: pointer; font: inherit; text-decoration: none; }
+  .youtube-play > img { width: 100%; height: 100%; object-fit: cover; transition: opacity 180ms ease-out; }
+  .youtube-play:hover > img { opacity: .85; }
+  .youtube-play:focus-visible { outline-offset: -5px; }
+  .youtube-play-label { position: absolute; bottom: 1.2rem; left: 1.2rem; display: inline-flex; align-items: center; gap: .8rem; min-height: 3rem; padding: .7rem 1rem; border-radius: .25rem; background: var(--color-paper); color: var(--color-ink); font-size: .9rem; font-weight: 650; }
+  .youtube-play-icon { width: 0; height: 0; border-top: .4rem solid transparent; border-bottom: .4rem solid transparent; border-left: .65rem solid currentColor; }
+  .youtube-player :global(iframe) { display: block; width: 100%; height: 100%; border: 0; }
+  .youtube-featured-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .6rem 1rem; margin-top: 1.4rem; color: var(--color-graphite); font-size: .8rem; line-height: 1.5; }
+  .youtube-featured h3 { max-width: 34ch; margin: .7rem 0 .8rem; font-size: clamp(1.5rem, 2vw, 2.25rem); line-height: 1.2; font-weight: 560; letter-spacing: -.025em; }
+  .youtube-watch-link { display: inline-flex; align-items: center; min-height: 2.75rem; gap: .5rem; font-size: .88rem; font-weight: 600; }
+  .youtube-privacy { margin: .8rem 0 0; color: var(--color-graphite); font-size: .76rem; line-height: 1.6; }
+  .youtube-more > h3 { margin: 0; padding: 0 0 1.1rem; border-bottom: 1px solid var(--color-line); font-size: 1rem; font-weight: 600; }
+  .youtube-list { list-style: none; padding: 0; margin: 0; }
+  .youtube-list > li { padding: 1.5rem 0; border-bottom: 1px solid var(--color-line); }
+  .youtube-list-link { display: grid; grid-template-columns: minmax(6.5rem, .9fr) minmax(0, 1.4fr); gap: 1.1rem; align-items: start; text-decoration: none; }
+  .youtube-list-image { overflow: hidden; aspect-ratio: 16 / 9; border-radius: .3rem; background: var(--color-paper); }
+  .youtube-list-image img { width: 100%; height: 100%; object-fit: cover; }
+  .youtube-list-copy time { color: var(--color-graphite); font-size: .75rem; }
+  .youtube-list-copy h4 { margin: .4rem 0 .65rem; font-size: clamp(.95rem, 1.1vw, 1.1rem); font-weight: 570; line-height: 1.35; letter-spacing: -.01em; }
+  .youtube-list-action { display: inline-block; color: var(--color-graphite); font-size: .72rem; text-decoration: underline; text-underline-offset: .2em; }
+  .youtube-list-link:hover h4 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .18em; }
+  @media (max-width: 1050px) {
+    .youtube-layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; }
+    .youtube-list-link { grid-template-columns: 6rem minmax(0, 1fr); gap: .85rem; }
+    .youtube-heading { align-items: flex-start; flex-direction: column; gap: 1rem; }
+  }
+  @media (max-width: 760px) {
+    .youtube-layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+    .youtube-list-link { grid-template-columns: minmax(6.5rem, .65fr) minmax(0, 1.35fr); gap: 1rem; }
+    .youtube-list-copy h4 { font-size: 1rem; }
+    .youtube-play-label { bottom: .8rem; left: .8rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .youtube-play > img { transition: none; } }
+</style>

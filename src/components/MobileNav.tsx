@@ -26,6 +26,9 @@ export default function MobileNav({ items, ui }: Props) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const scrimRef = useRef<HTMLDivElement>(null);
+  const releaseModalRef = useRef<(() => void) | null>(null);
+  const restoreFocusRef = useRef(true);
   const isMounted = phase !== "closed";
   const isInteractive = phase === "open";
 
@@ -35,6 +38,7 @@ export default function MobileNav({ items, ui }: Props) {
 
   const openMenu = () => {
     if (phase !== "open") {
+      restoreFocusRef.current = true;
       setPhase("opening");
     }
   };
@@ -42,13 +46,22 @@ export default function MobileNav({ items, ui }: Props) {
   const finishClose = useCallback(() => {
     setPhase("closed");
     window.requestAnimationFrame(() => {
-      triggerRef.current?.focus();
+      if (restoreFocusRef.current) {
+        triggerRef.current?.focus({ preventScroll: true });
+      }
     });
   }, []);
 
-  const closeMenu = useCallback(() => {
-    triggerRef.current?.focus();
-    setPhase((currentPhase) => (currentPhase === "closed" || currentPhase === "closing" ? currentPhase : "closing"));
+  const closeMenu = useCallback((restoreFocus = true) => {
+    restoreFocusRef.current = restoreFocus;
+    releaseModalRef.current?.();
+    if (restoreFocus) {
+      triggerRef.current?.focus({ preventScroll: true });
+    } else {
+      document.querySelector<HTMLElement>(".desktop-nav [aria-current], .site-header .brand")?.focus({ preventScroll: true });
+    }
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setPhase((currentPhase) => (currentPhase === "closed" || reducedMotion ? "closed" : "closing"));
   }, []);
 
   useEffect(() => {
@@ -81,7 +94,18 @@ export default function MobileNav({ items, ui }: Props) {
       return;
     }
 
-    closeRef.current?.focus();
+    const background = Array.from(document.body.children)
+      .filter((element): element is HTMLElement => element instanceof HTMLElement && element !== scrimRef.current)
+      .map((element) => ({ element, wasInert: element.inert ?? false }));
+
+    background.forEach(({ element }) => { element.inert = true; });
+    closeRef.current?.focus({ preventScroll: true });
+
+    const keepFocusInSheet = (event: FocusEvent) => {
+      if (event.target instanceof Node && !sheetRef.current?.contains(event.target)) {
+        closeRef.current?.focus({ preventScroll: true });
+      }
+    };
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -105,23 +129,50 @@ export default function MobileNav({ items, ui }: Props) {
       const firstElement = focusable[0];
       const lastElement = focusable[focusable.length - 1];
 
-      if (event.shiftKey && document.activeElement === firstElement) {
+      const focusIsOutside = !sheetRef.current.contains(document.activeElement);
+      if (event.shiftKey && (document.activeElement === firstElement || focusIsOutside)) {
         event.preventDefault();
         lastElement.focus();
       }
 
-      if (!event.shiftKey && document.activeElement === lastElement) {
+      if (!event.shiftKey && (document.activeElement === lastElement || focusIsOutside)) {
         event.preventDefault();
         firstElement.focus();
       }
     };
 
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("focusin", keepFocusInSheet);
+
+    const releaseModal = () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("focusin", keepFocusInSheet);
+      background.forEach(({ element, wasInert }) => { element.inert = wasInert; });
+    };
+    releaseModalRef.current = releaseModal;
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      releaseModal();
+      releaseModalRef.current = null;
     };
   }, [closeMenu, isInteractive]);
+
+  useEffect(() => {
+    if (!isMounted) {
+      return;
+    }
+
+    const desktop = window.matchMedia("(min-width: 1100px)");
+    const onDesktopChange = () => {
+      if (desktop.matches) {
+        closeMenu(false);
+      }
+    };
+
+    onDesktopChange();
+    desktop.addEventListener("change", onDesktopChange);
+    return () => desktop.removeEventListener("change", onDesktopChange);
+  }, [closeMenu, isMounted]);
 
   useEffect(() => {
     if (phase !== "closing") {
@@ -138,7 +189,7 @@ export default function MobileNav({ items, ui }: Props) {
       <button
         ref={triggerRef}
         type="button"
-        className="nav-trigger pressable material"
+        className="nav-trigger pressable"
         aria-expanded={isInteractive}
         aria-controls={dialogId}
         onClick={openMenu}
@@ -149,6 +200,7 @@ export default function MobileNav({ items, ui }: Props) {
       {isMounted
         ? createPortal(
             <div
+              ref={scrimRef}
               className="nav-scrim"
               data-state={isInteractive ? "open" : "closed"}
               role="presentation"
@@ -163,7 +215,8 @@ export default function MobileNav({ items, ui }: Props) {
               <div
                 id={dialogId}
                 ref={sheetRef}
-                className="nav-sheet material"
+                className="nav-sheet"
+                tabIndex={-1}
                 role={isInteractive ? "dialog" : undefined}
                 aria-modal={isInteractive ? "true" : undefined}
                 aria-label={isInteractive ? ui.mobileDialogLabel : undefined}
@@ -174,12 +227,12 @@ export default function MobileNav({ items, ui }: Props) {
                   }
                 }}
               >
-                <button ref={closeRef} type="button" className="nav-close pressable material" onClick={closeMenu}>
+                <button ref={closeRef} type="button" className="nav-close pressable" onClick={() => closeMenu()}>
                   {ui.closeLabel}
                 </button>
                 <nav aria-label={ui.mobileNavLabel}>
                   {items.map((item) => (
-                    <a key={item.href} className="pressable" href={item.href} onClick={closeMenu}>
+                    <a key={item.href} className="pressable" data-nav-link href={item.href} onClick={() => closeMenu()}>
                       {item.label}
                     </a>
                   ))}

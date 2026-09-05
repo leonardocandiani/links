@@ -11,15 +11,15 @@ html {
 }
 
 .pressable:active {
-  transform: scale(.975);
+  transform: scale(.96);
 }
 
 [data-reveal][data-reveal-ready]:not([data-visible="true"]) {
-  transform: translateY(1rem);
+  transform: translateY(1.25rem);
 }
 
 [data-reveal][data-reveal-ready] {
-  transition: transform 500ms var(--ease-out);
+  transition: transform 600ms var(--ease-out);
 }
 
 [data-reveal][data-visible="true"] {
@@ -27,12 +27,28 @@ html {
 }
 
 [data-media-reveal][data-reveal-ready] {
-  transform: scale(1.018);
-  transition: transform 900ms var(--ease-out);
+  transform: scale(1.025);
+  transition: transform 800ms var(--ease-out);
 }
 
 [data-media-reveal][data-visible="true"] {
   transform: scale(1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-content > .eyebrow,
+  .hero-content > .display,
+  .hero-content > .body-large,
+  .hero-content > .hero-actions {
+    animation: hero-arrive 650ms var(--ease-out) both;
+  }
+  .hero-content > .display { animation-delay: 60ms; }
+  .hero-content > .body-large { animation-delay: 120ms; }
+  .hero-content > .hero-actions { animation-delay: 180ms; }
+  @keyframes hero-arrive {
+    from { opacity: .15; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

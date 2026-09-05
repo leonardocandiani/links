@@ -94,7 +94,7 @@ function formatDescription(repository: GitHubRepository) {
                 />
               </figure>
               {featuredRepositories.map((repository, index) => (
-                <article class={`github-featured-card tone-${featuredToneByIndex[index] ?? "paper"}`}>
+                <article class={`github-featured-card tone-${featuredToneByIndex[index] ?? "paper"}`} data-reveal>
                   <div class="github-card-meta">
                     <span>{repository.language ?? ui.languageFallback}</span>
                     <span>{formatStars(repository.stars)}</span>
@@ -153,12 +153,14 @@ function formatDescription(repository: GitHubRepository) {
 
   .github-heading {
     display: grid;
-    max-width: 58rem;
+    max-width: none;
     gap: 1.35rem;
   }
 
   .github-heading-copy {
-    display: grid;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
     gap: 1.5rem;
     justify-items: start;
   }
@@ -195,8 +197,8 @@ function formatDescription(repository: GitHubRepository) {
   }
 
   .github-visual {
-    grid-column: span 7;
-    min-height: 25rem;
+    grid-column: span 5;
+    min-height: 21rem;
     margin: 0;
     overflow: hidden;
     border-radius: var(--radius-surface);
@@ -212,10 +214,10 @@ function formatDescription(repository: GitHubRepository) {
   }
 
   .github-featured-card {
-    grid-column: span 5;
+    grid-column: span 7;
     display: grid;
     align-content: start;
-    min-height: 24rem;
+    min-height: 20rem;
     padding: clamp(1.25rem, 2.5vw, 2rem);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-surface);
@@ -224,7 +226,7 @@ function formatDescription(repository: GitHubRepository) {
   }
 
   .github-featured-card:nth-of-type(3) {
-    grid-column: span 7;
+    grid-column: span 5;
   }
 
   .github-card-meta,
@@ -247,7 +249,7 @@ function formatDescription(repository: GitHubRepository) {
   }
 
   .github-featured-card h3 {
-    margin-top: clamp(3rem, 7vw, 5.75rem);
+    margin-top: clamp(2rem, 4vw, 3.25rem);
     font-size: clamp(1.85rem, 1.55rem + 1.1vw, 2.65rem);
     font-weight: 690;
     line-height: 1;
@@ -265,7 +267,7 @@ function formatDescription(repository: GitHubRepository) {
 
   .github-featured-card time {
     align-self: end;
-    margin-top: clamp(2rem, 5vw, 4rem);
+    margin-top: 2rem;
     color: var(--color-graphite);
     font-size: .92rem;
     font-weight: 700;
@@ -284,6 +286,7 @@ function formatDescription(repository: GitHubRepository) {
 
   .github-featured-card a:hover,
   .github-recent-item a:hover {
+    text-decoration-line: underline;
     text-decoration-thickness: .08em;
     text-underline-offset: .18em;
   }
@@ -373,14 +376,11 @@ function formatDescription(repository: GitHubRepository) {
       grid-template-columns: 1fr;
     }
 
+    .github-heading-copy { display: grid; }
     .github-featured-grid {
-      display: flex;
-      width: calc(100% + var(--space-page));
-      padding-right: var(--space-page);
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: inline mandatory;
-      scrollbar-width: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
     }
 
     .github-featured-grid::-webkit-scrollbar {
@@ -390,17 +390,17 @@ function formatDescription(repository: GitHubRepository) {
     .github-visual,
     .github-featured-card,
     .github-featured-card:nth-of-type(3) {
-      flex: 0 0 82vw;
-      scroll-snap-align: start;
+      grid-column: 1;
     }
 
     .github-visual {
-      min-height: 21rem;
+      min-height: 0;
+      aspect-ratio: 16 / 7;
     }
 
     .github-visual + .github-featured-card,
     .github-featured-card + .github-featured-card {
-      margin-left: 1rem;
+      margin-left: 0;
     }
 
     .github-recent-meta {
@@ -409,7 +409,9 @@ function formatDescription(repository: GitHubRepository) {
     }
 
     .github-featured-card {
-      min-height: 18rem;
+      min-height: 0;
     }
+
+    .github-featured-card h3 { margin-top: 1.75rem; }
   }
 </style>

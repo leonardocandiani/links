@@ -1,4 +1,4 @@
-import { useId, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useState, type KeyboardEvent } from "react";
 
 import type { RepertoireArea } from "../types/site";
 
@@ -10,8 +10,13 @@ type Props = {
 
 export default function RepertoireExplorer({ areas, tabsLabel, toolsLabel }: Props) {
   const [activeId, setActiveId] = useState(areas[0]?.id ?? "");
+  const [isHydrated, setIsHydrated] = useState(false);
   const panelPrefix = useId();
   const activeArea = areas.find((area) => area.id === activeId) ?? areas[0];
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   if (!activeArea) {
     return null;
@@ -39,44 +44,52 @@ export default function RepertoireExplorer({ areas, tabsLabel, toolsLabel }: Pro
   }
 
   return (
-    <div className="repertoire-explorer">
-      <div className="repertoire-tabs" role="tablist" aria-label={tabsLabel}>
+    <div className="repertoire-explorer" data-enhanced={isHydrated ? "true" : "false"}>
+      <div className="repertoire-tabs" role={isHydrated ? "tablist" : "navigation"} aria-label={tabsLabel}>
         {areas.map((area, index) => (
-          <button
+          isHydrated ? <button
             className="repertoire-tab pressable"
             id={`${panelPrefix}-tab-${area.id}`}
             key={area.id}
             type="button"
             role="tab"
-            aria-controls={`${panelPrefix}-panel`}
+            aria-controls={`${panelPrefix}-panel-${area.id}`}
             aria-selected={activeArea.id === area.id}
             tabIndex={activeArea.id === area.id ? 0 : -1}
             onClick={() => setActiveId(area.id)}
             onKeyDown={(event) => selectByOffset(event, index)}
           >
             {area.label}
-          </button>
+          </button> : <a
+            key={area.id}
+            className="repertoire-tab pressable"
+            href={`#${panelPrefix}-panel-${area.id}`}
+          >
+            {area.label}
+          </a>
         ))}
       </div>
 
-      <div
+      {areas.map((area, areaIndex) => <div
         className="repertoire-panel"
-        id={`${panelPrefix}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${panelPrefix}-tab-${activeArea.id}`}
-        key={activeArea.id}
+        id={`${panelPrefix}-panel-${area.id}`}
+        role={isHydrated && activeArea.id === area.id ? "tabpanel" : undefined}
+        aria-labelledby={isHydrated ? `${panelPrefix}-tab-${area.id}` : undefined}
+        hidden={isHydrated && activeArea.id !== area.id}
+        tabIndex={isHydrated && activeArea.id === area.id ? 0 : undefined}
+        key={area.id}
       >
         <div className="repertoire-summary">
-          <p className="repertoire-count">{String(areas.findIndex((area) => area.id === activeArea.id) + 1).padStart(2, "0")}</p>
-          <h3>{activeArea.title}</h3>
-          <p>{activeArea.description}</p>
+          <p className="repertoire-count">{String(areaIndex + 1).padStart(2, "0")}</p>
+          <h3>{area.title}</h3>
+          <p>{area.description}</p>
           <ul className="repertoire-tools" aria-label={toolsLabel}>
-            {activeArea.tools.map((tool) => <li key={tool}>{tool}</li>)}
+            {area.tools.map((tool) => <li key={tool}>{tool}</li>)}
           </ul>
         </div>
 
         <ol className="repertoire-items">
-          {activeArea.items.map((item, index) => (
+          {area.items.map((item, index) => (
             <li key={item.title}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
@@ -86,7 +99,7 @@ export default function RepertoireExplorer({ areas, tabsLabel, toolsLabel }: Pro
             </li>
           ))}
         </ol>
-      </div>
+      </div>)}
       <style>{styles}</style>
     </div>
   );
@@ -101,41 +114,62 @@ const styles = `
 
   .repertoire-tabs {
     display: flex;
-    gap: .35rem;
-    padding-block: .75rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .repertoire-tabs::-webkit-scrollbar {
-    display: none;
+    flex-wrap: wrap;
+    gap: .25rem .75rem;
+    padding-block: .5rem;
+    border-bottom: 1px solid var(--color-line);
   }
 
   .repertoire-tab {
-    min-height: 44px;
-    flex: 0 0 auto;
-    padding: .65rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    flex: 1 1 auto;
+    padding: .65rem .5rem;
     border: 0;
-    border-radius: var(--radius-control);
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
     background: transparent;
     color: var(--color-muted);
     cursor: pointer;
     font: inherit;
     font-size: .93rem;
     font-weight: 580;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    text-wrap: balance;
   }
 
   .repertoire-tab[aria-selected="true"] {
-    background: var(--color-ink);
-    color: var(--color-paper);
+    border-bottom-color: var(--color-ink);
+    color: var(--color-ink);
+    font-weight: 680;
+  }
+
+  .repertoire-tab:hover {
+    color: var(--color-ink);
   }
 
   .repertoire-panel {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(24rem, .82fr);
-    gap: clamp(2.5rem, 7vw, 7rem);
-    padding-block: clamp(2rem, 5vw, 4.5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    padding-block: clamp(2rem, 4vw, 3.5rem);
+    scroll-margin-top: 6rem;
+  }
+
+  .repertoire-panel[hidden] {
+    display: none;
+  }
+
+  .repertoire-explorer[data-enhanced="true"] .repertoire-panel:not([hidden]) {
     animation: repertoire-in 320ms var(--ease-out) both;
+  }
+
+  .repertoire-explorer[data-enhanced="false"] .repertoire-panel + .repertoire-panel {
+    border-top: 1px solid var(--color-line);
   }
 
   .repertoire-summary {
@@ -145,7 +179,7 @@ const styles = `
   }
 
   .repertoire-count {
-    margin: 0 0 clamp(1rem, 4vw, 3rem);
+    margin: 0 0 .5rem;
     color: var(--color-graphite);
     font-size: .9rem;
     font-weight: 620;
@@ -177,17 +211,14 @@ const styles = `
   .repertoire-tools {
     display: flex;
     flex-wrap: wrap;
-    gap: .5rem;
+    gap: .4rem 1rem;
     margin: 1rem 0 0;
     padding: 0;
     list-style: none;
   }
 
   .repertoire-tools li {
-    padding: .55rem .75rem;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-control);
-    background: rgb(251 250 247 / 52%);
+    padding: .35rem 0;
     color: var(--color-graphite);
     font-size: .82rem;
     font-weight: 570;
@@ -238,8 +269,17 @@ const styles = `
 
   @media (max-width: 52rem) {
     .repertoire-tabs {
-      width: calc(100% + var(--space-page));
-      padding-right: var(--space-page);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .25rem .5rem;
+    }
+
+    .repertoire-tab {
+      font-size: .875rem;
+    }
+
+    .repertoire-tab:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
     }
 
     .repertoire-panel {
@@ -249,7 +289,7 @@ const styles = `
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .repertoire-panel {
+    .repertoire-explorer[data-enhanced="true"] .repertoire-panel:not([hidden]) {
       animation: none;
     }
   }

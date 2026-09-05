@@ -27,7 +27,7 @@
 
 Portfólio pessoal de Leonardo Candiani, publicado em [leonardocandiani.com.br](https://leonardocandiani.com.br).
 
-O site apresenta liderança em IA, repertório de produtos e sistemas, o Minino Jarvis como case empresarial, educação corporativa e projetos open source.
+O site apresenta liderança em IA, repertório de produtos e sistemas, o Minino Jarvis como case empresarial, educação corporativa, projetos open source e vídeos do YouTube.
 
 ## Stack
 
@@ -58,9 +58,28 @@ npm run build
 - `/`: versão em português
 - `/en/`: versão em inglês
 
+## Conteúdo público
+
+O build atualiza os projetos públicos do GitHub e os vídeos do canal `@oleonardocandiani` antes de gerar as duas rotas. Não exige token do YouTube.
+
+```bash
+npm run sync:github
+npm run sync:youtube
+```
+
+O YouTube usa o feed público do canal `UCqO85XZNoBRx1SuYX20Nbgw`. O sincronizador valida o XML, a identidade do canal e os links antes de substituir o snapshot local. Em falhas de rede, preserva uma cópia válida; se também não houver cópia válida, o build falha explicitamente.
+
+São armazenados seis vídeos. A página apresenta o mais recente em destaque e outros três, com títulos e datas originais. O player `youtube-nocookie` só é criado após interação. As capas são imagens públicas do YouTube, carregadas sob demanda.
+
+Novas publicações entram no próximo build. Não há um agendamento de atualização ou deploy configurado neste repositório.
+
 ## Produção
 
 A branch `main` é a fonte canônica do site. O build gera arquivos estáticos em `dist/`.
+
+`vercel.json` fixa o preset Astro, a instalação por `npm ci`, o build por `npm run build` e a publicação de `dist/`. O projeto existente na Vercel é `leonardo-candiani-site`.
+
+Publicar código no GitHub não comprova deploy: a integração do provedor e a versão servida no domínio devem ser verificadas separadamente.
 
 <br>
 

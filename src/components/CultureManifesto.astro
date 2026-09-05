@@ -52,7 +52,7 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
 
 <style>
   .culture {
-    background: var(--color-paper);
+    background: var(--color-sky-light);
     color: var(--color-ink);
   }
 
@@ -64,11 +64,10 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
   .culture-stage {
     display: grid;
     grid-template-columns: minmax(0, 48%) minmax(0, 52%);
-    min-height: clamp(34rem, 48vw, 43rem);
+    min-height: clamp(29rem, 40vw, 36rem);
     overflow: hidden;
-    border: 1px solid var(--color-line);
     border-radius: var(--radius-surface);
-    background: var(--color-paper);
+    background: transparent;
   }
 
   .culture-copy {
@@ -76,7 +75,7 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
     align-content: center;
     min-width: 0;
     gap: clamp(1.25rem, 2.4vw, 1.75rem);
-    padding: clamp(2rem, 5vw, 5rem);
+    padding: clamp(1.25rem, 3vw, 3rem) clamp(1rem, 3vw, 3rem) clamp(1.25rem, 3vw, 3rem) 0;
   }
 
   .culture-copy .eyebrow {
@@ -85,13 +84,13 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
   }
 
   .culture-copy h2 {
-    max-width: 9.6ch;
+    max-width: 11ch;
     margin: 0;
     color: var(--color-ink);
-    font-size: clamp(3.25rem, 3rem + 3vw, 6rem);
+    font-size: clamp(3.1rem, 2.4rem + 3vw, 5.7rem);
     font-weight: 590;
     letter-spacing: -.057em;
-    line-height: .92;
+    line-height: 1.02;
   }
 
   .culture-limit-word {
@@ -102,15 +101,7 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
   }
 
   .culture-limit-word::after {
-    position: absolute;
-    z-index: -1;
-    top: 57%;
-    left: -.1em;
-    width: 100vw;
-    height: 1px;
-    background: var(--color-boundary);
-    content: "";
-    pointer-events: none;
+    content: none;
   }
 
   .culture-description {
@@ -124,7 +115,8 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
   .culture-media {
     position: relative;
     min-width: 0;
-    min-height: clamp(34rem, 48vw, 43rem);
+    min-height: clamp(29rem, 40vw, 36rem);
+    border-radius: var(--radius-surface);
     margin: 0;
     overflow: hidden;
     background: var(--color-sky-light);
@@ -224,12 +216,12 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
     }
 
     .culture-copy {
-      min-height: 32rem;
-      padding: clamp(2rem, 8vw, 3.5rem) clamp(1.5rem, 6vw, 3rem);
+      min-height: 0;
+      padding: 0 0 2rem;
     }
 
     .culture-copy h2 {
-      font-size: clamp(2.8rem, 14vw, 5.25rem);
+      font-size: clamp(2.6rem, 11vw, 4.5rem);
     }
 
     .culture-limit-word::after {
@@ -238,7 +230,7 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
     }
 
     .culture-media {
-      min-height: clamp(21rem, 84vw, 34rem);
+      min-height: clamp(17rem, 64vw, 28rem);
     }
 
     .culture-echoes {

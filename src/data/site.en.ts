@@ -7,18 +7,19 @@ export const siteContentEn = {
     { label: "Jarvis", href: "#jarvis" },
     { label: "Education", href: "#educacao" },
     { label: "Open source", href: "#github" },
+    { label: "YouTube", href: "#youtube" },
     { label: "Contact", href: "#contato" }
   ],
   hero: {
     name: "Leonardo Candiani",
-    eyebrow: "Founder and applied AI operator",
+    eyebrow: "Leadership, technology and education",
     title: "I build the intelligence that helps companies act.",
     limitWord: "act.",
-    description: "Systems, agents, and products that connect context, decisions, and execution in the real world."
+    description: "I lead people and build AI systems that turn what a company knows into what it can do."
   },
   about: {
     title: "Operations before hype.",
-    lead: "Automation since 2018, artificial intelligence since 2019, and one constant obsession: turning manual process into systems that run on their own.",
+    lead: "My work connects leadership, product and engineering. Understanding operations, giving people direction and building technology that moves work forward.",
     body: [
       "I have a background in Business Administration, I am a cofounder of SixQuasar, and I build technology inside real operations. My work sits between strategy, product, and engineering, from the business problem to the system in production.",
       "Proteauto, SegSmart, IACall, and SixQuasar projects are my daily lab. What I learn while building agents, CRMs, automations, products, and infrastructure also becomes open tooling and public content."
@@ -37,7 +38,7 @@ export const siteContentEn = {
     description:
       "To me, creativity is applied range: seeing possibilities, testing paths, and turning ideas into real capability.",
     imageCaption: "An idea stops being abstract when someone starts building it.",
-    bridgeTitle: "The line opens the idea. The next sections show what it produces.",
+    bridgeTitle: "A culture that becomes a way of working.",
     echoes: [
       {
         label: "Capabilities",

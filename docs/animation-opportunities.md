@@ -1,5 +1,7 @@
 # Relatório de Motion
 
+Este registro descreve a primeira versão do portfólio. A evolução de hierarquia, acessibilidade e movimento está em [Revisão da experiência](./portfolio-experience-review.md).
+
 ## Oportunidades aprovadas
 
 1. Jarvis state entries: entrada contida nos blocos condicionais da demo (`director`, `consulting`, `answer`, `success`) sem alterar a máquina de estados.

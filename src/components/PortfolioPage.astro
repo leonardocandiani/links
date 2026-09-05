@@ -9,6 +9,7 @@ import JarvisCaseStudy from "./jarvis/JarvisCaseStudy.astro";
 import PublicPresence from "./PublicPresence.astro";
 import SiteHeader from "./SiteHeader.astro";
 import VisionSection from "./VisionSection.astro";
+import YouTubeSection from "./YouTubeSection.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import type { SiteContent, SiteLocale } from "../types/site";
 import type { SiteUiCopy } from "../data/ui";
@@ -32,6 +33,7 @@ const { locale, content, ui } = Astro.props;
     <JarvisCaseStudy jarvis={content.jarvis} locale={locale} ui={ui.jarvis} />
     <EducationSection education={content.education} ui={ui.education} />
     <GitHubProjects ui={ui.github} />
+    <YouTubeSection locale={locale} />
     <PublicPresence links={content.links} ui={ui.presence} />
   </main>
   <ContactFooter ui={ui.contact} />

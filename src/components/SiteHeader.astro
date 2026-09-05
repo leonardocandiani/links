@@ -16,13 +16,13 @@ const { navigation: navItems, ui } = Astro.props;
 </script>
 <header class="site-header">
   <div class="header-shell material">
-    <a class="brand brand-signature pressable" href="#conteudo" aria-label={ui.homeLabel}>
-      <span class="brand-signature__given">Leonardo</span>
-      <span class="brand-signature__surname">Candiani</span>
+    <a class="brand pressable" href="#conteudo" aria-label={ui.homeLabel}>
+      <span class="brand__given">Leonardo</span>
+      <span class="brand__surname">Candiani</span>
     </a>
     <nav class="desktop-nav" aria-label={ui.primaryNavLabel}>
       {navItems.map((item) => (
-        <a class="pressable" href={item.href}>{item.label}</a>
+        <a class="pressable" data-nav-link href={item.href}>{item.label}</a>
       ))}
       <a
         class="language-switch pressable"
@@ -39,10 +39,10 @@ const { navigation: navItems, ui } = Astro.props;
         aria-label={ui.languageLabel}
       >{ui.languageCode}</a>
       <details class="mobile-nav-fallback">
-        <summary class="nav-trigger pressable material">{ui.menuLabel}</summary>
+        <summary class="nav-trigger pressable">{ui.menuLabel}</summary>
         <nav aria-label={ui.noJsNavLabel}>
           {navItems.map((item) => (
-            <a class="pressable" href={item.href}>{item.label}</a>
+            <a class="pressable" data-nav-link href={item.href}>{item.label}</a>
           ))}
           <a class="pressable" href={ui.languageHref} lang={ui.languageHref === "/" ? "pt-BR" : "en"}>{ui.languageLabel}</a>
         </nav>
@@ -66,19 +66,18 @@ const { navigation: navItems, ui } = Astro.props;
   .header-shell {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: clamp(.5rem, 1vw, .75rem);
-    width: max-content;
-    max-width: 100%;
-    min-height: 3.25rem;
+    justify-content: space-between;
+    gap: .5rem;
+    width: min(100%, 70rem);
+    min-height: 3.75rem;
     margin-inline: auto;
-    padding: .375rem;
-    border: 1px solid rgb(23 21 19 / 10%);
-    border-radius: var(--radius-control);
-    background-color: rgb(251 250 247 / 72%);
-    box-shadow: 0 1rem 2.75rem rgb(23 21 19 / 10%);
-    -webkit-backdrop-filter: blur(22px) saturate(1.25);
-    backdrop-filter: blur(22px) saturate(1.25);
+    padding: .4375rem;
+    border: 1px solid var(--color-line);
+    border-radius: .875rem;
+    background-color: rgb(251 250 247 / 94%);
+    box-shadow: 0 2px 8px rgb(23 21 19 / 5%);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     pointer-events: auto;
   }
 
@@ -90,29 +89,31 @@ const { navigation: navItems, ui } = Astro.props;
     align-items: center;
     justify-content: center;
     min-height: 2.75rem;
-    border-radius: var(--radius-control);
+    min-width: 2.75rem;
+    border-radius: .4375rem;
     color: var(--color-ink);
     font-size: .9rem;
     font-weight: 600;
     letter-spacing: 0;
-    line-height: 1;
+    line-height: 1.15;
     text-decoration: none;
     white-space: nowrap;
   }
 
   .site-header .brand {
+    flex: 0 0 auto;
     align-items: center;
-    padding-inline: 1rem;
-    border-radius: 0;
+    gap: .3em;
+    padding-inline: .75rem;
     background: transparent;
   }
 
-  .site-header .brand-signature__surname {
-    margin-left: .3em;
+  .site-header .brand__given {
+    font-weight: 500;
   }
 
-  .site-header .brand-signature__surname::before {
-    display: none;
+  .site-header .brand__surname {
+    font-weight: 700;
   }
 
   .desktop-nav {
@@ -122,14 +123,14 @@ const { navigation: navItems, ui } = Astro.props;
   }
 
   .desktop-nav a {
-    padding-inline: .72rem;
+    padding-inline: clamp(.5rem, .75vw, .75rem);
     color: var(--color-graphite);
   }
 
   .desktop-nav .language-switch {
     margin-left: .25rem;
     border-left: 1px solid var(--color-line);
-    border-radius: 0 var(--radius-control) var(--radius-control) 0;
+    border-radius: 0 .4375rem .4375rem 0;
   }
 
   .site-header .mobile-language-switch {
@@ -147,6 +148,11 @@ const { navigation: navItems, ui } = Astro.props;
     color: var(--color-ink);
   }
 
+  [data-nav-link][aria-current="location"] {
+    color: var(--color-ink);
+    background-color: rgb(23 21 19 / 7%);
+  }
+
   .mobile-nav,
   .mobile-nav-fallback {
     display: none;
@@ -155,7 +161,7 @@ const { navigation: navItems, ui } = Astro.props;
   .nav-trigger,
   .nav-close {
     border: 1px solid var(--color-line);
-    background-color: rgb(251 250 247 / 72%);
+    background-color: transparent;
     cursor: pointer;
     font-family: inherit;
   }
@@ -218,7 +224,7 @@ const { navigation: navItems, ui } = Astro.props;
     justify-content: center;
     height: 100dvh;
     max-height: 100dvh;
-    padding: 1rem;
+    padding: 1rem 1rem max(1rem, env(safe-area-inset-bottom));
     background-color: rgb(23 21 19 / 28%);
     opacity: 1;
     transition: opacity var(--duration-ui) var(--ease-out);
@@ -275,38 +281,9 @@ const { navigation: navItems, ui } = Astro.props;
     background-color: rgb(23 21 19 / 6%);
   }
 
-  @media (max-width: 51rem) {
+  @media (max-width: 1099.98px) {
     .site-header {
       top: .75rem;
-    }
-
-    .header-shell {
-      width: min(100%, 26rem);
-      min-height: 2.75rem;
-      padding: 0;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      box-shadow: none;
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-    }
-
-    .brand {
-      min-height: 2.75rem;
-      padding-inline: .8rem;
-      border: 1px solid rgb(23 21 19 / 10%);
-      border-radius: .875rem;
-      background-color: rgb(251 250 247 / 88%);
-      box-shadow: 0 .65rem 1.75rem rgb(23 21 19 / 10%);
-      -webkit-backdrop-filter: blur(16px) saturate(1.1);
-      backdrop-filter: blur(16px) saturate(1.1);
-      font-size: .9rem;
-    }
-
-    .site-header .brand-signature__given,
-    .site-header .brand-signature__surname {
-      font-weight: 650;
     }
 
     .desktop-nav {
@@ -317,13 +294,6 @@ const { navigation: navItems, ui } = Astro.props;
       display: flex;
       align-items: center;
       margin-left: auto;
-      padding-inline: .2rem;
-      border: 1px solid rgb(23 21 19 / 10%);
-      border-radius: .875rem;
-      background-color: rgb(251 250 247 / 88%);
-      box-shadow: 0 .65rem 1.75rem rgb(23 21 19 / 10%);
-      -webkit-backdrop-filter: blur(16px) saturate(1.1);
-      backdrop-filter: blur(16px) saturate(1.1);
     }
 
     .site-header .mobile-language-switch {
@@ -343,11 +313,11 @@ const { navigation: navItems, ui } = Astro.props;
       display: block;
     }
 
-    html.js .mobile-nav {
+    .mobile-nav[data-hydrated="true"] {
       display: block;
     }
 
-    html.js .mobile-nav-fallback {
+    .mobile-controls:has(.mobile-nav[data-hydrated="true"]) .mobile-nav-fallback {
       display: none;
     }
 
@@ -361,21 +331,37 @@ const { navigation: navItems, ui } = Astro.props;
   }
 
   @media (max-width: 22rem) {
-    .brand {
-      padding-inline: .7rem;
+    .site-header .brand {
+      padding-inline: .375rem;
       font-size: .82rem;
+    }
+
+    .nav-trigger {
+      padding-inline: .6rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .nav-scrim {
-      transition: opacity 120ms linear;
+      transition: none;
     }
 
     .nav-sheet,
     .nav-scrim[data-state="closed"] .nav-sheet {
       transform: none;
       transition: none;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .header-shell {
+      background-color: var(--color-paper);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+
+    .nav-scrim {
+      background-color: var(--color-graphite);
     }
   }
 </style>

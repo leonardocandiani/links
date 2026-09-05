@@ -25,6 +25,7 @@ const { hero, ui } = Astro.props;
   </picture>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="hero-content page-width">
+    <p class="hero-byline">{hero.name} <span>{ui.locationLabel}</span></p>
     <p class="eyebrow">{hero.eyebrow}</p>
     <h1 id="hero-title" class="display">{hero.title}</h1>
     <p class="body-large">{hero.description}</p>
@@ -32,6 +33,7 @@ const { hero, ui } = Astro.props;
       <a class="hero-button hero-button-primary pressable" href="#sobre">{ui.primaryCta}</a>
       <a class="hero-button hero-button-secondary pressable" href="#repertorio">{ui.secondaryCta}</a>
     </div>
+    <a class="hero-next" href="#cultura">{ui.cultureLabel}<span aria-hidden="true">↓</span></a>
   </div>
 </section>
 
@@ -39,7 +41,7 @@ const { hero, ui } = Astro.props;
   .hero {
     position: relative;
     display: grid;
-    min-height: 100svh;
+    min-height: 0;
     background: var(--color-ink);
     color: white;
     isolation: isolate;
@@ -80,9 +82,9 @@ const { hero, ui } = Astro.props;
     display: grid;
     align-content: end;
     min-height: 100svh;
-    gap: clamp(.9rem, 2vw, 1.3rem);
-    padding-top: 7rem;
-    padding-bottom: clamp(1.5rem, 5vh, 3rem);
+    gap: clamp(1rem, 2vw, 1.6rem);
+    padding-top: 8rem;
+    padding-bottom: 2rem;
   }
 
   .hero .eyebrow {
@@ -91,16 +93,16 @@ const { hero, ui } = Astro.props;
   }
 
   .hero .display {
-    max-width: 10ch;
+    max-width: 18ch;
     color: white;
-    font-size: clamp(2.45rem, 2.1rem + 1.8vw, 3.75rem);
+    font-size: clamp(2.65rem, 2rem + 3vw, 4.5rem);
     font-weight: 590;
-    line-height: .94;
+    line-height: 1.02;
     text-wrap: balance;
   }
 
   .hero .body-large {
-    max-width: 31rem;
+    max-width: 36rem;
     color: rgb(255 255 255 / 88%);
     font-size: clamp(1rem, .94rem + .25vw, 1.125rem);
     line-height: 1.5;
@@ -110,8 +112,36 @@ const { hero, ui } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     gap: .75rem;
-    padding-top: .35rem;
+    padding-top: .5rem;
   }
+
+  .hero-byline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    inset: 7.5rem 0 auto;
+    width: min(100% - var(--space-page) * 2, var(--content-wide));
+    margin: 0 auto;
+    font-size: .88rem;
+    font-weight: 560;
+  }
+
+  .hero-byline span { color: rgb(255 255 255 / 78%); }
+  .hero-next {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3rem;
+    margin-top: clamp(2rem, 6vh, 4rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 26%);
+    font-size: .85rem;
+    text-decoration: none;
+  }
+  .hero-next span { font-size: 1.3rem; transition: transform 200ms var(--ease-out); }
+  .hero-next:hover span { transform: translateY(3px); }
 
   .hero-button {
     display: inline-flex;
@@ -135,9 +165,8 @@ const { hero, ui } = Astro.props;
   }
 
   .hero-button-secondary {
-    border: 1px solid rgb(255 255 255 / 54%);
-    background-color: #45332a;
-    background-color: rgb(23 21 19 / 58%);
+    border: 1px solid rgb(255 255 255 / 36%);
+    background-color: rgb(15 22 26 / 74%);
     color: white;
   }
 
@@ -174,28 +203,28 @@ const { hero, ui } = Astro.props;
       background:
         linear-gradient(
           90deg,
-          rgb(8 12 16 / 72%) 0%,
-          rgb(8 12 16 / 58%) 24%,
-          rgb(8 12 16 / 24%) 47%,
-          rgb(8 12 16 / 0%) 72%
+          rgb(8 12 16 / 88%) 0%,
+          rgb(8 12 16 / 78%) 38%,
+          rgb(8 12 16 / 54%) 64%,
+          rgb(8 12 16 / 12%) 100%
         );
     }
 
     .hero .display {
-      max-width: 9.5ch;
-      font-size: clamp(4.25rem, 5.4vw, 5.8rem);
-      line-height: .92;
+      max-width: 18ch;
+      font-size: clamp(4rem, 5.5vw, 5.8rem);
+      line-height: 1.01;
     }
 
     .hero-content {
       align-content: end;
-      min-height: 100svh;
-      padding-top: clamp(7rem, 14vh, 9rem);
-      padding-bottom: clamp(2rem, 8vh, 5.5rem);
+      min-height: min(58rem, 100svh);
+      padding-top: 12rem;
+      padding-bottom: 1.75rem;
     }
 
     .hero .body-large {
-      font-size: clamp(1.125rem, 1rem + .65vw, 1.5rem);
+      font-size: clamp(1.125rem, 1rem + .45vw, 1.3rem);
       line-height: 1.55;
     }
 
@@ -203,8 +232,14 @@ const { hero, ui } = Astro.props;
 
   @media (max-width: 32rem) {
     .hero-content {
-      padding-bottom: 1.5rem;
+      padding-top: 12rem;
+      padding-bottom: 1.25rem;
+      min-height: 92svh;
     }
+
+    .hero-byline { top: 6rem; font-size: .75rem; }
+    .hero .display { max-width: 16ch; font-size: clamp(2.5rem, 10.7vw, 3.35rem); }
+    .hero-next { margin-top: 1rem; font-size: .76rem; }
 
     .hero-actions {
       width: 100%;

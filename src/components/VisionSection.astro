@@ -21,7 +21,6 @@ const { about, ui } = Astro.props;
     <div class="about-story">
       <figure class="about-portrait" data-media-reveal>
         <picture>
-          <source media="(min-width: 48rem)" srcset="/images/leonardo-portrait-wide.webp" type="image/webp" />
           <img
             src="/images/leonardo-portrait-mobile.webp"
             alt={ui.imageAlt}
@@ -38,7 +37,7 @@ const { about, ui } = Astro.props;
       </div>
     </div>
 
-    <dl class="about-stats" aria-label={ui.statsLabel} tabindex="0">
+    <dl class="about-stats" aria-label={ui.statsLabel}>
       {about.stats.map((stat) => (
         <div>
           <dt>{stat.label}</dt>
@@ -56,7 +55,7 @@ const { about, ui } = Astro.props;
 
   .about-shell {
     display: grid;
-    gap: clamp(3rem, 7vw, 6.5rem);
+    gap: clamp(2.5rem, 5vw, 4rem);
   }
 
   .about-heading {
@@ -91,16 +90,20 @@ const { about, ui } = Astro.props;
   .about-story {
     position: relative;
     display: grid;
-    min-height: clamp(35rem, 55vw, 48rem);
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 6rem);
+    min-height: 0;
     overflow: hidden;
     border-radius: var(--radius-surface);
-    background: var(--color-sky-light);
+    background: transparent;
     isolation: isolate;
   }
 
   .about-portrait {
     position: relative;
-    grid-area: 1 / 1;
+    grid-area: auto;
+    min-height: 32rem;
     margin: 0;
     overflow: hidden;
     border-radius: var(--radius-surface);
@@ -119,24 +122,19 @@ const { about, ui } = Astro.props;
   .about-copy {
     position: relative;
     z-index: 1;
-    grid-area: 1 / 1;
+    grid-area: auto;
     display: grid;
     align-self: center;
     gap: 1.5rem;
-    width: min(38rem, calc(100% - 3rem));
-    margin-left: clamp(1.5rem, 5vw, 5rem);
-    padding: clamp(1.5rem, 3vw, 2.75rem);
-    border: 1px solid rgb(251 250 247 / 48%);
-    border-radius: calc(var(--radius-surface) - .5rem);
-    background: rgb(251 250 247 / 90%);
-    box-shadow: 0 1.5rem 4rem rgb(23 21 19 / 10%);
+    width: 100%;
+    padding-block: 1rem;
   }
 
   .about-copy p,
   .about-copy blockquote {
     margin: 0;
     color: var(--color-muted);
-    font-size: clamp(1.08rem, 1rem + .4vw, 1.3rem);
+    font-size: clamp(1rem, .96rem + .25vw, 1.15rem);
     line-height: 1.62;
   }
 
@@ -159,8 +157,8 @@ const { about, ui } = Astro.props;
 
   .about-stats div {
     display: grid;
-    gap: 2.5rem;
-    min-height: 12rem;
+    gap: 1.5rem;
+    min-height: 9rem;
     padding: 1.5rem clamp(1rem, 3vw, 2.5rem);
   }
 
@@ -179,7 +177,7 @@ const { about, ui } = Astro.props;
     align-self: end;
     margin: 0;
     color: var(--color-ink);
-    font-size: clamp(3rem, 2.35rem + 3.2vw, 6.5rem);
+    font-size: clamp(2rem, 2rem + 2vw, 4rem);
     font-weight: 560;
     letter-spacing: -.055em;
     line-height: .86;
@@ -200,6 +198,7 @@ const { about, ui } = Astro.props;
 
     .about-story {
       display: grid;
+      grid-template-columns: 1fr;
       min-height: 0;
       overflow: visible;
       gap: 2rem;
@@ -209,7 +208,8 @@ const { about, ui } = Astro.props;
     .about-portrait {
       grid-area: auto;
       width: 100%;
-      min-height: 34rem;
+      min-height: 0;
+      aspect-ratio: 4 / 4.5;
     }
 
     .about-portrait img {
@@ -219,19 +219,13 @@ const { about, ui } = Astro.props;
     .about-copy {
       grid-area: auto;
       width: auto;
-      margin: -5rem 1rem 0;
-      padding: 1.35rem;
-      border-radius: 1.25rem;
-      background: rgb(251 250 247 / 96%);
+      margin: 0;
+      padding: 0;
     }
 
     .about-stats {
-      grid-template-columns: repeat(3, 73vw);
-      width: calc(100% + var(--space-page));
-      overflow-x: auto;
-      overscroll-behavior-inline: contain;
-      scroll-snap-type: inline mandatory;
-      scrollbar-width: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      width: 100%;
     }
 
     .about-stats::-webkit-scrollbar {
@@ -239,9 +233,11 @@ const { about, ui } = Astro.props;
     }
 
     .about-stats div {
-      min-height: 11rem;
-      scroll-snap-align: start;
+      min-height: 8rem;
+      padding: 1rem .6rem;
     }
+
+    .about-stats dt { font-size: .75rem; }
 
   }
 </style>

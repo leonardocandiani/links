@@ -4,8 +4,8 @@ export const siteUiByLocale = {
   "pt-BR": {
     seo: {
       title: "Leonardo Candiani | IA, produtos e sistemas que operam empresas",
-      description: "Fundador e operador de IA. Projetos, sistemas e open source construídos por Leonardo Candiani.",
-      jobTitle: "Fundador e operador de IA",
+      description: "Leonardo Candiani: liderança em IA, produtos e educação corporativa. Conheça o Minino Jarvis, projetos open source e conteúdo sobre tecnologia aplicada.",
+      jobTitle: "Líder de inteligência artificial e cofundador da SixQuasar",
       ogLocale: "pt_BR"
     },
     layout: { skipLink: "Pular para o conteúdo" },
@@ -22,6 +22,8 @@ export const siteUiByLocale = {
       languageHref: "/en/"
     },
     hero: {
+      locationLabel: "Maringá, Brasil",
+      cultureLabel: "O que nos limita é a nossa criatividade.",
       imageAlt: "Caminho terracota entre arquitetura escura e um horizonte azul",
       actionsLabel: "Ações principais",
       primaryCta: "Conhecer meu trabalho",
@@ -88,8 +90,8 @@ export const siteUiByLocale = {
   en: {
     seo: {
       title: "Leonardo Candiani | AI leadership, products, and business systems",
-      description: "AI founder and operator. Products, systems, education, and open-source work by Leonardo Candiani.",
-      jobTitle: "AI founder and operator",
+      description: "Leonardo Candiani: AI leadership, products and corporate education. Explore Minino Jarvis, open-source projects and applied technology videos.",
+      jobTitle: "AI leader and SixQuasar cofounder",
       ogLocale: "en_US"
     },
     layout: { skipLink: "Skip to content" },
@@ -106,6 +108,8 @@ export const siteUiByLocale = {
       languageHref: "/"
     },
     hero: {
+      locationLabel: "Maringá, Brazil",
+      cultureLabel: "What limits us is our creativity.",
       imageAlt: "Terracotta path between dark architecture and a blue horizon",
       actionsLabel: "Primary actions",
       primaryCta: "See my work",

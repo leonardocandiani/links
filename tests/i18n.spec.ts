@@ -54,7 +54,8 @@ test("keeps the English page free of serious accessibility violations", async ({
 test("keeps the approved personal branding in both locales", async ({ page }) => {
   for (const path of ["/", "/en/"]) {
     await page.goto(path);
-    await expect(page.locator(".brand-signature__surname").first()).toHaveText("Candiani");
+    await expect(page.locator(".site-header .brand__given")).toHaveText("Leonardo");
+    await expect(page.locator(".site-header .brand__surname")).toHaveText("Candiani");
     await expect(page.locator(".hero-limit-word")).toHaveCount(0);
     await expect(page.locator(".culture-limit-word")).toHaveCount(1);
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.png?v=4");
@@ -75,21 +76,22 @@ test("shows a single language switch at each viewport size", async ({ page }, te
   expect(visibleSwitches, `language switch duplicado em ${testInfo.project.name}`).toBe(1);
 });
 
-test("keeps the mobile hero clean and the navigation compact", async ({ browser }, testInfo) => {
+test("keeps the mobile hero clean and the navigation compact", async ({ browser, baseURL }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Executa uma vez no viewport exato do iPhone reportado.");
 
   const context = await browser.newContext({
+    baseURL,
     viewport: { width: 390, height: 844 },
     isMobile: true,
     hasTouch: true
   });
   const page = await context.newPage();
 
-  await page.goto("http://127.0.0.1:4322/");
+  await page.goto("/");
 
   const layout = await page.evaluate(() => {
     const header = document.querySelector<HTMLElement>(".header-shell");
-    const surname = document.querySelector<HTMLElement>(".site-header .brand-signature__surname");
+    const surname = document.querySelector<HTMLElement>(".site-header .brand__surname");
 
     if (!header || !surname) {
       throw new Error("Estrutura visual principal incompleta.");
@@ -104,14 +106,15 @@ test("keeps the mobile hero clean and the navigation compact", async ({ browser 
       headerInsideViewport: headerBox.left >= 0 && headerBox.right <= window.innerWidth,
       headerRadius: Number.parseFloat(headerStyle.borderTopLeftRadius),
       hasHeroLine: Boolean(document.querySelector(".hero-limit-word")),
-      nameLineDisplay: nameLine.display,
+      nameLineContent: nameLine.content,
       noDocumentOverflow: document.documentElement.scrollWidth <= window.innerWidth
     };
   });
 
   expect(layout.hasHeroLine).toBe(false);
-  expect(layout.nameLineDisplay).toBe("none");
-  expect(layout.headerHeight).toBeLessThanOrEqual(56);
+  expect(["none", "normal"]).toContain(layout.nameLineContent);
+  expect(layout.headerHeight).toBeGreaterThanOrEqual(56);
+  expect(layout.headerHeight).toBeLessThanOrEqual(64);
   expect(layout.headerRadius).toBeLessThanOrEqual(18);
   expect(layout.headerInsideViewport).toBe(true);
   expect(layout.noDocumentOverflow).toBe(true);
@@ -123,13 +126,13 @@ test("keeps the header name free of decorative cursors and nested hover pills", 
   await page.goto("/");
 
   const brand = page.locator(".site-header .brand");
-  const surname = brand.locator(".brand-signature__surname");
+  const surname = brand.locator(".brand__surname");
   const initialBackground = await brand.evaluate((element) => getComputedStyle(element).backgroundColor);
 
   await brand.hover();
 
   const visualState = await brand.evaluate((element) => {
-    const surname = element.querySelector<HTMLElement>(".brand-signature__surname");
+    const surname = element.querySelector<HTMLElement>(".brand__surname");
 
     if (!surname) {
       throw new Error("Sobrenome da assinatura não encontrado.");
@@ -137,11 +140,13 @@ test("keeps the header name free of decorative cursors and nested hover pills", 
 
     return {
       background: getComputedStyle(element).backgroundColor,
-      lineDisplay: getComputedStyle(surname, "::before").display
+      beforeContent: getComputedStyle(surname, "::before").content,
+      afterContent: getComputedStyle(surname, "::after").content
     };
   });
 
-  expect(visualState.lineDisplay).toBe("none");
+  expect(["none", "normal"]).toContain(visualState.beforeContent);
+  expect(["none", "normal"]).toContain(visualState.afterContent);
   expect(visualState.background).toBe(initialBackground);
   await expect(surname).toHaveText("Candiani");
 });
@@ -150,7 +155,7 @@ test("centers the signature vertically inside the header control", async ({ page
   await page.goto("/");
 
   const alignment = await page.locator(".site-header .brand").evaluate((brand) => {
-    const givenName = brand.querySelector<HTMLElement>(".brand-signature__given");
+    const givenName = brand.querySelector<HTMLElement>(".brand__given");
 
     if (!givenName) {
       throw new Error("Nome da assinatura não encontrado.");
@@ -171,13 +176,14 @@ test("centers the signature vertically inside the header control", async ({ page
   expect(alignment.centerDifference).toBeLessThanOrEqual(1);
 });
 
-test("keeps the desktop header grouped without elastic dead space", async ({ browser }, testInfo) => {
+test("keeps the desktop header centered with balanced margins and separated controls", async ({ browser, baseURL }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Executa uma vez no breakpoint desktop reportado.");
 
-  const context = await browser.newContext({ viewport: { width: 1024, height: 768 } });
+  const context = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
 
-  await page.goto("http://127.0.0.1:4322/");
+  await page.goto("/");
+  await expect(page.getByRole("navigation", { name: "Principal" })).toBeVisible();
 
   const layout = await page.evaluate(() => {
     const shell = document.querySelector<HTMLElement>(".header-shell");
@@ -196,15 +202,59 @@ test("keeps the desktop header grouped without elastic dead space", async ({ bro
       gap: navigationBox.left - brandBox.right,
       unusedSpace: (brandBox.left - shellBox.left) + (shellBox.right - navigationBox.right),
       shellWidth: shellBox.width,
+      shellHeight: shellBox.height,
+      centerDifference: Math.abs(shellBox.left + shellBox.width / 2 - window.innerWidth / 2),
+      controlsInsideShell: brandBox.left >= shellBox.left && navigationBox.right <= shellBox.right,
+      controlsShareCenter: Math.abs(brandBox.top + brandBox.height / 2 - navigationBox.top - navigationBox.height / 2) <= 1,
       noDocumentOverflow: document.documentElement.scrollWidth <= window.innerWidth
     };
   });
 
   expect(layout.gap).toBeGreaterThanOrEqual(8);
-  expect(layout.gap).toBeLessThanOrEqual(24);
+  expect(layout.gap).toBeLessThanOrEqual(layout.shellWidth * .3);
   expect(layout.unusedSpace).toBeLessThanOrEqual(18);
-  expect(layout.shellWidth).toBeLessThanOrEqual(800);
+  expect(layout.shellWidth).toBeCloseTo(1120, 0);
+  expect(layout.shellHeight).toBeGreaterThanOrEqual(56);
+  expect(layout.shellHeight).toBeLessThanOrEqual(64);
+  expect(layout.centerDifference).toBeLessThanOrEqual(1);
+  expect(layout.controlsInsideShell).toBe(true);
+  expect(layout.controlsShareCenter).toBe(true);
   expect(layout.noDocumentOverflow).toBe(true);
 
   await context.close();
+});
+
+test("uses the mobile drawer below 1100 pixels and releases the page on desktop resize", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Executa uma vez os dois lados do breakpoint.");
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/");
+  await expect(page.locator(".mobile-nav")).toHaveAttribute("data-hydrated", "true");
+
+  const menu = page.getByRole("banner").getByRole("button", { name: "Menu" });
+  const desktopNavigation = page.getByRole("navigation", { name: "Principal" });
+  await expect(menu).toBeVisible();
+  await expect(desktopNavigation).toBeHidden();
+  await page.setViewportSize({ width: 1099, height: 768 });
+  await expect(menu).toBeVisible();
+  await menu.click();
+  await expect(page.getByRole("dialog", { name: "Navegação" })).toBeVisible();
+  await expect(page.locator("main")).toHaveJSProperty("inert", true);
+
+  await page.setViewportSize({ width: 1100, height: 768 });
+  await expect(desktopNavigation).toBeVisible();
+  await expect(menu).toBeHidden();
+  await expect(page.locator(".nav-scrim")).toHaveCount(0);
+  await expect(page.locator("main")).toHaveJSProperty("inert", false);
+  await expect(page.locator("body")).toHaveJSProperty("style.overflow", "");
+});
+
+test("keeps the English training CTA contextual without navigating off-site", async ({ page }) => {
+  await page.goto("/en/");
+  const cta = page.locator("#educacao").getByRole("link", { name: "Bring this training to my company" });
+  const href = await cta.getAttribute("href");
+  expect(href).not.toBeNull();
+  const destination = new URL(href!);
+  expect(destination.origin).toBe("https://wa.me");
+  expect(destination.pathname).toBe("/5544998893474");
+  expect(destination.searchParams.get("text")).toBe("Hi Leonardo. I would like to discuss AI training for my team.");
 });

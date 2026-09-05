@@ -7,18 +7,19 @@ export const siteContent = {
     { label: "Jarvis", href: "#jarvis" },
     { label: "Educação", href: "#educacao" },
     { label: "Open source", href: "#github" },
+    { label: "YouTube", href: "#youtube" },
     { label: "Contato", href: "#contato" }
   ],
   hero: {
     name: "Leonardo Candiani",
-    eyebrow: "Fundador e operador de IA",
+    eyebrow: "Liderança, tecnologia e educação",
     title: "Construo a inteligência que faz empresas agirem.",
     limitWord: "agirem.",
-    description: "Sistemas, agentes e produtos que conectam contexto, decisão e execução no mundo real."
+    description: "Lidero pessoas e construo sistemas de IA para transformar o que uma empresa sabe no que ela consegue fazer."
   },
   about: {
     title: "Operação antes do hype.",
-    lead: "Automação desde 2018, inteligência artificial desde 2019 e uma obsessão constante: transformar processo manual em sistema que funciona sozinho.",
+    lead: "Minha atuação conecta liderança, produto e engenharia. Entender a operação, dar direção às pessoas e construir a tecnologia que faz o trabalho avançar.",
     body: [
       "Sou formado em Administração, cofundador da SixQuasar e construo tecnologia dentro de operações reais. Trabalho entre estratégia, produto e engenharia, do problema empresarial até o sistema em produção.",
       "Proteauto, SegSmart, IACall e os projetos da SixQuasar formam meu laboratório diário. O que aprendo construindo agentes, CRMs, automações, produtos e infraestrutura também vira ferramenta aberta e conteúdo público."
@@ -37,7 +38,7 @@ export const siteContent = {
     description:
       "Criatividade, para mim, é repertório aplicado: enxergar possibilidades, testar caminhos e transformar ideias em capacidade real.",
     imageCaption: "Uma ideia deixa de ser abstrata quando alguém começa a construí-la.",
-    bridgeTitle: "A frase abre a ideia. As seções seguintes mostram o que ela produz.",
+    bridgeTitle: "Uma cultura que se transforma em trabalho.",
     echoes: [
       {
         label: "Repertório",

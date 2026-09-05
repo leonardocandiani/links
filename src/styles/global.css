@@ -75,7 +75,7 @@ button {
 
 .section {
   padding-block: var(--space-section);
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 6rem;
 }
 
 .eyebrow {
@@ -83,7 +83,7 @@ button {
   color: var(--color-graphite);
   font-size: clamp(.75rem, .7rem + .25vw, .9rem);
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: .065em;
   line-height: 1.2;
   text-transform: uppercase;
 }
@@ -105,7 +105,8 @@ button {
   font-size: clamp(2.25rem, 1.85rem + 2vw, 4.5rem);
   font-weight: 560;
   letter-spacing: -.04em;
-  line-height: 1;
+  line-height: 1.06;
+  text-wrap: balance;
 }
 
 .body-large {
@@ -120,7 +121,7 @@ button {
 
 .brand-signature {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   white-space: nowrap;
 }
 
@@ -135,13 +136,7 @@ button {
 }
 
 .brand-signature__surname::before {
-  position: absolute;
-  top: -.28em;
-  bottom: -.25em;
-  left: -.24em;
-  width: 1px;
-  background: var(--color-boundary);
-  content: "";
+  content: none;
 }
 
 .language-switch {
@@ -185,3 +180,8 @@ button {
 .skip-link:focus-visible {
   transform: translateY(0);
 }
+
+p { text-wrap: pretty; }
+button, a { touch-action: manipulation; }
+time { font-variant-numeric: tabular-nums; }
+img { outline: 1px solid rgb(0 0 0 / 6%); outline-offset: -1px; }

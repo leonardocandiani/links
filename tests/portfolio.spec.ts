@@ -86,14 +86,13 @@ async function expectHeroCtaNavigatesToSection(
 async function expectHeaderNavResolvesToSection(page: import("@playwright/test").Page, label: string, hash: string) {
   const header = page.getByRole("banner");
   const menuButton = header.getByRole("button", { name: "Menu" });
+  await expect(header.locator(".mobile-nav")).toHaveAttribute("data-hydrated", "true");
 
   if (await menuButton.isVisible()) {
     const mobileDialog = page.getByRole("dialog", { name: "Navegação" });
 
-    await expect(async () => {
-      await menuButton.click();
-      await expect(mobileDialog).toBeVisible({ timeout: 1000 });
-    }).toPass();
+    await menuButton.click();
+    await expect(mobileDialog).toBeVisible();
 
     const mobileNavigation = page.getByRole("navigation", { name: "Menu mobile" });
     const link = mobileNavigation.getByRole("link", { name: label });
@@ -101,6 +100,8 @@ async function expectHeaderNavResolvesToSection(page: import("@playwright/test")
     await link.focus();
     await expect(link).toBeFocused();
     await page.keyboard.press("Enter");
+    await expect(page.locator(".nav-scrim")).toHaveCount(0);
+    await expect(page.locator("body")).toHaveJSProperty("style.overflow", "");
   } else {
     await page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: label }).click();
   }
@@ -373,7 +374,7 @@ test("transforma criatividade no fio condutor do portfólio", async ({ page }, t
   await expect(culture).toBeVisible();
   await expect(culture.getByText("Nossa cultura", { exact: true })).toBeVisible();
   await expect(culture.getByText("Criatividade, para mim, é repertório aplicado:")).toBeVisible();
-  await expect(culture.getByText("A frase abre a ideia. As seções seguintes mostram o que ela produz.")).toBeVisible();
+  await expect(culture.getByText("Uma cultura que se transforma em trabalho.")).toBeVisible();
   await expect(culture.getByRole("list", { name: "Como a criatividade atravessa o portfólio" })).toBeVisible();
   await expect(culture.getByRole("listitem")).toHaveCount(3);
   await expect(culture.getByRole("heading", { name: "Mais referências, mais caminhos possíveis." })).toBeVisible();
@@ -433,10 +434,11 @@ test("transforma criatividade no fio condutor do portfólio", async ({ page }, t
   expect(layout.copyBottom).toBeLessThanOrEqual(layout.mediaTop);
 });
 
-test("mantém o manifesto legível em 320 pixels", async ({ browser }, testInfo) => {
+test("mantém o manifesto legível em 320 pixels", async ({ browser, baseURL }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Executa uma vez com contexto mobile estreito próprio.");
 
   const context = await browser.newContext({
+    baseURL,
     viewport: { width: 320, height: 720 },
     deviceScaleFactor: 1,
     isMobile: true,
@@ -444,7 +446,7 @@ test("mantém o manifesto legível em 320 pixels", async ({ browser }, testInfo)
   });
   const page = await context.newPage();
 
-  await page.goto("http://127.0.0.1:4322/#cultura");
+  await page.goto("/#cultura");
 
   const culture = page.locator("#cultura");
   const stage = culture.locator(".culture-stage");
@@ -503,14 +505,19 @@ test("carrega a narrativa visual completa sem imagens quebradas", async ({ page 
       .toBeGreaterThan(0);
   }
 
-  await expect(page.locator(".eyebrow")).toHaveCount(4);
+  for (const id of ["sobre", "cultura", "repertorio", "jarvis", "educacao", "youtube", "github"]) {
+    const section = page.locator(`section#${id}`);
+    await expect(section).toHaveAccessibleName(/\S/);
+    await expect(section.getByRole("heading", { level: 2 })).toHaveCount(1);
+  }
   await expect(page.locator("#contato")).toHaveCSS("background-image", /contact-horizon\.webp/);
 });
 
-test("mantém navegação mobile nativa sem JavaScript", async ({ browser }, testInfo) => {
+test("mantém navegação mobile nativa sem JavaScript", async ({ browser, baseURL }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Executa uma vez com contexto mobile próprio.");
 
   const context = await browser.newContext({
+    baseURL,
     javaScriptEnabled: false,
     viewport: { width: 390, height: 844 },
     isMobile: true,
@@ -518,7 +525,7 @@ test("mantém navegação mobile nativa sem JavaScript", async ({ browser }, tes
   });
   const page = await context.newPage();
 
-  await page.goto("http://127.0.0.1:4322/");
+  await page.goto("/");
 
   const fallback = page.locator(".mobile-nav-fallback");
   const reactNav = page.locator(".mobile-nav");
@@ -531,7 +538,8 @@ test("mantém navegação mobile nativa sem JavaScript", async ({ browser }, tes
 
   const nativeNav = fallback.getByRole("navigation", { name: "Menu mobile sem JavaScript" });
   await expect(nativeNav).toBeVisible();
-  await expect(nativeNav.getByRole("link")).toHaveCount(7);
+  await expect(nativeNav.getByRole("link")).toHaveCount(8);
+  await expect(nativeNav.getByRole("link", { name: "YouTube" })).toHaveAttribute("href", "#youtube");
   await expect(nativeNav.getByRole("link", { name: "View in English" })).toHaveAttribute("href", "/en/");
 
   await nativeNav.getByRole("link", { name: "Educação" }).click();
@@ -585,6 +593,21 @@ test("navega para os itens internos publicados", async ({ page }) => {
   await expectHeaderNavResolvesToSection(page, "Educação", "#educacao");
 });
 
+test("aguarda a hidratação antes de escolher a navegação mobile", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name === "desktop", "Regressão dos timeouts observados em mobile e tablet.");
+  let delayedModules = 0;
+  await page.route("**/*MobileNav*", async (route) => {
+    delayedModules += 1;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    await route.continue();
+  });
+
+  await page.goto("/", { waitUntil: "commit" });
+  await expectHeaderNavResolvesToSection(page, "Sobre", "#sobre");
+  expect(delayedModules).toBeGreaterThan(0);
+  await expect(page.getByRole("banner").getByRole("button", { name: "Menu" })).toBeFocused();
+});
+
 test("navega para GitHub e Contato pelo menu mobile", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name === "desktop", "Verificação específica do menu mobile/tablet.");
 
@@ -622,7 +645,7 @@ test("explora o repertório por clique e teclado", async ({ page }) => {
 test("resolve todos os destinos do nav desktop", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Verificação específica do nav desktop.");
 
-  const navTargets = ["#sobre", "#repertorio", "#jarvis", "#educacao", "#github", "#contato"];
+  const navTargets = ["#sobre", "#repertorio", "#jarvis", "#educacao", "#youtube", "#github", "#contato"];
 
   await page.goto("/");
 
@@ -694,10 +717,12 @@ test("apresenta educação aplicada para empresas", async ({ page }) => {
 
   const cta = education.getByRole("link", { name: "Levar o treinamento para minha empresa" });
 
-  await expect(cta).toHaveAttribute("href", "#contato");
-  await cta.click();
-  await expect.poll(async () => page.evaluate(() => window.location.hash)).toBe("#contato");
-  await expect(page.locator("footer#contato")).toBeVisible();
+  const href = await cta.getAttribute("href");
+  expect(href).not.toBeNull();
+  const trainingUrl = new URL(href!);
+  expect(trainingUrl.origin).toBe("https://wa.me");
+  expect(trainingUrl.pathname).toBe("/5544998893474");
+  expect(trainingUrl.searchParams.get("text")).toBe("Olá, Leonardo. Quero conversar sobre um treinamento de IA para a minha equipe.");
 });
 
 test("apresenta GitHub público, presença pública e contato", async ({ page }) => {

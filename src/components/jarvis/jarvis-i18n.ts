@@ -205,7 +205,7 @@ export const jarvisUiByLocale = {
     },
     toolbar: {
       title: "MININO JARVIS / DEMONSTRAÇÃO",
-      live: "canal seguro ativo"
+      live: "simulação local"
     },
     control: {
       kicker: "Escolha uma pergunta",
@@ -216,15 +216,15 @@ export const jarvisUiByLocale = {
       questionLabel: "Pergunta para o Minino Jarvis",
       questionPlaceholder: "Pergunte sobre operação, comercial ou equipe",
       submitButton: "Enviar",
-      demoNote: "Dados demonstrativos para explicar a experiência."
+      demoNote: "Simulação com dados demonstrativos. Nenhuma consulta ou ação real é executada."
     },
     phone: {
       ariaLabel: "Simulação do Minino Jarvis no WhatsApp",
       avatar: "MJ",
       name: "Minino Jarvis",
-      availability: "online pelo WhatsApp",
-      secure: "harness ativo",
-      inputPlaceholder: "Mensagem",
+      availability: "experiência simulada",
+      secure: "demonstração",
+      inputPlaceholder: "Escrever mensagem",
       sendSymbol: "↑"
     },
     idle: {
@@ -233,7 +233,7 @@ export const jarvisUiByLocale = {
     },
     thinking: {
       title: "Consultando a empresa",
-      live: "ao vivo"
+      live: "simulação"
     },
     tools: {
       ariaLabel: "Fontes consultadas"
@@ -263,7 +263,7 @@ export const jarvisUiByLocale = {
     backstage: {
       ariaLabel: "Bastidores técnicos da consulta",
       title: "trace empresarial",
-      runStatus: "run_live",
+      runStatus: "run_demo",
       code: {
         declaration: "const",
         variable: "decisão",
@@ -290,7 +290,7 @@ export const jarvisUiByLocale = {
     },
     toolbar: {
       title: "MININO JARVIS / DEMO",
-      live: "secure channel active"
+      live: "local simulation"
     },
     control: {
       kicker: "Choose a question",
@@ -301,15 +301,15 @@ export const jarvisUiByLocale = {
       questionLabel: "Question for Minino Jarvis",
       questionPlaceholder: "Ask about operations, sales or team",
       submitButton: "Send",
-      demoNote: "Demo data used to explain the experience."
+      demoNote: "Simulation with demo data. No real queries or actions are performed."
     },
     phone: {
       ariaLabel: "Minino Jarvis simulation on WhatsApp",
       avatar: "MJ",
       name: "Minino Jarvis",
-      availability: "online on WhatsApp",
-      secure: "harness active",
-      inputPlaceholder: "Message",
+      availability: "simulated experience",
+      secure: "demonstration",
+      inputPlaceholder: "Write a message",
       sendSymbol: "↑"
     },
     idle: {
@@ -318,7 +318,7 @@ export const jarvisUiByLocale = {
     },
     thinking: {
       title: "Checking the company",
-      live: "live"
+      live: "simulation"
     },
     tools: {
       ariaLabel: "Sources checked"
@@ -348,7 +348,7 @@ export const jarvisUiByLocale = {
     backstage: {
       ariaLabel: "Technical backstage for the query",
       title: "business trace",
-      runStatus: "run_live",
+      runStatus: "run_demo",
       code: {
         declaration: "const",
         variable: "decision",

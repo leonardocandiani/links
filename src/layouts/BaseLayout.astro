@@ -67,6 +67,7 @@ const personJsonLd = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonical.toString()} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage.toString()} />
     <meta property="og:locale" content={ogLocale} />
@@ -84,6 +85,24 @@ const personJsonLd = {
     <script is:inline>
       const revealItems = Array.from(document.querySelectorAll("[data-reveal], [data-media-reveal]"));
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const navigationLinks = Array.from(document.querySelectorAll('.desktop-nav a[href^="#"]'));
+      const navigationSections = navigationLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+      if ("IntersectionObserver" in window) {
+        const activeSections = new Set();
+        const navigationObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) activeSections.add(entry.target.id);
+            else activeSections.delete(entry.target.id);
+          });
+          const currentSection = navigationSections.find((section) => activeSections.has(section.id));
+          navigationLinks.forEach((link) => {
+            if (currentSection && link.hash === `#${currentSection.id}`) link.setAttribute("aria-current", "location");
+            else link.removeAttribute("aria-current");
+          });
+        }, { rootMargin: "-12% 0px -55% 0px" });
+        navigationSections.forEach((section) => navigationObserver.observe(section));
+      }
 
       if (revealItems.length > 0) {
         if (prefersReducedMotion) {
@@ -114,7 +133,7 @@ const personJsonLd = {
                 observer.unobserve(entry.target);
               });
             },
-            { rootMargin: "0px 0px -10% 0px" }
+            { rootMargin: "0px 0px -40px 0px" }
           );
 
           requestAnimationFrame(() => {

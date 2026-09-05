@@ -9,10 +9,11 @@
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
     "check": "astro check",
-    "build": "npm run sync:github && astro check && astro build",
+    "build": "npm run sync:github && npm run sync:youtube && astro check && astro build",
     "build:fresh": "npm run build",
     "preview": "astro preview --host 0.0.0.0",
     "sync:github": "node scripts/sync-github.mjs",
+    "sync:youtube": "node scripts/sync-youtube.mjs",
     "test": "vitest run",
     "test:a11y": "playwright test tests/accessibility.spec.ts",
     "test:e2e": "playwright test",
@@ -22,6 +23,7 @@
     "@astrojs/react": "6.0.2",
     "@astrojs/sitemap": "3.7.3",
     "astro": "7.2.0",
+    "fast-xml-parser": "^5.11.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sharp": "0.35.3"
