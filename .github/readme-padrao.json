@@ -1,0 +1,44 @@
+{
+  "name": "Leonardo Candiani",
+  "desc": "Portfólio pessoal",
+  "lang": "pt",
+  "typing": [
+    "Portfólio pessoal de Leonardo Candiani",
+    "Liderança em IA, produtos e sistemas",
+    "Minino Jarvis como case, educação corporativa, open source",
+    "Astro 7 + React 19, deploy na Vercel"
+  ],
+  "tagline": "Site publicado em <a href=\"https://leonardocandiani.com.br\">leonardocandiani.com.br</a>.",
+  "badges": [
+    {
+      "label": "Astro",
+      "msg": "7",
+      "logo": "astro"
+    },
+    {
+      "label": "React",
+      "msg": "19",
+      "logo": "react/61DAFB"
+    },
+    {
+      "label": "Deploy",
+      "msg": "Vercel",
+      "color": "0d1117",
+      "logo": "vercel"
+    },
+    {
+      "label": "Idiomas",
+      "msg": "PT · EN",
+      "color": "ACCENT"
+    }
+  ],
+  "pitch": "**leonardocandiani.com.br** é a vitrine do trabalho do Leonardo: liderança em IA, produtos e sistemas em operação, o Minino Jarvis como case empresarial, educação corporativa e os projetos open source.",
+  "what": {
+    "produto": "site pessoal e portfólio, estático",
+    "stack": "Astro 7, React 19 para ilhas interativas, TypeScript",
+    "testes": "Vitest (unitário) e Playwright (e2e)",
+    "rotas": "/ em português, /en/ em inglês",
+    "deploy": "Vercel, branch main como fonte canônica, build em dist/",
+    "dev": "npm ci · npm run dev · npm run check · npm test"
+  }
+}
