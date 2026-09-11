@@ -1,0 +1,518 @@
+/* Kit de efeitos extraído do olek.si (Oleksii Besida), reescrito pra reuso.
+   Cada bloco cita a origem no CSS dissecado em docs/design-kit-olek/README.md.
+   Nada aqui depende de framework: só CSS moderno + src/scripts/kit-olek.js. */
+
+/* ---------- Fontes (Inter é SIL OFL, self-hosted) ---------- */
+
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter Display";
+  src: url("/fonts/InterDisplay-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+
+@property --tone-fade {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f5f5f5;
+}
+
+@property --glow-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #fff;
+}
+
+:root {
+  /* easing mestre: sai rápido, assenta longo (olek: --animat) */
+  --animat: cubic-bezier(0.1, 0.1, 0, 1);
+  /* easing da etiqueta de nome (olek: @keyframes name) */
+  --animat-name: cubic-bezier(0.3, 0, 0, 1);
+  /* easing de troca de tom (olek: html transition) */
+  --animat-tone: cubic-bezier(0.4, 0, 0, 1);
+
+  --tone-fg: #000;
+  --tone-soft: #999;
+  --tone-softest: #9996;
+  --tone-invert: 0;
+  --tone-fade: #f5f5f5;
+  --glow-color: #fff;
+  --tone-blend: plus-darker;
+
+  transition:
+    --tone-fade 0.4s var(--animat-tone),
+    --glow-color 0.4s var(--animat-tone),
+    background-color 0.4s var(--animat-tone);
+}
+
+html[data-tone="dark"] {
+  --tone-fg: #fff;
+  --tone-soft: #fffc;
+  --tone-softest: #fff6;
+  --tone-invert: 1;
+  --tone-fade: #101010;
+  --glow-color: #111;
+  --tone-blend: plus-lighter;
+}
+
+/* ---------- Entrada "cube-rotate": gira do fundo, desfoca, assenta ---------- */
+
+@keyframes cube-rotate {
+  0% {
+    transform: rotateX(-45deg) translateY(64px);
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+@keyframes name-rise {
+  0% {
+    transform: rotateX(-45deg) translateY(48px);
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+@keyframes rail-rise {
+  0% {
+    transform: translateY(192px);
+    filter: blur(8px);
+  }
+}
+
+/* O pai precisa de perspective pra rotateX ter profundidade. */
+.k-stage {
+  perspective: 512px;
+}
+
+[data-cube] {
+  opacity: 0;
+}
+
+[data-cube][data-rendered] {
+  opacity: 1;
+  animation: 0.8s cube-rotate var(--animat) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+[data-cube="name"][data-rendered] {
+  animation-name: name-rise;
+  animation-timing-function: var(--animat-name);
+}
+
+[data-cube="rail"][data-rendered] {
+  animation: 1s rail-rise cubic-bezier(0, 0.25, 0, 1) both;
+}
+
+/* ---------- Motor de seções (rotateX + blur + opacidade por scroll) ---------- */
+
+/* Modo slides: só com ponteiro fino, como o olek (scrollSnap = pointer: fine).
+   Cada seção é um slide de 100dvh; conteúdo mais alto rola dentro do slide.
+   O encaixe entre slides é feito pelo kit-olek.js (roda e teclado), não por
+   scroll-snap CSS: o snap nativo mira a caixa já girada pela perspectiva e
+   o ponto de encaixe fugia junto com a rotação. */
+/* o motor anima o scroll por conta própria; o smooth nativo atrapalha */
+html[data-engine="snap"] {
+  scroll-behavior: auto;
+}
+
+html[data-engine="snap"] main > section,
+html[data-engine="snap"] body > footer {
+  /* !important porque componentes (ex.: .jarvis-case) fixam overflow: hidden
+     com seletor escopado de especificidade maior; sem isso o slide não rola */
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+  scroll-margin-top: 0;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+}
+
+html[data-engine="snap"] main > section::-webkit-scrollbar,
+html[data-engine="snap"] body > footer::-webkit-scrollbar {
+  display: none;
+}
+
+/* perspective vai dentro do transform de cada slide (kit-olek.js):
+   perspective no body/main viraria containing block e quebraria o header fixo */
+
+/* ---------- Timeline lateral (olek: #timeline .bar) ---------- */
+
+.k-rail {
+  position: fixed;
+  top: 50%;
+  left: 24px;
+  z-index: 60;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  translate: 0 -50%;
+  color: var(--tone-soft);
+  mix-blend-mode: var(--tone-blend);
+}
+
+html[data-engine="snap"] .k-rail {
+  display: flex;
+}
+
+.k-rail-tab {
+  height: 24px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tone-soft);
+  font-family: "Inter Variable", system-ui, sans-serif;
+  font-size: 14px;
+  font-variation-settings: "opsz" 14, "wght" 500;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* hover: a timeline inteira desembaça pra dar pra ler onde clicar; a aba
+   sob o cursor fica cheia, as outras a 70% */
+.k-rail:hover .k-rail-tab {
+  filter: none !important;
+  opacity: 0.7 !important;
+}
+
+.k-rail:hover .k-rail-tab:hover,
+.k-rail:hover .k-rail-tab[aria-current="true"] {
+  opacity: 1 !important;
+}
+
+.k-rail-tab:focus-visible {
+  outline: 2px solid var(--tone-soft);
+  outline-offset: 2px;
+}
+
+.k-rail-sep {
+  width: 10px;
+  height: 1px;
+  margin-left: 8px;
+  background: var(--tone-soft);
+  opacity: 0.3;
+}
+
+/* Com a timeline visível, o header fica só com a marca e o idioma: duas
+   navegações pra mesma coisa é ruído (o olek não tem navbar). Abaixo de
+   80rem a timeline some e o menu volta. */
+@media (min-width: 80.01rem) {
+  html[data-engine="snap"] .site-header .desktop-nav a:not(.language-switch) {
+    display: none;
+  }
+
+  html[data-engine="snap"] .site-header .desktop-nav .language-switch {
+    margin-left: 0;
+  }
+
+  /* margem lateral maior pra timeline não encostar no conteúdo (olek centraliza
+     o conteúdo com respiro dos dois lados) */
+  html[data-engine="snap"] {
+    --space-page: clamp(10rem, 11vw, 13rem);
+  }
+
+  /* a barra de 70rem vira uma pílula só com marca e idioma */
+  html[data-engine="snap"] .site-header .header-shell {
+    width: fit-content;
+    gap: .25rem;
+  }
+}
+
+/* o header do repo usa o papel quente antigo; na paleta branca fica vidro neutro */
+.site-header .header-shell.material {
+  background-color: rgb(255 255 255 / 80%);
+  border-color: #ddd7;
+}
+
+@media (max-width: 80rem) {
+  html[data-engine="snap"] .k-rail {
+    display: none;
+  }
+}
+
+/* ---------- Morph por blur (padrão do lightbox e do indicador) ---------- */
+
+.k-morph {
+  transition:
+    opacity 0.75s var(--animat),
+    filter 0.75s var(--animat),
+    scale 0.75s var(--animat),
+    translate 0.5s var(--animat);
+}
+
+.k-morph[data-hidden] {
+  opacity: 0;
+  filter: blur(8px);
+  scale: 0.75;
+  pointer-events: none;
+}
+
+/* ---------- Fade inferior: blur progressivo transparente ----------
+   Técnica do trybendy.app (três camadas com blur 6/16/36px e máscaras cada vez
+   mais curtas), aqui com backdrop-filter pra desfocar o que passa por baixo.
+   Sem cor: o conteúdo só perde nitidez conforme chega no rodapé. */
+
+/* --fold (0 em repouso, 1 no meio da troca de slide) vem do kit-olek.js e
+   estende o blur pelas bordas longe da dobradiça, como o lid-plane faz com
+   radius = smoothstep(altura) × |sin(ângulo)|: em repouso sobra só a névoa
+   do rodapé; durante a dobra, topo e rodapé se esfumam até 35vh. */
+:root {
+  --fold: 0;
+}
+
+.k-fade,
+.k-fade::before,
+.k-fade::after,
+.k-fade-top,
+.k-fade-top::before,
+.k-fade-top::after {
+  position: fixed;
+  right: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.k-fade,
+.k-fade::before,
+.k-fade::after {
+  bottom: 0;
+}
+
+.k-fade-top,
+.k-fade-top::before,
+.k-fade-top::after {
+  top: 0;
+}
+
+.k-fade,
+.k-fade-top {
+  /* abaixo do header (50) e da timeline (60): o blur não pode esfumar a UI fixa */
+  z-index: 40;
+  height: calc(112px + var(--fold) * 35vh);
+  backdrop-filter: blur(4px);
+}
+
+/* faixa base no topo: o header flutua sobre névoa, como o #glowfade do olek,
+   e o texto da marca não colide com o conteúdo que passa por baixo */
+.k-fade-top {
+  height: calc(72px + var(--fold) * 35vh);
+}
+
+.k-fade::before,
+.k-fade::after,
+.k-fade-top::before,
+.k-fade-top::after {
+  content: "";
+}
+
+.k-fade::before,
+.k-fade-top::before {
+  height: calc(72px + var(--fold) * 22vh);
+  backdrop-filter: blur(10px);
+}
+
+.k-fade-top::before {
+  height: calc(48px + var(--fold) * 22vh);
+}
+
+.k-fade::after,
+.k-fade-top::after {
+  height: calc(40px + var(--fold) * 12vh);
+  backdrop-filter: blur(22px);
+}
+
+.k-fade-top::after {
+  height: calc(28px + var(--fold) * 12vh);
+}
+
+.k-fade,
+.k-fade::before,
+.k-fade::after {
+  mask-image: linear-gradient(to top, #000 0%, #000 25%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 25%, transparent 100%);
+}
+
+.k-fade-top,
+.k-fade-top::before,
+.k-fade-top::after {
+  mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 100%);
+}
+
+/* ---------- Peças de UI ---------- */
+
+.k-headline {
+  font-family: "Inter Display", "Inter Variable", system-ui, sans-serif;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: -2.64px;
+  line-height: 54px;
+  color: #000e;
+}
+
+@media (min-width: 48rem) {
+  .k-headline {
+    font-size: 96px;
+    line-height: 116px;
+  }
+}
+
+.k-body {
+  font-family: "Inter Variable", system-ui, sans-serif;
+  font-size: 32px;
+  font-variation-settings: "opsz" 32, "wght" 350;
+  letter-spacing: -0.25px;
+  line-height: 1.6;
+}
+
+.k-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px 0 12px;
+  border-radius: 18px;
+  background: #0001;
+  color: var(--tone-fg);
+  font-family: "Inter Variable", system-ui, sans-serif;
+  font-size: 16px;
+  font-variation-settings: "opsz" 32, "wght" 500;
+  text-decoration: none;
+}
+
+.k-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  box-shadow: inset 0 0 0 1px #ddd7;
+  color: var(--tone-fg);
+  text-decoration: none;
+}
+
+.k-circle svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.k-card {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px #00000005,
+    0 1px 1px #00000005,
+    0 6px 32px #0000000a;
+  font-family: "Inter Display", "Inter Variable", system-ui, sans-serif;
+  font-size: 20px;
+}
+
+/* ---------- Movimento reduzido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cube],
+  [data-cube][data-rendered] {
+    opacity: 1;
+    animation: none;
+  }
+
+  html[data-engine="snap"] main > section,
+  html[data-engine="snap"] body > footer {
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .k-fade,
+  .k-fade::before,
+  .k-fade::after,
+  .k-fade-top,
+  .k-fade-top::before,
+  .k-fade-top::after {
+    backdrop-filter: none;
+  }
+}
+
+/* ---------- Header sobre slide escuro ---------- */
+
+html[data-tone="dark"] .site-header .material {
+  background: rgb(17 17 17 / 72%);
+  border-color: #ffffff1a;
+  color: var(--tone-fg);
+}
+
+html[data-tone="dark"] .site-header a,
+html[data-tone="dark"] .site-header .nav-trigger {
+  color: var(--tone-fg);
+}
+
+html[data-tone="dark"] .site-header .brand-signature__surname::before {
+  background: var(--tone-soft);
+}
+
+/* ---------- Toque: swipe entre slides (olek: SwipeState) ---------- */
+
+/* a janela só se move pelo kit-olek.js (arrasto e goTo); nada de rolagem
+   nativa da página, como o html overflow: hidden do olek */
+html[data-input="touch"] {
+  overflow: hidden;
+}
+
+html[data-input="touch"] main > section,
+html[data-input="touch"] body > footer {
+  overscroll-behavior-y: contain;
+}
+
+/* ---------- Celular: folga pro header fixo ---------- */
+
+/* o header ocupa 72px; a seção nascia com padding igual e o kicker passava
+   por baixo dele e da névoa do topo. */
+@media (pointer: coarse) {
+  html[data-engine="snap"] main > section.section,
+  html[data-engine="snap"] body > footer {
+    padding-top: 7rem !important;
+  }
+
+  .k-fade {
+    height: calc(72px + var(--fold) * 35vh);
+  }
+
+  .k-fade-top {
+    height: 56px;
+  }
+
+  .k-fade-top::before {
+    height: 36px;
+  }
+
+  .k-fade-top::after {
+    height: 20px;
+  }
+}

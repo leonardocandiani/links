@@ -9,7 +9,7 @@ const { ui } = Astro.props;
 const whatsappHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.message)}`;
 ---
 
-<footer id="contato" class="contact-footer" aria-labelledby="contact-title">
+<footer id="contato" class="contact-footer" aria-labelledby="contact-title" data-tone="dark">
   <div class="page-width contact-shell">
     <div>
       <h2 id="contact-title" class="section-title">{ui.title}</h2>
@@ -32,6 +32,14 @@ const whatsappHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.m
     position: relative;
     display: grid;
     min-height: 72svh;
+  }
+
+  /* no modo slides o rodapé é o último slide inteiro */
+  :global(html[data-engine="snap"]) .contact-footer,
+  :global(html[data-input="touch"]) .contact-footer {
+    min-height: 100dvh;
+    /* a assinatura fica acima da névoa inferior do kit */
+    padding-bottom: 7rem;
     align-items: end;
     padding-block: clamp(6rem, 12vw, 9rem) clamp(2rem, 5vw, 4rem);
     overflow: hidden;

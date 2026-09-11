@@ -1,53 +1,21 @@
 {
-  "syncedAt": "2026-09-05T01:38:08.829Z",
+  "syncedAt": "2026-09-11T12:06:16.124Z",
   "repositories": [
     {
-      "name": "wascii",
-      "url": "https://github.com/leonardocandiani/wascii",
-      "description": "The art of ASCII for WhatsApp: monospace boxes, bars, charts and leaderboards that actually line up on a phone. A Claude agent skill + reference.",
-      "language": "HTML",
-      "stars": 0,
-      "pushedAt": "2026-09-05T01:33:52Z"
-    },
-    {
-      "name": "tollgate",
-      "url": "https://github.com/leonardocandiani/tollgate",
-      "description": "Self-hostable OpenRouter for resellers: multi-tenant, OpenAI-compatible LLM gateway with markup billing, prepaid credit wallets, and Stripe + PIX top-ups",
-      "language": "TypeScript",
-      "stars": 0,
-      "pushedAt": "2026-09-05T01:33:49Z"
-    },
-    {
-      "name": "tacet",
-      "url": "https://github.com/leonardocandiani/tacet",
-      "description": "Silent by default. A self-hosted agent that sits in your meetings, listens to everything, speaks only when called, and files the minutes.",
-      "language": "TypeScript",
-      "stars": 0,
-      "pushedAt": "2026-09-05T01:33:46Z"
-    },
-    {
-      "name": "shortcuts-apple",
-      "url": "https://github.com/leonardocandiani/shortcuts-apple",
-      "description": "Claude Code skill and CLI to build, sign and deliver Apple Shortcuts (.shortcut) files from a JSON spec",
-      "language": "Python",
-      "stars": 0,
-      "pushedAt": "2026-09-05T01:33:43Z"
-    },
-    {
-      "name": "scratchmate",
-      "url": "https://github.com/leonardocandiani/scratchmate",
-      "description": "A programmable, ephemeral scratchpad for developers on macOS. Liquid Glass, global hotkey, :: text commands, live preview.",
-      "language": "Swift",
+      "name": "glint",
+      "url": "https://github.com/leonardocandiani/glint",
+      "description": "A liquid-glass status line for the Claude Code CLI: glass-gradient pill, context tracking, effort colors, git-aware.",
+      "language": "Shell",
       "stars": 1,
-      "pushedAt": "2026-09-05T01:33:37Z"
+      "pushedAt": "2026-09-09T18:12:44Z"
     },
     {
-      "name": "looksright",
-      "url": "https://github.com/leonardocandiani/looksright",
-      "description": "Abre a página num Chrome de verdade e diz o que quebrou: 11 checagens de UI, sem baseline de imagem.",
+      "name": "neurograph",
+      "url": "https://github.com/leonardocandiani/neurograph",
+      "description": "A neural network inside a real brain: connected nodes that follow 52 real sulci, in 25KB of dependency-free canvas 2D.",
       "language": "JavaScript",
       "stars": 0,
-      "pushedAt": "2026-09-05T01:33:32Z"
+      "pushedAt": "2026-09-08T13:48:38Z"
     },
     {
       "name": "links",
@@ -55,7 +23,55 @@
       "description": "Portfólio pessoal de Leonardo Candiani: liderança em IA, produtos, Minino Jarvis, educação corporativa e open source.",
       "language": "TypeScript",
       "stars": 0,
-      "pushedAt": "2026-09-05T01:33:26Z"
+      "pushedAt": "2026-09-08T13:42:45Z"
+    },
+    {
+      "name": "wascii",
+      "url": "https://github.com/leonardocandiani/wascii",
+      "description": "The art of ASCII for WhatsApp: monospace boxes, bars, charts and leaderboards that actually line up on a phone. A Claude agent skill + reference.",
+      "language": "HTML",
+      "stars": 0,
+      "pushedAt": "2026-09-08T13:38:55Z"
+    },
+    {
+      "name": "tollgate",
+      "url": "https://github.com/leonardocandiani/tollgate",
+      "description": "Self-hostable OpenRouter for resellers: multi-tenant, OpenAI-compatible LLM gateway with markup billing, prepaid credit wallets, and Stripe + PIX top-ups",
+      "language": "TypeScript",
+      "stars": 0,
+      "pushedAt": "2026-09-08T13:38:53Z"
+    },
+    {
+      "name": "tacet",
+      "url": "https://github.com/leonardocandiani/tacet",
+      "description": "Silent by default. A self-hosted agent that sits in your meetings, listens to everything, speaks only when called, and files the minutes.",
+      "language": "TypeScript",
+      "stars": 0,
+      "pushedAt": "2026-09-08T13:38:51Z"
+    },
+    {
+      "name": "shortcuts-apple",
+      "url": "https://github.com/leonardocandiani/shortcuts-apple",
+      "description": "Claude Code skill and CLI to build, sign and deliver Apple Shortcuts (.shortcut) files from a JSON spec",
+      "language": "Python",
+      "stars": 0,
+      "pushedAt": "2026-09-08T13:38:49Z"
+    },
+    {
+      "name": "scratchmate",
+      "url": "https://github.com/leonardocandiani/scratchmate",
+      "description": "A programmable, ephemeral scratchpad for developers on macOS. Liquid Glass, global hotkey, :: text commands, live preview.",
+      "language": "Swift",
+      "stars": 1,
+      "pushedAt": "2026-09-08T13:38:47Z"
+    },
+    {
+      "name": "looksright",
+      "url": "https://github.com/leonardocandiani/looksright",
+      "description": "Abre a página num Chrome de verdade e diz o que quebrou: 11 checagens de UI, sem baseline de imagem.",
+      "language": "JavaScript",
+      "stars": 0,
+      "pushedAt": "2026-09-08T13:38:44Z"
     },
     {
       "name": "krit",
@@ -63,7 +79,7 @@
       "description": "Native, open-source screenshot and markup tool for macOS. Capture, annotate, record, copy: one shortcut.",
       "language": "Swift",
       "stars": 3,
-      "pushedAt": "2026-09-05T01:33:14Z"
+      "pushedAt": "2026-09-08T13:38:41Z"
     },
     {
       "name": "keepwright",
@@ -71,15 +87,7 @@
       "description": "Skill Claude Code que aplica arquitetura de qualidade alta em qualquer projeto git. Rules estruturadas + CI/CD com auto-review OAuth + validators portáveis + deploy adaptado à stack.",
       "language": "TypeScript",
       "stars": 1,
-      "pushedAt": "2026-09-05T01:33:03Z"
-    },
-    {
-      "name": "glint",
-      "url": "https://github.com/leonardocandiani/glint",
-      "description": "A liquid-glass status line for the Claude Code CLI: glass-gradient pill, context tracking, effort colors, git-aware.",
-      "language": "Shell",
-      "stars": 1,
-      "pushedAt": "2026-09-05T01:32:57Z"
+      "pushedAt": "2026-09-08T13:38:39Z"
     },
     {
       "name": "glassmith",
@@ -87,7 +95,7 @@
       "description": "Forge real glass for the web: optical refraction, chromatic aberration and specular highlights, with honest cross-browser fallbacks.",
       "language": "HTML",
       "stars": 0,
-      "pushedAt": "2026-09-05T01:32:54Z"
+      "pushedAt": "2026-09-08T13:38:35Z"
     },
     {
       "name": "claude-optimizer",
@@ -95,7 +103,7 @@
       "description": "Audit and optimize your Claude Code config for context efficiency. Measures what the diet bought you in working hours, not dollars.",
       "language": "JavaScript",
       "stars": 0,
-      "pushedAt": "2026-09-05T01:32:49Z"
+      "pushedAt": "2026-09-08T13:38:33Z"
     },
     {
       "name": "bgent",
@@ -103,7 +111,7 @@
       "description": "Communication bus for background Claude Code sessions: they message each other and stay aware of what the others are doing.",
       "language": "Python",
       "stars": 1,
-      "pushedAt": "2026-09-05T01:32:45Z"
+      "pushedAt": "2026-09-08T13:38:31Z"
     }
   ]
 }
