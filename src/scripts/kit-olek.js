@@ -180,9 +180,9 @@ export function startKit() {
     else if (direction === "down") slide.scrollTop = 0;
     animateScroll(window, target.top);
   };
-  const edges = (el, down) => {
-    const atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-    const atStart = el.scrollTop <= 0;
+  const edges = (el, down, tolerance = 1) => {
+    const atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - tolerance;
+    const atStart = el.scrollTop <= tolerance - 1;
     return down ? atEnd : atStart;
   };
   // Lista, bloco de código ou tabs com overflow próprio dentro do slide:
@@ -197,10 +197,10 @@ export function startKit() {
     return false;
   };
 
-  // Modelo por gesto. Gesto novo = pausa de 200ms, troca de direção ou delta
-  // subindo (dedo novo acelera; inércia só decai). Troca de slide quando:
-  // o gesto começou na borda e empurrou 24px, ou insistiu 140px na borda
-  // dentro do mesmo gesto. Um gesto troca no máximo um slide.
+  // Modelo por gesto. Gesto novo = pausa de 200ms (ou direção/aceleração,
+  // se ainda não houve troca na rajada). Troca de slide só quando o gesto
+  // começou na borda e empurrou 24px. Um gesto = uma ação: rola o conteúdo
+  // OU troca um slide, nunca os dois.
   const gesture = { at: 0, down: null, lastDelta: 0, startedAtEdge: false, edgePush: 0, changed: false };
   // Swipe (toque): o dedo só assume quando o conteúdo do slide já está na
   // borda; até lá a rolagem interna é nativa. Arrasto segue o dedo com
@@ -274,15 +274,26 @@ export function startKit() {
           gesture.at = 0;
           return;
         }
-        const fresh =
-          now - gesture.at > 200 || gesture.down !== down || d > gesture.lastDelta * 1.6 + 2;
+        // Gesto novo: pausa de 200ms sempre conta. Direção ou aceleração só
+        // contam se ainda não houve troca nesta rajada: a inércia do trackpad
+        // dá solavancos que pareciam dedo novo e passavam dois slides de uma vez.
+        // Jitter da inércia (deltas minúsculos, às vezes invertidos) não conta
+        // como direção nova nem como dedo novo.
+        if (d < 8 && gesture.down !== null && gesture.down !== down) return;
+        const silent = now - gesture.at > 200;
+        // Dedo novo sem pausa: a cauda já tinha morrido (< 15px) e o delta
+        // volta forte (>= 40px). Pico no meio da inércia não passa nesse filtro.
+        const restart = gesture.lastDelta < 15 && d >= 40;
+        const fresh = silent || (!gesture.changed && (gesture.down !== down || restart));
         gesture.at = now;
         gesture.lastDelta = d;
         if (fresh) {
           gesture.down = down;
           gesture.changed = false;
           gesture.edgePush = 0;
-          gesture.startedAtEdge = edges(section, down);
+          // começar a até 48px da borda conta como borda: a rolada termina o
+          // resto do conteúdo e troca, em vez de parar a um dedo do fim
+          gesture.startedAtEdge = edges(section, down, 48);
         }
         if (now < lockedUntil || gesture.changed) {
           event.preventDefault();
@@ -293,9 +304,11 @@ export function startKit() {
           return;
         }
         event.preventDefault();
+        // só troca o gesto que JÁ começou na borda: rolada longa leva o
+        // conteúdo até o fim e para ali; a próxima rolada troca o slide
+        if (!gesture.startedAtEdge) return;
         gesture.edgePush += d;
-        const threshold = gesture.startedAtEdge ? 24 : 140;
-        if (gesture.edgePush >= threshold) {
+        if (gesture.edgePush >= 24) {
           gesture.changed = true;
           goTo(index + (down ? 1 : -1), down ? "down" : "up");
         }
