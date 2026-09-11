@@ -1,23 +1,24 @@
 :root {
   --color-sky: #708ca1;
   --color-boundary: var(--color-sky);
-  --color-sky-light: #dfe9ee;
-  --color-cotton: #f2eee7;
-  --color-paper: #fbfaf7;
-  --color-ink: #171513;
-  --color-graphite: #38464d;
-  --color-line: rgb(23 21 19 / 12%);
-  --color-muted: #5c6265;
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-sky-light: #e6edf2;
+  --color-cotton: #f2f2f2;
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-graphite: #1a1a1a;
+  --color-line: #ddd7;
+  --color-muted: #6b6b6b;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Inter Display", "Inter Variable", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
   --space-page: clamp(1.25rem, 5vw, 5rem);
   --space-section: clamp(4.5rem, 8vw, 7rem);
   --content-wide: 80rem;
   --content-copy: 48rem;
-  --radius-surface: 1.25rem;
-  --radius-control: .65rem;
-  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --radius-surface: clamp(16px, 2vw, 24px);
+  --radius-control: 999px;
+  --ease-out: var(--animat);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
   --duration-press: 140ms;
   --duration-ui: 240ms;
-  --shadow-float: 0 2px 6px rgb(0 0 0 / 5%), 0 12px 28px rgb(0 0 0 / 8%);
+  --shadow-float: 0 0 0 1px #00000005, 0 1px 1px #00000005, 0 6px 32px #0000000a;
 }

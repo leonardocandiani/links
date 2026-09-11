@@ -78,7 +78,12 @@ export const siteUiByLocale = {
       title: "O caminho também vira conteúdo.",
       description: "Compartilho o que funciona, o que falhou e como a IA muda o trabalho quando sai do discurso. No YouTube e na Mente Conectada, engenharia e negócio aparecem no mesmo contexto.",
       linksLabel: "Canais públicos",
-      openLabel: "Abrir"
+      openLabel: "Abrir",
+      channels: {
+        GitHub: { handle: "@leonardocandiani", note: "Ferramentas abertas que nascem da operação: CLIs, skills e integrações." },
+        YouTube: { handle: "@oleonardocandiani", note: "Tutoriais de n8n, agentes de IA e fluxos passo a passo." },
+        Instagram: { handle: "@leonardocandiani", note: "Bastidores, comunidade Mente Conectada e o dia a dia de construir." }
+      }
     },
     contact: {
       title: "Se a conversa pede ação, vamos construir.",
@@ -164,7 +169,12 @@ export const siteUiByLocale = {
       title: "The path also becomes content.",
       description: "I share what works, what failed, and how AI changes work when it moves beyond the talking points. On YouTube and inside Mente Conectada, engineering and business stay in the same context.",
       linksLabel: "Public channels",
-      openLabel: "Open"
+      openLabel: "Open",
+      channels: {
+        GitHub: { handle: "@leonardocandiani", note: "Open tools born from real operations: CLIs, skills and integrations." },
+        YouTube: { handle: "@oleonardocandiani", note: "n8n tutorials, AI agents and step-by-step workflows, in Portuguese." },
+        Instagram: { handle: "@leonardocandiani", note: "Behind the scenes, the Mente Conectada community and the daily build." }
+      }
     },
     contact: {
       title: "When the conversation calls for action, let's build.",

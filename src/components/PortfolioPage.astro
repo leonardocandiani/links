@@ -26,7 +26,7 @@ const { locale, content, ui } = Astro.props;
 <BaseLayout locale={locale} ui={ui}>
   <SiteHeader navigation={content.navigation} ui={ui.header} />
   <main id="conteudo">
-    <HeroPortrait hero={content.hero} ui={ui.hero} />
+    <HeroPortrait hero={content.hero} links={content.links} ui={ui.hero} />
     <VisionSection about={content.about} ui={ui.about} />
     <CultureManifesto culture={content.culture} ui={ui.culture} />
     <FeaturedWork repertoire={content.repertoire} ui={ui.repertoire} />

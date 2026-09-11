@@ -37,28 +37,15 @@ const personJsonLd = {
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} data-tone="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#FBFAF7" />
+    <meta name="theme-color" content="#FFFFFF" />
     <meta name="description" content={description} />
-    <link
-      rel="preload"
-      as="image"
-      href="/images/hero-horizon-mobile.webp"
-      type="image/webp"
-      media="(max-width: 63.99rem)"
-      fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="/images/hero-horizon-wide.webp"
-      type="image/webp"
-      media="(min-width: 64rem)"
-      fetchpriority="high"
-    />
+    <link rel="preload" href="/fonts/InterDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" as="image" href="/images/leonardo-mini.webp" type="image/webp" fetchpriority="high" />
     <link rel="canonical" href={canonical.toString()} />
     <link rel="alternate" hreflang="pt-BR" href={portugueseUrl.toString()} />
     <link rel="alternate" hreflang="en" href={englishUrl.toString()} />
@@ -82,6 +69,12 @@ const personJsonLd = {
   <body>
     <a class="skip-link" href="#conteudo">{ui.layout.skipLink}</a>
     <slot />
+    <div class="k-fade-top" aria-hidden="true"></div>
+    <div class="k-fade" aria-hidden="true"></div>
+    <script>
+      import { startKit } from "../scripts/kit-olek.js";
+      startKit();
+    </script>
     <script is:inline>
       const revealItems = Array.from(document.querySelectorAll("[data-reveal], [data-media-reveal]"));
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

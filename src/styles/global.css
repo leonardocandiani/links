@@ -1,3 +1,4 @@
+@import "./kit-olek.css";
 @import "./tokens.css";
 @import "./motion.css";
 
@@ -9,9 +10,11 @@
 
 html {
   min-width: 320px;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--glow-color);
+  color: var(--tone-fg);
   font-family: var(--font-sans);
+  font-variation-settings: "opsz" 32;
+  letter-spacing: -0.02em;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -20,9 +23,10 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--glow-color);
+  color: var(--tone-fg);
   font-family: var(--font-sans);
+  transition: background-color .4s var(--animat-tone), color .4s var(--animat-tone);
 }
 
 img,
@@ -78,10 +82,15 @@ button {
   scroll-margin-top: 6rem;
 }
 
+html[data-tone="dark"] .section-title,
+html[data-tone="dark"] .display {
+  color: var(--tone-fg);
+}
+
 .eyebrow {
   margin: 0 0 1rem;
-  color: var(--color-graphite);
-  font-size: clamp(.75rem, .7rem + .25vw, .9rem);
+  color: var(--color-muted);
+  font-size: clamp(.75rem, .7rem + .25vw, .875rem);
   font-weight: 700;
   letter-spacing: .065em;
   line-height: 1.2;
@@ -92,31 +101,33 @@ button {
   max-width: 13ch;
   margin: 0;
   color: var(--color-ink);
-  font-size: clamp(3.5rem, 2.5rem + 5vw, 8rem);
-  font-weight: 590;
-  letter-spacing: -.045em;
-  line-height: .92;
+  font-family: var(--font-display);
+  font-size: clamp(2.625rem, 1.5rem + 5vw, 6rem);
+  font-weight: 500;
+  letter-spacing: -0.0275em;
+  line-height: 1.2;
 }
 
 .section-title {
   max-width: var(--content-copy);
   margin: 0;
   color: var(--color-ink);
-  font-size: clamp(2.25rem, 1.85rem + 2vw, 4.5rem);
-  font-weight: 560;
-  letter-spacing: -.04em;
-  line-height: 1.06;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
   text-wrap: balance;
 }
 
 .body-large {
   max-width: var(--content-copy);
   margin: 0;
-  color: var(--color-muted);
+  color: #000b;
   font-size: clamp(1.125rem, 1rem + .65vw, 1.5rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.55;
+  font-variation-settings: "opsz" 32, "wght" 350;
+  letter-spacing: -0.25px;
+  line-height: 1.6;
 }
 
 .brand-signature {

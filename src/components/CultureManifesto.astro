@@ -65,7 +65,9 @@ const titlePrefix = culture.title.slice(0, -culture.limitWord.length).trimEnd();
     display: grid;
     grid-template-columns: minmax(0, 48%) minmax(0, 52%);
     min-height: clamp(29rem, 40vw, 36rem);
-    overflow: hidden;
+    /* visible: com hidden o "N" do kicker perdia um pixel na borda esquerda;
+       a mídia já recorta a si mesma */
+    overflow: visible;
     border-radius: var(--radius-surface);
     background: transparent;
   }
