@@ -115,37 +115,27 @@ html[data-tone="dark"] {
 
 /* ---------- Motor de seções (rotateX + blur + opacidade por scroll) ---------- */
 
-/* Modo slides: só com ponteiro fino, como o olek (scrollSnap = pointer: fine).
-   Cada seção é um slide de 100dvh; conteúdo mais alto rola dentro do slide.
-   O encaixe entre slides é feito pelo kit-olek.js (roda e teclado), não por
-   scroll-snap CSS: o snap nativo mira a caixa já girada pela perspectiva e
-   o ponto de encaixe fugia junto com a rotação. */
-/* o motor anima o scroll por conta própria; o smooth nativo atrapalha */
+/* Deck nativo (olek no desktop): scroll-snap mandatory na janela com
+   scroll-snap-stop: always, um slide por gesto, física do navegador. Seção
+   mais alta que a tela rola livre por dentro (área de snap maior que a
+   janela, spec 6.2) e encaixa só nas costuras. O snap mira a caixa
+   transformada, por isso a dobradiça fica na borda (topo de quem entra, base
+   de quem sai): o alvo não se move. */
 html[data-engine="snap"] {
-  scroll-behavior: auto;
+  scroll-snap-type: y mandatory;
 }
 
 html[data-engine="snap"] main > section,
 html[data-engine="snap"] body > footer {
-  /* !important porque componentes (ex.: .jarvis-case) fixam overflow: hidden
-     com seletor escopado de especificidade maior; sem isso o slide não rola */
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior-y: contain;
-  scrollbar-width: none;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   scroll-margin-top: 0;
   will-change: transform, opacity, filter;
   backface-visibility: hidden;
 }
 
-html[data-engine="snap"] main > section::-webkit-scrollbar,
-html[data-engine="snap"] body > footer::-webkit-scrollbar {
-  display: none;
-}
-
-/* perspective vai dentro do transform de cada slide (kit-olek.js):
+/* perspective vai dentro da geometria de cada slide (dobradiça na borda):
    perspective no body/main viraria containing block e quebraria o header fixo */
 
 /* ---------- Timeline lateral (olek: #timeline .bar) ---------- */
@@ -477,19 +467,6 @@ html[data-tone="dark"] .site-header .brand-signature__surname::before {
   background: var(--tone-soft);
 }
 
-/* ---------- Toque: swipe entre slides (olek: SwipeState) ---------- */
-
-/* a janela só se move pelo kit-olek.js (arrasto e goTo); nada de rolagem
-   nativa da página, como o html overflow: hidden do olek */
-html[data-input="touch"] {
-  overflow: hidden;
-}
-
-html[data-input="touch"] main > section,
-html[data-input="touch"] body > footer {
-  overscroll-behavior-y: contain;
-}
-
 /* ---------- Celular: folga pro header fixo ---------- */
 
 /* o header ocupa 72px; a seção nascia com padding igual e o kicker passava
@@ -497,7 +474,7 @@ html[data-input="touch"] body > footer {
 @media (pointer: coarse) {
   html[data-engine="snap"] main > section.section,
   html[data-engine="snap"] body > footer {
-    padding-top: 7rem !important;
+    padding-top: 7rem;
   }
 
   .k-fade {
