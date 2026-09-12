@@ -1,128 +1,93 @@
-/* Motor de scroll extraído do olek.si e adaptado pra página longa.
-   Fórmulas idênticas às do bundle original (renderSection, calculateBlur,
-   compress, opacity); o que muda é como calculamos a distância h de cada
-   seção, já que aqui as seções têm alturas variadas em vez de 100vh cada. */
+/* Kit visual do olek.si adaptado pra página contínua.
 
-// olek: compress() arredonda o blur em degraus pra não recompor filtro a cada px.
-function compress(t) {
-  if (t < 16) return t;
-  const step = 2 ** (Math.floor(Math.log2(t)) - 3);
-  return Math.round(t / step) * step;
-}
+   O deck paginado saiu: a rolagem é a nativa do navegador e o JS nunca
+   intercepta roda, teclado ou toque. O que ele faz é ler scrollY e pintar
+   três coisas: a névoa das bordas (que cresce com a velocidade), o deslize
+   dos títulos e a troca de tom, além de montar a timeline lateral. */
 
-// olek: calculateBlur(y, index). Borda (primeira/última) usa curva cúbica.
-// No toque o teto cai pra 12: tela pequena e GPU de celular.
-let blurCap = 32;
-function blurFor(y, edge) {
-  const l = edge ? y * y * y * 32 : Math.max(0, y - 0.15) ** 2;
-  // teto 32 (olek usa 56): as seções aqui são bem maiores que as páginas dele
-  // e blur acima disso derruba o frame rate no scroll
-  const px = Math.min(blurCap, compress(l * 48));
-  return px ? `blur(${px}px)` : "blur(0px)";
-}
-
-// olek: opacity = max(0, 1 - y / (mesmo tom ? 2 : 1.1))
-const opacityFor = (y, sameTone) => Math.max(0, 1 - y / (sameTone ? 2 : 1.1));
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 export function startKit() {
   const root = document.documentElement;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  if (!reduced) splitHeadlines();
   revealCubes(reduced);
+
+  root.dataset.engine = "flow";
   if (reduced) return;
 
   const sections = Array.from(document.querySelectorAll("main > section, body > footer"));
   if (sections.length === 0) return;
 
-  // Deck nativo, como o olek no desktop: scroll-snap mandatory com
-  // scroll-snap-stop: always (um slide por gesto) e ZERO interceptação de
-  // roda, teclado ou toque. A física é do navegador; o JS só lê scrollY e
-  // pinta rotação, blur, opacidade, tom e dobra. Seção mais alta que a tela
-  // rola livre por dentro (área de snap maior que a janela) e encaixa só
-  // nas costuras.
-  root.dataset.engine = "snap";
   const finePointer = window.matchMedia("(pointer: fine)").matches;
-  if (!finePointer) blurCap = 12;
+  // deslize dos títulos: amplitude menor no toque, onde a tela é curta
+  const drift = finePointer ? 22 : 12;
   let frame = 0;
 
-  // Geometria de layout (sem transform): getBoundingClientRect devolve o
-  // retângulo já girado e realimenta a própria rotação. O olek usa scrollTop.
+  // Geometria de layout, nunca getBoundingClientRect: o rect já vem com o
+  // transform aplicado e realimentaria o próprio deslize.
   const layoutTop = (el) => {
     let top = 0;
     for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
     return top;
   };
+
+  const kinetic = Array.from(document.querySelectorAll("[data-kinetic]"));
   let geometry = [];
+  let anchors = [];
   const measure = () => {
     geometry = sections.map((el) => ({ top: layoutTop(el), height: el.offsetHeight }));
+    anchors = kinetic.map((el) => ({ top: layoutTop(el), height: el.offsetHeight }));
   };
   measure();
 
-  const current = () => {
-    let best = 0;
-    geometry.forEach((g, i) => {
-      if (Math.abs(g.top - window.scrollY) < Math.abs(geometry[best].top - window.scrollY)) best = i;
-    });
-    return best;
-  };
-
-  // Timeline: clique leva ao slide pelo scroll nativo (o snap encaixa).
   const rail = finePointer
     ? buildRail(sections, (index) => sections[index].scrollIntoView({ behavior: "smooth", block: "start" }))
     : { update() {} };
 
+  // A névoa base fica sempre; --fold estende as camadas enquanto a página se
+  // move e decai sozinho quando ela para.
+  let lastY = window.scrollY;
+  let fold = 0;
+
   const render = () => {
     frame = 0;
     const vh = window.innerHeight;
+    const scrollY = window.scrollY;
+
+    const speed = Math.abs(scrollY - lastY);
+    lastY = scrollY;
+    fold = Math.max(fold * 0.82, clamp(speed / 90, 0, 1));
+    if (fold < 0.005) fold = 0;
+    root.style.setProperty("--fold", fold.toFixed(3));
+
+    // tom troca quando a costura passa 30% da tela
     let activeTone = null;
-    // dobra (lid-plane): 0 em repouso, 1 no meio da transição
-    let fold = 0;
+    geometry.forEach((box, index) => {
+      const top = box.top - scrollY;
+      if (top <= vh * 0.3 && top + box.height > vh * 0.3) {
+        activeTone = sections[index].dataset.tone || "light";
+      }
+    });
+    if (activeTone && root.dataset.tone !== activeTone) root.dataset.tone = activeTone;
 
-    sections.forEach((section, index) => {
-      const box = geometry[index];
-      const rect = { top: box.top - window.scrollY, bottom: box.top + box.height - window.scrollY };
-
-      // Mesma distância do olek (página r menos posição o, em viewports):
-      // h > 0 enquanto o topo ainda não chegou ao topo da tela (entrando),
-      // h < 0 quando o fim já subiu acima do rodapé (saindo), 0 em repouso.
-      let h = 0;
-      if (rect.top > 0) h = rect.top / vh;
-      else if (rect.bottom < vh) h = (rect.bottom - vh) / vh;
-      // tom troca quando a costura passa 30% da tela: a seção que sai já quase
-      // sumiu, sem laje clara meio transparente em cima do fundo escuro
-      if (rect.top <= vh * 0.3 && rect.bottom > vh * 0.3) activeTone = section.dataset.tone || "light";
-
-      const y = Math.abs(h);
-      const style = section.style;
-
-      if (y > 1.5) {
-        if (style.willChange !== "auto") {
-          style.transformOrigin = "";
-          style.transform = "";
-          style.filter = "";
-          style.opacity = "";
-          style.willChange = "auto";
-        }
+    // título desliza de baixo pra cima conforme atravessa a tela: q vale 1
+    // quando ele ainda está lá embaixo e -1 quando já saiu por cima
+    anchors.forEach((box, index) => {
+      const middle = box.top + box.height / 2 - scrollY;
+      const q = (middle - vh / 2) / vh;
+      const el = kinetic[index];
+      if (Math.abs(q) > 0.9) {
+        if (el.style.transform) el.style.transform = "";
         return;
       }
-
-      const sameTone = (section.dataset.tone || "light") === (root.dataset.tone || "light");
-      // lid-plane: a dobradiça é a costura entre os slides (borda superior de
-      // quem entra, inferior de quem sai), projeção paralela, sem perspective.
-      // Com a dobradiça na borda o alvo do snap nativo não se move.
-      style.transformOrigin = h > 0 ? "50% 0" : "50% 100%";
-      style.transform = `rotateX(${-14 * h}deg)`;
-      style.filter = blurFor(y, false);
-      if (y < 1) fold = Math.max(fold, 4 * y * (1 - y));
-      style.opacity = String(opacityFor(y, sameTone));
-      style.willChange = "transform, opacity, filter";
+      el.style.transform = `translate3d(0, ${(q * drift).toFixed(2)}px, 0)`;
     });
 
-    if (activeTone && root.dataset.tone !== activeTone) {
-      root.dataset.tone = activeTone;
-    }
-    root.style.setProperty("--fold", fold.toFixed(3));
-    rail.update(window.scrollY / vh, geometry);
+    rail.update(scrollY, geometry);
+    // enquanto a névoa decai, continua pintando mesmo sem evento de scroll
+    if (fold) schedule();
   };
 
   const schedule = () => {
@@ -134,7 +99,7 @@ export function startKit() {
     measure();
     schedule();
   });
-  // conteúdo carregado depois (imagens, fontes, React) muda a altura das seções
+  // conteúdo que carrega depois (imagens, fontes, React) muda as alturas
   window.addEventListener("load", () => {
     measure();
     schedule();
@@ -146,6 +111,58 @@ export function startKit() {
     }).observe(document.body);
   }
   render();
+}
+
+/* Fatia os títulos de seção em palavras, como o título da hero, pra cada uma
+   entrar com o mesmo cube-rotate escalonado. Só toca em nó de texto: markup
+   interno (destaques, links) vira uma peça inteira em vez de ser desmontado. */
+function splitHeadlines() {
+  const selector = [
+    "main > section h2",
+    "main > section .eyebrow",
+    "body > footer h2",
+    "body > footer .eyebrow"
+  ].join(", ");
+
+  document.querySelectorAll(selector).forEach((el) => {
+    if (el.hasAttribute("data-split") || el.querySelector("[data-cube]")) return;
+
+    const pieces = [];
+    Array.from(el.childNodes).forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        node.classList.add("k-word");
+        node.setAttribute("data-cube", "");
+        pieces.push(node);
+        return;
+      }
+      if (node.nodeType !== Node.TEXT_NODE) {
+        pieces.push(node);
+        return;
+      }
+      node.textContent.split(/(\s+)/).forEach((chunk) => {
+        if (!chunk) return;
+        if (!chunk.trim()) {
+          pieces.push(document.createTextNode(chunk));
+          return;
+        }
+        const word = document.createElement("span");
+        word.className = "k-word";
+        word.setAttribute("data-cube", "");
+        word.textContent = chunk;
+        pieces.push(word);
+      });
+    });
+
+    let index = 0;
+    pieces.forEach((piece) => {
+      if (piece.nodeType === Node.ELEMENT_NODE) piece.style.setProperty("--i", String(index++));
+    });
+
+    el.replaceChildren(...pieces);
+    el.setAttribute("data-split", "");
+    el.classList.add("k-split");
+    if (el.tagName === "H2") el.setAttribute("data-kinetic", "");
+  });
 }
 
 // Entrada cube-rotate: cada [data-cube] anima uma vez ao entrar no viewport.
@@ -174,7 +191,7 @@ function revealCubes(reduced) {
   requestAnimationFrame(() => cubes.forEach((el) => observer.observe(el)));
 }
 
-// Timeline lateral do olek: rótulo por slide, ativo cheio, os outros a 50%,
+// Timeline lateral do olek: rótulo por seção, ativa cheia, as outras a 50%,
 // blur crescendo com a distância (blur(min(2, max(0, q-0.5)*1.5))).
 function buildRail(sections, onPick) {
   const lang = document.documentElement.lang || "pt-BR";
@@ -192,7 +209,7 @@ function buildRail(sections, onPick) {
 
   const nav = document.createElement("nav");
   nav.className = "k-rail";
-  nav.setAttribute("aria-label", lang.startsWith("en") ? "Slides" : "Seções");
+  nav.setAttribute("aria-label", lang.startsWith("en") ? "Sections" : "Seções");
   nav.setAttribute("data-cube", "rail");
   const tabs = sections.map((section, index) => {
     if (index > 0) {
@@ -212,14 +229,15 @@ function buildRail(sections, onPick) {
   requestAnimationFrame(() => nav.setAttribute("data-rendered", ""));
 
   return {
-    update(position, geometry) {
-      // posição fracionária em slides, como o olek (scrollTop / vh)
+    // ativa é a seção que ocupa o meio da tela
+    update(scrollY, geometry) {
+      const middle = scrollY + window.innerHeight / 2;
       let active = 0;
-      geometry.forEach((g, i) => {
-        if (Math.abs(g.top - position * window.innerHeight) < Math.abs(geometry[active].top - position * window.innerHeight)) active = i;
+      geometry.forEach((box, index) => {
+        if (middle >= box.top) active = index;
       });
-      tabs.forEach((tab, i) => {
-        const q = Math.abs(i - active);
+      tabs.forEach((tab, index) => {
+        const q = Math.abs(index - active);
         const blur = Math.min(2, Math.max(0, q - 0.5) * 1.5);
         tab.style.filter = blur ? `blur(${blur.toFixed(2)}px)` : "";
         tab.style.opacity = q < 0.5 ? "1" : "0.5";

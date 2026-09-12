@@ -34,9 +34,9 @@ const whatsappHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.m
     min-height: 72svh;
   }
 
-  /* no modo slides o rodapé é o último slide inteiro */
-  :global(html[data-engine="snap"]) .contact-footer {
-    min-height: 100dvh;
+  /* rodapé com a foto do horizonte; alto o bastante pra assinatura respirar */
+  :global(html[data-engine="flow"]) .contact-footer {
+    min-height: 86svh;
     /* a assinatura fica acima da névoa inferior do kit */
     padding-bottom: 7rem;
     align-items: end;

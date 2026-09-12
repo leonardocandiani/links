@@ -113,30 +113,41 @@ html[data-tone="dark"] {
   animation: 1s rail-rise cubic-bezier(0, 0.25, 0, 1) both;
 }
 
-/* ---------- Motor de seções (rotateX + blur + opacidade por scroll) ---------- */
+/* ---------- Página contínua: rolagem nativa, sem paginação ---------- */
 
-/* Deck nativo (olek no desktop): scroll-snap mandatory na janela com
-   scroll-snap-stop: always, um slide por gesto, física do navegador. Seção
-   mais alta que a tela rola livre por dentro (área de snap maior que a
-   janela, spec 6.2) e encaixa só nas costuras. O snap mira a caixa
-   transformada, por isso a dobradiça fica na borda (topo de quem entra, base
-   de quem sai): o alvo não se move. */
-html[data-engine="snap"] {
-  scroll-snap-type: y mandatory;
+/* O deck paginado saiu. As seções voltam à altura natural e a rolagem é a do
+   navegador, sem interceptar roda, teclado ou toque. Do kit ficam o desfoque
+   das bordas, o deslize dos títulos e a animação de entrada do texto. */
+html[data-engine="flow"] {
+  scroll-behavior: smooth;
 }
 
-html[data-engine="snap"] main > section,
-html[data-engine="snap"] body > footer {
-  min-height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  scroll-margin-top: 0;
-  will-change: transform, opacity, filter;
-  backface-visibility: hidden;
+html[data-engine="flow"] main > section,
+html[data-engine="flow"] body > footer {
+  /* âncora do menu não para embaixo do header fixo */
+  scroll-margin-top: 5.5rem;
 }
 
-/* perspective vai dentro da geometria de cada slide (dobradiça na borda):
-   perspective no body/main viraria containing block e quebraria o header fixo */
+/* títulos que deslizam com a rolagem: só transform, nunca layout */
+[data-kinetic] {
+  will-change: transform;
+}
+
+/* palavra fatiada pelo kit-olek.js; inline-block pra aceitar rotateX */
+.k-word {
+  display: inline-block;
+}
+
+/* o pai fatiado dá profundidade às palavras, como .k-stage faz na hero */
+.k-split {
+  perspective: 512px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-engine="flow"] {
+    scroll-behavior: auto;
+  }
+}
 
 /* ---------- Timeline lateral (olek: #timeline .bar) ---------- */
 
@@ -154,7 +165,7 @@ html[data-engine="snap"] body > footer {
   mix-blend-mode: var(--tone-blend);
 }
 
-html[data-engine="snap"] .k-rail {
+html[data-engine="flow"] .k-rail {
   display: flex;
 }
 
@@ -205,22 +216,22 @@ html[data-engine="snap"] .k-rail {
    navegações pra mesma coisa é ruído (o olek não tem navbar). Abaixo de
    80rem a timeline some e o menu volta. */
 @media (min-width: 80.01rem) {
-  html[data-engine="snap"] .site-header .desktop-nav a:not(.language-switch) {
+  html[data-engine="flow"] .site-header .desktop-nav a:not(.language-switch) {
     display: none;
   }
 
-  html[data-engine="snap"] .site-header .desktop-nav .language-switch {
+  html[data-engine="flow"] .site-header .desktop-nav .language-switch {
     margin-left: 0;
   }
 
   /* margem lateral maior pra timeline não encostar no conteúdo (olek centraliza
      o conteúdo com respiro dos dois lados) */
-  html[data-engine="snap"] {
+  html[data-engine="flow"] {
     --space-page: clamp(10rem, 11vw, 13rem);
   }
 
   /* a barra de 70rem vira uma pílula só com marca e idioma */
-  html[data-engine="snap"] .site-header .header-shell {
+  html[data-engine="flow"] .site-header .header-shell {
     width: fit-content;
     gap: .25rem;
   }
@@ -233,7 +244,7 @@ html[data-engine="snap"] .k-rail {
 }
 
 @media (max-width: 80rem) {
-  html[data-engine="snap"] .k-rail {
+  html[data-engine="flow"] .k-rail {
     display: none;
   }
 }
@@ -296,14 +307,14 @@ html[data-engine="snap"] .k-rail {
 .k-fade-top {
   /* abaixo do header (50) e da timeline (60): o blur não pode esfumar a UI fixa */
   z-index: 40;
-  height: calc(112px + var(--fold) * 35vh);
+  height: calc(112px + var(--fold) * 22vh);
   backdrop-filter: blur(4px);
 }
 
 /* faixa base no topo: o header flutua sobre névoa, como o #glowfade do olek,
    e o texto da marca não colide com o conteúdo que passa por baixo */
 .k-fade-top {
-  height: calc(72px + var(--fold) * 35vh);
+  height: calc(72px + var(--fold) * 22vh);
 }
 
 .k-fade::before,
@@ -433,8 +444,8 @@ html[data-engine="snap"] .k-rail {
     animation: none;
   }
 
-  html[data-engine="snap"] main > section,
-  html[data-engine="snap"] body > footer {
+  html[data-engine="flow"] main > section,
+  html[data-engine="flow"] body > footer {
     transform: none !important;
     filter: none !important;
     opacity: 1 !important;
@@ -472,13 +483,13 @@ html[data-tone="dark"] .site-header .brand-signature__surname::before {
 /* o header ocupa 72px; a seção nascia com padding igual e o kicker passava
    por baixo dele e da névoa do topo. */
 @media (pointer: coarse) {
-  html[data-engine="snap"] main > section.section,
-  html[data-engine="snap"] body > footer {
+  html[data-engine="flow"] main > section.section,
+  html[data-engine="flow"] body > footer {
     padding-top: 7rem;
   }
 
   .k-fade {
-    height: calc(72px + var(--fold) * 35vh);
+    height: calc(72px + var(--fold) * 22vh);
   }
 
   .k-fade-top {
