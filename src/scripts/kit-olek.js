@@ -201,7 +201,7 @@ export function startKit() {
   // se ainda não houve troca na rajada). Troca de slide só quando o gesto
   // começou na borda e empurrou 24px. Um gesto = uma ação: rola o conteúdo
   // OU troca um slide, nunca os dois.
-  const gesture = { at: 0, down: null, lastDelta: 0, startedAtEdge: false, edgePush: 0, changed: false };
+  const gesture = { at: 0, down: null, lastDelta: 0, startedAtEdge: false, edgePush: 0, steady: 0, changed: false };
   // Swipe (toque): o dedo só assume quando o conteúdo do slide já está na
   // borda; até lá a rolagem interna é nativa. Arrasto segue o dedo com
   // resistência 0.5 e, ao soltar, 90px ou 0,6px/ms trocam o slide.
@@ -274,9 +274,6 @@ export function startKit() {
           gesture.at = 0;
           return;
         }
-        // Gesto novo: pausa de 200ms sempre conta. Direção ou aceleração só
-        // contam se ainda não houve troca nesta rajada: a inércia do trackpad
-        // dá solavancos que pareciam dedo novo e passavam dois slides de uma vez.
         // Jitter da inércia (deltas minúsculos, às vezes invertidos) não conta
         // como direção nova nem como dedo novo.
         if (d < 8 && gesture.down !== null && gesture.down !== down) return;
@@ -285,30 +282,40 @@ export function startKit() {
         // volta forte (>= 40px). Pico no meio da inércia não passa nesse filtro.
         const restart = gesture.lastDelta < 15 && d >= 40;
         const fresh = silent || (!gesture.changed && (gesture.down !== down || restart));
+        const previous = gesture.lastDelta;
         gesture.at = now;
         gesture.lastDelta = d;
         if (fresh) {
           gesture.down = down;
           gesture.changed = false;
           gesture.edgePush = 0;
+          gesture.steady = 0;
           // começar a até 48px da borda conta como borda: a rolada termina o
           // resto do conteúdo e troca, em vez de parar a um dedo do fim
           gesture.startedAtEdge = edges(section, down, 48);
         }
-        if (now < lockedUntil || gesture.changed) {
+        // Animação em curso: nada passa.
+        if (now < lockedUntil) {
           event.preventDefault();
           return;
         }
+        // Fora da borda o conteúdo rola nativamente, inclusive logo depois de
+        // uma troca com os dedos ainda no trackpad (antes isso era engolido e
+        // o slide novo parecia travado).
         if (!edges(section, down)) {
           gesture.edgePush = 0;
+          gesture.steady = 0;
           return;
         }
+        // Na borda: segura o encadeamento pra janela; uma troca por rajada.
         event.preventDefault();
-        // só troca o gesto que JÁ começou na borda: rolada longa leva o
-        // conteúdo até o fim e para ali; a próxima rolada troca o slide
-        if (!gesture.startedAtEdge) return;
+        if (gesture.changed) return;
         gesture.edgePush += d;
-        if (gesture.edgePush >= 24) {
+        // Empurrão sustentado (dedos parados na borda, deltas que não decaem)
+        // conta; inércia só decai e nunca acumula "steady".
+        gesture.steady = d >= 6 && d >= previous - 1 ? gesture.steady + 1 : 0;
+        const threshold = gesture.startedAtEdge ? 24 : Infinity;
+        if (gesture.edgePush >= threshold || (gesture.steady >= 6 && gesture.edgePush >= 120)) {
           gesture.changed = true;
           goTo(index + (down ? 1 : -1), down ? "down" : "up");
         }
@@ -317,7 +324,6 @@ export function startKit() {
     );
   });
 
-  const interactive = new Set(["INPUT", "TEXTAREA", "SELECT", "BUTTON", "A", "SUMMARY", "VIDEO", "AUDIO"]);
   window.addEventListener("keydown", (event) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     const active = document.activeElement;
