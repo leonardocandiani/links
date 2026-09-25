@@ -17,7 +17,8 @@ const kritRepository = {
   fork: false,
   archived: false,
   disabled: false,
-  pushed_at: "2026-08-06T13:21:07Z"
+  pushed_at: "2026-08-06T13:21:07Z",
+  created_at: "2026-05-30T10:00:00Z"
 };
 
 const fallbackSnapshot = {
@@ -29,7 +30,8 @@ const fallbackSnapshot = {
       description: "Snapshot anterior válido",
       language: null,
       stars: 0,
-      pushedAt: "2026-08-01T09:00:00Z"
+      pushedAt: "2026-08-01T09:00:00Z",
+      createdAt: "2026-07-01T09:00:00Z"
     }
   ]
 };
@@ -66,7 +68,8 @@ describe("normalizeRepositories", () => {
         description: "Screenshot nativo para macOS",
         language: "Swift",
         stars: 12,
-        pushedAt: "2026-08-06T13:21:07Z"
+        pushedAt: "2026-08-06T13:21:07Z",
+        createdAt: "2026-05-30T10:00:00Z"
       }
     ]);
   });
@@ -84,6 +87,8 @@ describe("normalizeRepositories", () => {
       { ...kritRepository, description: "   " },
       { ...kritRepository, language: 42 },
       { ...kritRepository, pushed_at: "not-a-date" },
+      { ...kritRepository, created_at: "not-a-date" },
+      { ...kritRepository, created_at: undefined },
       { ...kritRepository, stargazers_count: "12" },
       null,
       {}
@@ -96,7 +101,8 @@ describe("normalizeRepositories", () => {
         description: "Screenshot nativo para macOS",
         language: "Swift",
         stars: 12,
-        pushedAt: "2026-08-06T13:21:07Z"
+        pushedAt: "2026-08-06T13:21:07Z",
+        createdAt: "2026-05-30T10:00:00Z"
       }
     ]);
   });
@@ -107,25 +113,25 @@ describe("normalizeRepositories", () => {
     );
   });
 
-  it("orders repositories by most recent activity", () => {
+  it("orders repositories by most recent publication", () => {
     const repositories = [
       {
         ...kritRepository,
         name: "older",
         html_url: "https://github.com/leonardocandiani/older",
-        pushed_at: "2026-08-01T09:00:00Z"
+        created_at: "2026-08-01T09:00:00Z"
       },
       {
         ...kritRepository,
         name: "newer",
         html_url: "https://github.com/leonardocandiani/newer",
-        pushed_at: "2026-08-08T09:00:00Z"
+        created_at: "2026-08-08T09:00:00Z"
       },
       {
         ...kritRepository,
         name: "middle",
         html_url: "https://github.com/leonardocandiani/middle",
-        pushed_at: "2026-08-06T09:00:00Z"
+        created_at: "2026-08-06T09:00:00Z"
       }
     ];
 
@@ -154,7 +160,8 @@ describe("normalizeRepositories", () => {
         description: "Screenshot nativo para macOS",
         language: "Swift",
         stars: 12,
-        pushedAt: "2026-08-06T13:21:07Z"
+        pushedAt: "2026-08-06T13:21:07Z",
+        createdAt: "2026-05-30T10:00:00Z"
       }
     ]);
   });
@@ -174,7 +181,8 @@ describe("normalizeRepositories", () => {
         description: "Ferramentas conectadas: decisões rápidas",
         language: "Swift",
         stars: 12,
-        pushedAt: "2026-08-06T13:21:07Z"
+        pushedAt: "2026-08-06T13:21:07Z",
+        createdAt: "2026-05-30T10:00:00Z"
       }
     ]);
   });
@@ -224,7 +232,8 @@ describe("syncGitHubSnapshot", () => {
           description: "Screenshot nativo para macOS",
           language: "Swift",
           stars: 12,
-          pushedAt: "2026-08-06T13:21:07Z"
+          pushedAt: "2026-08-06T13:21:07Z",
+          createdAt: "2026-05-30T10:00:00Z"
         }
       ]
     });

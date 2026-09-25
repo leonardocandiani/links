@@ -11,21 +11,13 @@ const { ui } = Astro.props;
 
 const snapshot = githubSnapshot as GitHubSnapshot;
 const repositories = snapshot.repositories;
-const featuredNames = ["scratchmate", "krit", "keepwright"] as const;
 const featuredToneByIndex = ["ink", "sky", "cotton"] as const;
 const githubProfileUrl = "https://github.com/leonardocandiani";
 
-function isGitHubRepository(repository: GitHubRepository | undefined): repository is GitHubRepository {
-  return Boolean(repository);
-}
-
-const featuredRepositories = featuredNames
-  .map((name) => repositories.find((repository) => repository.name === name))
-  .filter(isGitHubRepository);
-const featuredNameSet = new Set(featuredRepositories.map((repository) => repository.name));
-const recentRepositories = repositories
-  .filter((repository) => !featuredNameSet.has(repository.name))
-  .slice(0, 4);
+// o snapshot já vem do mais novo pro mais antigo: os três últimos publicados
+// viram destaque e os quatro seguintes entram na lista
+const featuredRepositories: GitHubRepository[] = repositories.slice(0, 3);
+const recentRepositories = repositories.slice(3, 7);
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat(ui.dateLocale, {
@@ -105,7 +97,7 @@ function formatDescription(repository: GitHubRepository) {
                     </a>
                   </h3>
                   <p>{formatDescription(repository)}</p>
-                  <time datetime={repository.pushedAt}>{formatDate(repository.pushedAt)}</time>
+                  <time datetime={repository.createdAt}>{formatDate(repository.createdAt)}</time>
                 </article>
               ))}
             </div>
@@ -127,7 +119,7 @@ function formatDescription(repository: GitHubRepository) {
                     </div>
                     <div class="github-recent-meta">
                       <span>{repository.language ?? ui.languageFallback}</span>
-                      <time datetime={repository.pushedAt}>{formatDate(repository.pushedAt)}</time>
+                      <time datetime={repository.createdAt}>{formatDate(repository.createdAt)}</time>
                       {repository.stars > 0 && <span>{formatStars(repository.stars)}</span>}
                     </div>
                   </article>

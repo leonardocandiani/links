@@ -11,9 +11,11 @@ export function normalizeRepositories(repositories) {
       description: normalizeDescription(repository.description),
       language: repository.language,
       stars: repository.stargazers_count,
-      pushedAt: repository.pushed_at
+      pushedAt: repository.pushed_at,
+      createdAt: repository.created_at
     }))
-    .sort((left, right) => Date.parse(right.pushedAt) - Date.parse(left.pushedAt));
+    // mais novo primeiro: a vitrine mostra o que foi publicado por último
+    .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt));
 }
 
 function isRepositoryCandidate(repository) {
@@ -34,6 +36,8 @@ function isRepositoryCandidate(repository) {
     !isOwnedRepositoryUrl(repository.html_url, repository.name) ||
     !isNonEmptyString(repository.pushed_at) ||
     Number.isNaN(Date.parse(repository.pushed_at)) ||
+    !isNonEmptyString(repository.created_at) ||
+    Number.isNaN(Date.parse(repository.created_at)) ||
     typeof repository.description !== "string" ||
     repository.description.trim().length === 0 ||
     typeof repository.stargazers_count !== "number" ||

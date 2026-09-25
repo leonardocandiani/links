@@ -4,7 +4,8 @@ import type { GitHubSnapshot } from "../src/types/site";
 
 const siteHeading = (text: string) => new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
 const snapshot = githubSnapshot as GitHubSnapshot;
-const featuredRepositoryNames = ["scratchmate", "krit", "keepwright"] as const;
+// destaques = os três publicados por último; o snapshot já vem nessa ordem
+const featuredRepositoryNames = snapshot.repositories.slice(0, 3).map((repository) => repository.name);
 const publicPresenceLinks = [
   { label: "GitHub", href: "https://github.com/leonardocandiani" },
   { label: "YouTube", href: "https://youtube.com/@oleonardocandiani" },
@@ -740,8 +741,7 @@ test("apresenta GitHub público, presença pública e contato", async ({ page })
     return repository!;
   });
   const expectedRecentNames = snapshot.repositories
-    .filter((repository) => !featuredRepositoryNames.includes(repository.name as (typeof featuredRepositoryNames)[number]))
-    .slice(0, 4)
+    .slice(3, 7)
     .map((repository) => repository.name);
 
   expect(snapshot.repositories.length).toBeGreaterThan(0);
@@ -755,7 +755,7 @@ test("apresenta GitHub público, presença pública e contato", async ({ page })
 
     await expect(card).toContainText(repository.language ?? "Linguagem não informada");
     await expect(card).toContainText(formatStars(repository.stars));
-    await expect(card.locator("time")).toHaveText(formatDate(repository.pushedAt));
+    await expect(card.locator("time")).toHaveText(formatDate(repository.createdAt));
   }
 
   await expect(recentItems).toHaveCount(expectedRecentNames.length);
