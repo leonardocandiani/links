@@ -56,6 +56,7 @@ export type GitHubRepository = {
   language: string | null;
   stars: number;
   pushedAt: string;
+  createdAt: string;
 };
 
 export type GitHubSnapshot = {
