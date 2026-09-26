@@ -26,7 +26,10 @@ export const siteUiByLocale = {
       cultureLabel: "O que nos limita é a nossa criatividade.",
       imageAlt: "Caminho terracota entre arquitetura escura e um horizonte azul",
       actionsLabel: "Ações principais",
-      primaryCta: "Conhecer meu trabalho",
+      primaryCta: "Conversar sobre a minha empresa",
+      primaryCtaMessage: "Olá Leo, quero conversar sobre colocar a operação da minha empresa no WhatsApp com IA.",
+      primaryCtaHint: "A conversa é pelo WhatsApp.",
+      jarvisCta: "Ver como funciona",
       secondaryCta: "Explorar repertório"
     },
     about: {
@@ -56,7 +59,9 @@ export const siteUiByLocale = {
       imageAlt: "Pessoas organizam camadas e módulos em uma mesa de aprendizagem colaborativa",
       leverageLabel: "Alavancas do treinamento",
       firstMetricContext: "mais rápido",
-      methodLabel: "Método do treinamento"
+      methodLabel: "Método do treinamento",
+      faqLabel: "Perguntas sobre o treinamento",
+      ctaHint: "A conversa é pelo WhatsApp."
     },
     github: {
       eyebrow: "Open source, @leonardocandiani",
@@ -117,7 +122,10 @@ export const siteUiByLocale = {
       cultureLabel: "What limits us is our creativity.",
       imageAlt: "Terracotta path between dark architecture and a blue horizon",
       actionsLabel: "Primary actions",
-      primaryCta: "See my work",
+      primaryCta: "Talk about my company",
+      primaryCtaMessage: "Hi Leo, I want to talk about putting my company's operation on WhatsApp with AI.",
+      primaryCtaHint: "The conversation happens on WhatsApp.",
+      jarvisCta: "See how it works",
       secondaryCta: "Explore capabilities"
     },
     about: {
@@ -147,7 +155,9 @@ export const siteUiByLocale = {
       imageAlt: "People organize layers and modules on a collaborative learning table",
       leverageLabel: "Training leverage",
       firstMetricContext: "faster",
-      methodLabel: "Training method"
+      methodLabel: "Training method",
+      faqLabel: "Questions about the training",
+      ctaHint: "The conversation happens on WhatsApp."
     },
     github: {
       eyebrow: "Open source, @leonardocandiani",

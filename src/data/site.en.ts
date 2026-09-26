@@ -12,7 +12,7 @@ export const siteContentEn = {
   ],
   hero: {
     name: "Leonardo Candiani",
-    eyebrow: "Leadership, technology and education",
+    eyebrow: "I put your company's operations on your leadership's WhatsApp and teach your team to use AI on the bottlenecks it already has.",
     title: "I build the intelligence that helps companies act.",
     limitWord: "act.",
     description: "I lead people and build AI systems that turn what a company knows into what it can do."
@@ -131,7 +131,7 @@ export const siteContentEn = {
     ]
   },
   jarvis: {
-    eyebrow: "Success case",
+    eyebrow: "Demo",
     title: "Ask your company. It answers on WhatsApp.",
     description:
       "Minino Jarvis puts connected operational information in the hands of directors and managers, so they can investigate, decide, and accelerate new capabilities without leaving the conversation.",
@@ -199,7 +199,7 @@ export const siteContentEn = {
     ],
     note:
       "7x is a program design and leverage reference. Results depend on each team's context, adoption, and execution.",
-    ctaLabel: "Bring this training to my company"
+    ctaLabel: "Book the 30-minute conversation"
   },
   links: [
     { label: "GitHub", href: "https://github.com/leonardocandiani" },
