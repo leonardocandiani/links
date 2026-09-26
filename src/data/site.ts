@@ -12,7 +12,7 @@ export const siteContent = {
   ],
   hero: {
     name: "Leonardo Candiani",
-    eyebrow: "Liderança, tecnologia e educação",
+    eyebrow: "Coloco a operação da sua empresa no WhatsApp da diretoria e ensino sua equipe a resolver com IA os gargalos que ela já tem.",
     title: "Construo a inteligência que faz empresas agirem.",
     limitWord: "agirem.",
     description: "Lidero pessoas e construo sistemas de IA para transformar o que uma empresa sabe no que ela consegue fazer."
@@ -131,7 +131,7 @@ export const siteContent = {
     ]
   },
   jarvis: {
-    eyebrow: "Case de sucesso",
+    eyebrow: "Demonstração",
     title: "Pergunte à sua empresa. Ela responde no WhatsApp.",
     description:
       "O Minino Jarvis coloca informações conectadas da operação na palma de diretores e gestores, para investigar, decidir e acelerar novas capacidades sem sair da conversa.",
@@ -199,7 +199,7 @@ export const siteContent = {
     ],
     note:
       "7× é uma referência de desenho e alavancagem do programa. O resultado depende do contexto, da adesão e da execução de cada equipe.",
-    ctaLabel: "Levar o treinamento para minha empresa"
+    ctaLabel: "Marcar a conversa de 30 minutos"
   },
   links: [
     { label: "GitHub", href: "https://github.com/leonardocandiani" },

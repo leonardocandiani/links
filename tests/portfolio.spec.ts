@@ -140,7 +140,16 @@ test("renders the portfolio shell", async ({ page }, testInfo) => {
   await expect(heroSource).toHaveAttribute("srcset", "/images/hero-horizon-wide.webp");
   await expect(heroImage).toHaveAttribute("src", "/images/hero-horizon-mobile.webp");
   await expect(heroImage).toHaveAttribute("alt", "Caminho terracota entre arquitetura escura e um horizonte azul");
-  await expect(hero.getByRole("link", { name: "Conhecer meu trabalho" })).toHaveAttribute("href", "#sobre");
+  const heroCta = hero.getByRole("link", { name: "Conversar sobre a minha empresa" });
+  const heroCtaHref = await heroCta.getAttribute("href");
+  expect(heroCtaHref).not.toBeNull();
+  const heroCtaUrl = new URL(heroCtaHref!);
+  expect(heroCtaUrl.origin).toBe("https://wa.me");
+  expect(heroCtaUrl.pathname).toBe("/5544998893474");
+  expect(heroCtaUrl.searchParams.get("text")).toBe(
+    "Olá Leo, quero conversar sobre colocar a operação da minha empresa no WhatsApp com IA."
+  );
+  await expect(hero.getByRole("link", { name: "Ver como funciona" })).toHaveAttribute("href", "#jarvis");
   await expect(hero.getByRole("link", { name: "Explorar repertório" })).toHaveAttribute("href", "#repertorio");
 
   const renderedImage = await heroImage.evaluate((image) => {
@@ -158,7 +167,7 @@ test("renders the portfolio shell", async ({ page }, testInfo) => {
   if (testInfo.project.name === "desktop") {
     expect(renderedImage.currentSrc).toContain("/images/hero-horizon-wide.webp");
     await expect(page.getByRole("navigation", { name: "Principal" })).toBeVisible();
-    await expectHeroCtaNavigatesToSection(page, "Conhecer meu trabalho", "#sobre", "section#sobre");
+    await expectHeroCtaNavigatesToSection(page, "Ver como funciona", "#jarvis", "section#jarvis");
     await page.goto("/");
     await expectHeroCtaNavigatesToSection(page, "Explorar repertório", "#repertorio", "section#repertorio");
     return;
@@ -716,14 +725,16 @@ test("apresenta educação aplicada para empresas", async ({ page }) => {
     )
   ).toBeVisible();
 
-  const cta = education.getByRole("link", { name: "Levar o treinamento para minha empresa" });
+  const cta = education.getByRole("link", { name: "Marcar a conversa de 30 minutos" });
 
   const href = await cta.getAttribute("href");
   expect(href).not.toBeNull();
   const trainingUrl = new URL(href!);
   expect(trainingUrl.origin).toBe("https://wa.me");
   expect(trainingUrl.pathname).toBe("/5544998893474");
-  expect(trainingUrl.searchParams.get("text")).toBe("Olá, Leonardo. Quero conversar sobre um treinamento de IA para a minha equipe.");
+  expect(trainingUrl.searchParams.get("text")).toBe(
+    "Olá, Leonardo. Quero marcar a conversa de 30 minutos sobre os gargalos da minha equipe."
+  );
 });
 
 test("apresenta GitHub público, presença pública e contato", async ({ page }) => {

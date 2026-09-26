@@ -11,6 +11,7 @@ type Props = {
 
 const { hero, links, ui } = Astro.props;
 const words = hero.title.split(" ");
+const primaryCtaHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.primaryCtaMessage)}`;
 
 const icons = socialIcons;
 
@@ -38,10 +39,14 @@ const profiles = links.filter((link) => icons[link.label]);
 
     <p class="hero-eyebrow" data-cube data-rendered style={`--i: ${words.length}`}>{hero.eyebrow}</p>
 
-    <a class="hero-cta k-pill" href="#sobre" data-cube data-rendered style={`--i: ${words.length + 1}`}>
-      <span class="hero-cta-dot" aria-hidden="true"></span>
-      {ui.primaryCta}
-    </a>
+    <div class="hero-actions" data-cube data-rendered style={`--i: ${words.length + 1}`}>
+      <a class="hero-cta k-pill" href={primaryCtaHref}>
+        <span class="hero-cta-dot" aria-hidden="true"></span>
+        {ui.primaryCta}
+      </a>
+      <p class="hero-cta-hint">{ui.primaryCtaHint}</p>
+      <a class="hero-secondary" href="#jarvis">{ui.jarvisCta}</a>
+    </div>
 
     <nav class="hero-profiles" aria-label={ui.actionsLabel}>
       {profiles.map((link, index) => (
@@ -144,11 +149,37 @@ const profiles = links.filter((link) => icons[link.label]);
     line-height: 1.5;
   }
 
+  .hero-actions {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+  }
+
   .hero-cta-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: var(--color-sky);
+  }
+
+  .hero-cta-hint {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 13px;
+    letter-spacing: -0.1px;
+  }
+
+  .hero-secondary {
+    margin-top: 4px;
+    color: var(--color-graphite);
+    font-size: 14px;
+    text-decoration: underline;
+    text-decoration-color: rgb(23 21 19 / 32%);
+    text-underline-offset: 3px;
+  }
+
+  .hero-secondary:hover {
+    color: var(--color-ink);
   }
 
   .hero-profiles {

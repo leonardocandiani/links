@@ -250,11 +250,13 @@ test("uses the mobile drawer below 1100 pixels and releases the page on desktop 
 
 test("keeps the English training CTA contextual without navigating off-site", async ({ page }) => {
   await page.goto("/en/");
-  const cta = page.locator("#educacao").getByRole("link", { name: "Bring this training to my company" });
+  const cta = page.locator("#educacao").getByRole("link", { name: "Book the 30-minute conversation" });
   const href = await cta.getAttribute("href");
   expect(href).not.toBeNull();
   const destination = new URL(href!);
   expect(destination.origin).toBe("https://wa.me");
   expect(destination.pathname).toBe("/5544998893474");
-  expect(destination.searchParams.get("text")).toBe("Hi Leonardo. I would like to discuss AI training for my team.");
+  expect(destination.searchParams.get("text")).toBe(
+    "Hi Leonardo. I would like to book the 30-minute conversation about my team's bottlenecks."
+  );
 });

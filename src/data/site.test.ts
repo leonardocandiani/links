@@ -69,7 +69,7 @@ describe("siteContent", () => {
       ],
       note:
         "7× é uma referência de desenho e alavancagem do programa. O resultado depende do contexto, da adesão e da execução de cada equipe.",
-      ctaLabel: "Levar o treinamento para minha empresa"
+      ctaLabel: "Marcar a conversa de 30 minutos"
     });
   });
 

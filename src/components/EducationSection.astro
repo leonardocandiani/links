@@ -10,9 +10,45 @@ type Props = {
 const { education, ui } = Astro.props;
 const isPortuguese = ui.firstMetricContext === "mais rápido";
 const trainingMessage = isPortuguese
-  ? "Olá, Leonardo. Quero conversar sobre um treinamento de IA para a minha equipe."
-  : "Hi Leonardo. I would like to discuss AI training for my team.";
+  ? "Olá, Leonardo. Quero marcar a conversa de 30 minutos sobre os gargalos da minha equipe."
+  : "Hi Leonardo. I would like to book the 30-minute conversation about my team's bottlenecks.";
 const trainingHref = `https://wa.me/5544998893474?text=${encodeURIComponent(trainingMessage)}`;
+
+const educationFaq = isPortuguese
+  ? [
+      {
+        question: "Minha equipe não é técnica, serve?",
+        answer:
+          "Sim. O treinamento parte dos gargalos que a equipe já enfrenta e coloca as ferramentas na mão dela, sem exigir bagagem técnica prévia."
+      },
+      {
+        question: "E a segurança dos dados da empresa?",
+        answer:
+          "O Minino Jarvis opera com permissões, ações autorizadas, regras e observabilidade, agindo dentro do que a empresa autoriza."
+      },
+      {
+        question: "Quanto tempo até ver algo funcionando?",
+        answer:
+          "A prática acontece no contexto real da sua empresa, não em exemplo genérico, desde o primeiro encontro. Você sai da conversa de 30 minutos com o desenho do treinamento pronto, mesmo que a gente não avance."
+      }
+    ]
+  : [
+      {
+        question: "My team isn't technical, does this still work?",
+        answer:
+          "Yes. The training starts from the bottlenecks the team already faces and puts the tools in their hands, with no prior technical background required."
+      },
+      {
+        question: "What about our company's data security?",
+        answer:
+          "Minino Jarvis operates with permissions, authorized actions, rules, and observability, acting within what the company allows."
+      },
+      {
+        question: "How long until something is working?",
+        answer:
+          "Practice happens inside your company's real context, not a generic example, from the first session on. You leave the 30-minute conversation with the training design ready, even if we don't move forward."
+      }
+    ];
 ---
 
 <section id="educacao" class="education section" aria-labelledby="education-title">
@@ -34,6 +70,9 @@ const trainingHref = `https://wa.me/5544998893474?text=${encodeURIComponent(trai
     </div>
 
     <p class="education-ambition">{isPortuguese ? "A ambição: ampliar a capacidade de cada pessoa." : "The ambition: expand what each person can do."}</p>
+    <p class="education-cost">{isPortuguese
+      ? "O gargalo que ainda não foi resolvido continua fazendo a equipe perder tempo, margem ou velocidade."
+      : "The bottleneck you haven't solved yet keeps costing your team time, margin, or speed."}</p>
     <div class="education-leverage" aria-label={ui.leverageLabel}>
       {
         education.leverage.map((item, index) => (
@@ -66,8 +105,24 @@ const trainingHref = `https://wa.me/5544998893474?text=${encodeURIComponent(trai
       }
     </ol>
 
+    <dl class="education-faq" aria-label={ui.faqLabel}>
+      {
+        educationFaq.map((item) => (
+          <div class="education-faq-item">
+            <dt>{item.question}</dt>
+            <dd>{item.answer}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
     <div class="education-footer">
-      <p>{isPortuguese ? "Vamos desenhar o treinamento a partir dos desafios da sua equipe." : "Let's design the training around your team's challenges."}</p>
+      <div>
+        <p>{isPortuguese
+          ? "Você traz 30 minutos e os gargalos da sua equipe. Eu devolvo o desenho do treinamento, mesmo que a gente não feche."
+          : "You bring 30 minutes and your team's bottlenecks. I hand back the training design, even if we don't move forward."}</p>
+        <p class="education-cta-hint">{ui.ctaHint}</p>
+      </div>
       <a class="education-cta pressable" href={trainingHref}>{education.ctaLabel}</a>
     </div>
   </div>
@@ -255,8 +310,47 @@ const trainingHref = `https://wa.me/5544998893474?text=${encodeURIComponent(trai
   }
 
   .education-ambition { margin: 1rem 0 -1.5rem; color: var(--color-graphite); font-size: .95rem; }
+  .education-cost { max-width: 60ch; margin: .5rem 0 0; color: rgb(23 21 19 / 72%); font-size: .95rem; line-height: 1.5; }
   .education-note { max-width: 72ch; margin: -1.5rem 0 0; font-size: .85rem; line-height: 1.6; color: var(--color-muted); }
   .education-intro .eyebrow { margin: 0; }
+
+  .education-faq {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid rgb(23 21 19 / 18%);
+  }
+
+  .education-faq-item {
+    padding: clamp(1.1rem, 2vw, 1.5rem) 0;
+    border-bottom: 1px solid rgb(23 21 19 / 12%);
+  }
+
+  /* o rodapé da seção já tem borda em cima: sem linha dupla */
+  .education-faq-item:last-child {
+    border-bottom: 0;
+  }
+  .education-faq-item dt {
+    color: var(--color-ink);
+    font-size: 1.02rem;
+    font-weight: 690;
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+
+  .education-faq-item dd {
+    max-width: 62ch;
+    margin: .5rem 0 0;
+    color: rgb(23 21 19 / 72%);
+    font-size: .95rem;
+    line-height: 1.55;
+  }
+
+  .education-footer .education-cta-hint {
+    margin: .5rem 0 0;
+    color: var(--color-muted);
+    font-size: .85rem;
+  }
 
   @media (max-width: 58rem) {
     .education-method {
