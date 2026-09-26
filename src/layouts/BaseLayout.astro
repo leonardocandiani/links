@@ -37,7 +37,9 @@ const personJsonLd = {
 ---
 
 <!doctype html>
-<html lang={locale} data-tone="light">
+<!-- data-engine vem no HTML: o cabeçalho já nasce no formato final e não
+     pula quando o kit carrega (era o CLS do desktop) -->
+<html lang={locale} data-tone="light" data-engine="flow">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
