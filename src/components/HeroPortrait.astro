@@ -17,9 +17,12 @@ const icons = socialIcons;
 const profiles = links.filter((link) => icons[link.label]);
 ---
 
+<!-- A hero já está na tela no primeiro quadro: data-rendered vem no HTML pra
+     animação começar na primeira pintura, sem esperar o JS do kit (era o que
+     segurava o LCP no celular). -->
 <section class="hero k-stage" aria-labelledby="hero-title" data-tone="light">
   <div class="hero-container">
-    <p class="hero-name" data-cube="name">
+    <p class="hero-name" data-cube="name" data-rendered>
       <span class="hero-avatar">
         <img src="/images/leonardo-mini.webp" alt="" width="24" height="16" loading="eager" decoding="async" />
       </span>
@@ -28,14 +31,14 @@ const profiles = links.filter((link) => icons[link.label]);
 
     <h1 id="hero-title" class="hero-headline k-headline">
       {words.map((word, index) => (
-        <span data-cube style={`--i: ${index}`}>{word}</span>
+        <span data-cube data-rendered style={`--i: ${index}`}>{word}</span>
         <span> </span>
       ))}
     </h1>
 
-    <p class="hero-eyebrow" data-cube style={`--i: ${words.length}`}>{hero.eyebrow}</p>
+    <p class="hero-eyebrow" data-cube data-rendered style={`--i: ${words.length}`}>{hero.eyebrow}</p>
 
-    <a class="hero-cta k-pill" href="#sobre" data-cube style={`--i: ${words.length + 1}`}>
+    <a class="hero-cta k-pill" href="#sobre" data-cube data-rendered style={`--i: ${words.length + 1}`}>
       <span class="hero-cta-dot" aria-hidden="true"></span>
       {ui.primaryCta}
     </a>
@@ -48,7 +51,7 @@ const profiles = links.filter((link) => icons[link.label]);
           target="_blank"
           rel="noopener noreferrer"
           aria-label={link.label}
-          data-cube
+          data-cube data-rendered
           style={`--i: ${words.length + 2 + index}`}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icons[link.label]}></path></svg>
@@ -57,7 +60,7 @@ const profiles = links.filter((link) => icons[link.label]);
     </nav>
   </div>
 
-  <a class="hero-chevron" href="#sobre" aria-label={ui.secondaryCta} data-cube style={`--i: ${words.length + 6}`}>
+  <a class="hero-chevron" href="#sobre" aria-label={ui.secondaryCta} data-cube data-rendered style={`--i: ${words.length + 6}`}>
     <svg width="56" height="56" viewBox="0 0 56 56" fill="none" aria-hidden="true">
       <path
         fill-rule="evenodd"

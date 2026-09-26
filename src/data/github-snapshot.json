@@ -1,13 +1,22 @@
 {
-  "syncedAt": "2026-09-25T14:15:06.816Z",
+  "syncedAt": "2026-09-25T23:17:13.963Z",
   "repositories": [
+    {
+      "name": "hormozi-skill",
+      "url": "https://github.com/leonardocandiani/hormozi-skill",
+      "description": "Claude Code skill for sales analysis with the Hormozi method",
+      "language": "Python",
+      "stars": 0,
+      "pushedAt": "2026-09-25T22:55:32Z",
+      "createdAt": "2026-09-25T22:49:49Z"
+    },
     {
       "name": "keyfence",
       "url": "https://github.com/leonardocandiani/keyfence",
       "description": "Keeps secrets from leaking out of AI coding agent sessions, and keeps them organized in a local vault",
       "language": "JavaScript",
       "stars": 0,
-      "pushedAt": "2026-09-25T13:38:55Z",
+      "pushedAt": "2026-09-25T19:39:45Z",
       "createdAt": "2026-09-22T19:41:27Z"
     },
     {
@@ -142,7 +151,7 @@
       "description": "Portfólio pessoal de Leonardo Candiani: liderança em IA, produtos, Minino Jarvis, educação corporativa e open source.",
       "language": "TypeScript",
       "stars": 0,
-      "pushedAt": "2026-09-12T06:14:54Z",
+      "pushedAt": "2026-09-25T14:24:11Z",
       "createdAt": "2024-12-31T14:44:58Z"
     }
   ]
