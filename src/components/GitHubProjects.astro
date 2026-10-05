@@ -178,8 +178,10 @@ function formatDescription(repository: GitHubRepository) {
     text-decoration: none;
   }
 
-  .github-profile-link:hover {
-    background: var(--color-graphite);
+  @media (hover: hover) and (pointer: fine) {
+    .github-profile-link:hover {
+      background: var(--color-graphite);
+    }
   }
 
   .github-featured-grid {
@@ -276,11 +278,13 @@ function formatDescription(repository: GitHubRepository) {
     text-decoration: none;
   }
 
-  .github-featured-card a:hover,
-  .github-recent-item a:hover {
-    text-decoration-line: underline;
-    text-decoration-thickness: .08em;
-    text-underline-offset: .18em;
+  @media (hover: hover) and (pointer: fine) {
+    .github-featured-card a:hover,
+    .github-recent-item a:hover {
+      text-decoration-line: underline;
+      text-decoration-thickness: .08em;
+      text-underline-offset: .18em;
+    }
   }
 
   .tone-ink {

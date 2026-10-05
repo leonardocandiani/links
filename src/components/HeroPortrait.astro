@@ -178,8 +178,10 @@ const profiles = links.filter((link) => icons[link.label]);
     text-underline-offset: 3px;
   }
 
-  .hero-secondary:hover {
-    color: var(--color-ink);
+  @media (hover: hover) and (pointer: fine) {
+    .hero-secondary:hover {
+      color: var(--color-ink);
+    }
   }
 
   .hero-profiles {

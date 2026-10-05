@@ -141,11 +141,13 @@ const { navigation: navItems, ui } = Astro.props;
     display: none;
   }
 
-  .desktop-nav a:hover,
-  .nav-trigger:hover,
-  .nav-close:hover {
-    background-color: rgb(23 21 19 / 6%);
-    color: var(--color-ink);
+  @media (hover: hover) and (pointer: fine) {
+    .desktop-nav a:hover,
+    .nav-trigger:hover,
+    .nav-close:hover {
+      background-color: rgb(23 21 19 / 6%);
+      color: var(--color-ink);
+    }
   }
 
   [data-nav-link][aria-current="location"] {
@@ -209,8 +211,10 @@ const { navigation: navItems, ui } = Astro.props;
     text-decoration: none;
   }
 
-  .mobile-nav-fallback a:hover {
-    background-color: rgb(23 21 19 / 6%);
+  @media (hover: hover) and (pointer: fine) {
+    .mobile-nav-fallback a:hover {
+      background-color: rgb(23 21 19 / 6%);
+    }
   }
 
   .nav-scrim {
@@ -277,8 +281,10 @@ const { navigation: navItems, ui } = Astro.props;
     text-decoration: none;
   }
 
-  .nav-sheet a:hover {
-    background-color: rgb(23 21 19 / 6%);
+  @media (hover: hover) and (pointer: fine) {
+    .nav-sheet a:hover {
+      background-color: rgb(23 21 19 / 6%);
+    }
   }
 
   @media (max-width: 1099.98px) {

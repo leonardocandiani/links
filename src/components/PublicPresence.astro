@@ -91,9 +91,11 @@ const channels = links.filter((link) => ui.channels[link.label as keyof typeof u
     transition: background-color var(--duration-ui) var(--ease-out), translate var(--duration-ui) var(--ease-out);
   }
 
-  .presence-card:hover {
-    background: #e9e9e9;
-    translate: 0 -2px;
+  @media (hover: hover) and (pointer: fine) {
+    .presence-card:hover {
+      background: #e9e9e9;
+      translate: 0 -2px;
+    }
   }
 
   .presence-icon {

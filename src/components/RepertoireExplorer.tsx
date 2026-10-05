@@ -148,8 +148,10 @@ const styles = `
     font-weight: 680;
   }
 
-  .repertoire-tab:hover {
-    color: var(--color-ink);
+  @media (hover: hover) and (pointer: fine) {
+    .repertoire-tab:hover {
+      color: var(--color-ink);
+    }
   }
 
   .repertoire-panel {
