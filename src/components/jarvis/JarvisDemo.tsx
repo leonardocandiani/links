@@ -448,13 +448,20 @@ const styles = `
     transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
   }
 
-  .jarvis-scenario:hover,
   .jarvis-scenario:focus-visible,
   .jarvis-scenario[aria-pressed="true"] {
     border-color: rgb(144 173 191 / 58%);
     background: rgb(144 173 191 / 10%);
     outline: none;
     transform: translateX(.2rem);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .jarvis-scenario:hover {
+      border-color: rgb(144 173 191 / 58%);
+      background: rgb(144 173 191 / 10%);
+      transform: translateX(.2rem);
+    }
   }
 
   .jarvis-scenario > span {
@@ -495,6 +502,15 @@ const styles = `
     font: inherit;
     font-size: .8rem;
     outline: none;
+  }
+
+  /* iOS dá zoom na página quando o foco cai em campo abaixo de 16px.
+     Com a fonte maior o texto de sugestão em PT não cabe: termina em reticências. */
+  @media (pointer: coarse) {
+    .jarvis-compose input {
+      font-size: 16px;
+      text-overflow: ellipsis;
+    }
   }
 
   .jarvis-compose input:focus {
@@ -846,8 +862,10 @@ const styles = `
     cursor: pointer;
   }
 
-  .jarvis-input-bar:hover {
-    background: #292621;
+  @media (hover: hover) and (pointer: fine) {
+    .jarvis-input-bar:hover {
+      background: #292621;
+    }
   }
 
   .jarvis-input-bar:focus-visible {

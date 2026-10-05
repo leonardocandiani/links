@@ -49,13 +49,22 @@ a {
   text-underline-offset: .22em;
 }
 
-a:hover {
-  text-decoration-color: currentColor;
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    text-decoration-color: currentColor;
+  }
 }
 
+html,
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* sem inflar a fonte do texto quando o iPhone gira pro modo paisagem */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 :focus {
@@ -165,9 +174,11 @@ html[data-tone="dark"] .display {
   text-decoration: none;
 }
 
-.language-switch:hover {
-  background: rgb(23 21 19 / 6%);
-  color: var(--color-ink);
+@media (hover: hover) and (pointer: fine) {
+  .language-switch:hover {
+    background: rgb(23 21 19 / 6%);
+    color: var(--color-ink);
+  }
 }
 
 .skip-link {
@@ -193,6 +204,12 @@ html[data-tone="dark"] .display {
 }
 
 p { text-wrap: pretty; }
-button, a { touch-action: manipulation; }
+button, a, [role="button"] { touch-action: manipulation; }
+/* texto de controle não seleciona no toque longo; texto de conteúdo continua selecionável */
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
 time { font-variant-numeric: tabular-nums; }
 img { outline: 1px solid rgb(0 0 0 / 6%); outline-offset: -1px; }
