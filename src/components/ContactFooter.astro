@@ -92,9 +92,8 @@ const whatsappHref = `https://wa.me/5544998893474?text=${encodeURIComponent(ui.m
   }
 
   .contact-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .35rem .8rem;
+    /* texto corrido: com flex e gap a vírgula ficava longe do sobrenome */
+    display: block;
     margin: 0;
     color: rgb(251 250 247 / 76%);
     font-size: .95rem;

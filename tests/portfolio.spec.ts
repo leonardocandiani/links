@@ -500,7 +500,7 @@ test("carrega a narrativa visual completa sem imagens quebradas", async ({ page 
     ["#sobre", "/images/leonardo-portrait-mobile.webp"],
     ["#cultura", "/images/vision-architecture.webp"],
     ["#repertorio", "/images/systems-workbench.webp"],
-    ["#jarvis", "/images/jarvis-intelligence.webp"],
+    ["#jarvis", "/images/jarvis-glass-network.webp"],
     ["#educacao", "/images/education-collaboration.webp"],
     ["#github", "/images/open-source-workbench.webp"]
   ] as const;

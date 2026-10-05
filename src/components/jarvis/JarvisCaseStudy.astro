@@ -16,7 +16,7 @@ const { jarvis, locale, ui } = Astro.props;
   <div class="page-width jarvis-case-shell">
     <div class="jarvis-visual">
       <img
-        src="/images/jarvis-intelligence.webp"
+        src="/images/jarvis-glass-network.webp"
         alt={ui.imageAlt}
         width="1672"
         height="941"
@@ -253,6 +253,12 @@ const { jarvis, locale, ui } = Astro.props;
   @media (max-width: 58rem) {
     .jarvis-visual {
       min-height: 38rem;
+    }
+
+    /* cartão alto e estreito: o recorte padrão pega só o miolo escuro e corta o ponto âmbar.
+       Puxar pra direita mostra o fim do trajeto de luz na metade de baixo, sem texto por cima */
+    .jarvis-visual img {
+      object-position: 88% center;
     }
 
     .jarvis-visual::after {

@@ -69,10 +69,12 @@ const educationFaq = isPortuguese
       </div>
     </div>
 
-    <p class="education-ambition">{isPortuguese ? "A ambição: ampliar a capacidade de cada pessoa." : "The ambition: expand what each person can do."}</p>
-    <p class="education-cost">{isPortuguese
-      ? "O gargalo que ainda não foi resolvido continua fazendo a equipe perder tempo, margem ou velocidade."
-      : "The bottleneck you haven't solved yet keeps costing your team time, margin, or speed."}</p>
+    <div class="education-statement">
+      <p class="education-ambition">{isPortuguese ? "A ambição: ampliar a capacidade de cada pessoa." : "The ambition: expand what each person can do."}</p>
+      <p class="education-cost">{isPortuguese
+        ? "O gargalo que ainda não foi resolvido continua fazendo a equipe perder tempo, margem ou velocidade."
+        : "The bottleneck you haven't solved yet keeps costing your team time, margin, or speed."}</p>
+    </div>
     <div class="education-leverage" aria-label={ui.leverageLabel}>
       {
         education.leverage.map((item, index) => (
@@ -311,8 +313,10 @@ const educationFaq = isPortuguese
     }
   }
 
-  .education-ambition { margin: 1rem 0 -1.5rem; color: var(--color-graphite); font-size: .95rem; }
-  .education-cost { max-width: 60ch; margin: .5rem 0 0; color: rgb(23 21 19 / 72%); font-size: .95rem; line-height: 1.5; }
+  /* ambição e custo do gargalo formam um bloco só: a frase forte em cima, o custo logo abaixo */
+  .education-statement { display: grid; gap: .4rem; max-width: 60ch; margin: 1rem 0 -1.5rem; }
+  .education-ambition { margin: 0; color: var(--color-ink); font-size: clamp(1.05rem, 1rem + .3vw, 1.2rem); font-weight: 600; line-height: 1.35; letter-spacing: -.01em; }
+  .education-cost { margin: 0; color: rgb(23 21 19 / 72%); font-size: .95rem; line-height: 1.5; }
   .education-note { max-width: 72ch; margin: -1.5rem 0 0; font-size: .85rem; line-height: 1.6; color: var(--color-muted); }
   .education-intro .eyebrow { margin: 0; }
 
@@ -323,9 +327,20 @@ const educationFaq = isPortuguese
     border-top: 1px solid rgb(23 21 19 / 18%);
   }
 
+  /* pergunta à esquerda, resposta à direita: usa a largura que antes ficava vazia */
   .education-faq-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    gap: .5rem clamp(2rem, 5vw, 5rem);
+    align-items: baseline;
     padding: clamp(1.1rem, 2vw, 1.5rem) 0;
     border-bottom: 1px solid rgb(23 21 19 / 12%);
+  }
+
+  @media (max-width: 47.99rem) {
+    .education-faq-item {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 
   /* o rodapé da seção já tem borda em cima: sem linha dupla */
@@ -342,7 +357,7 @@ const educationFaq = isPortuguese
 
   .education-faq-item dd {
     max-width: 62ch;
-    margin: .5rem 0 0;
+    margin: 0;
     color: rgb(23 21 19 / 72%);
     font-size: .95rem;
     line-height: 1.55;
@@ -422,7 +437,7 @@ const educationFaq = isPortuguese
       text-align: center;
     }
 
-    .education-ambition { margin-bottom: -.75rem; }
+    .education-statement { margin-bottom: -.75rem; }
   }
 
 </style>

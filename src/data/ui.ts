@@ -47,7 +47,7 @@ export const siteUiByLocale = {
       toolsLabel: "Ferramentas e disciplinas"
     },
     jarvis: {
-      imageAlt: "Fluxos de informação de uma empresa convergem para a palma de uma mão",
+      imageAlt: "Cinco lâminas de vidro azul sobre grafite ligadas por fios de luz que convergem para um único ponto âmbar",
       narrativeLead: "Uma conversa simples na frente. Uma empresa conectada por trás.",
       stepsLabel: "Como o Minino Jarvis opera",
       proofAriaLabel: "Por trás da conversa",
@@ -143,7 +143,7 @@ export const siteUiByLocale = {
       toolsLabel: "Tools and disciplines"
     },
     jarvis: {
-      imageAlt: "Company information flows converge into the palm of a hand",
+      imageAlt: "Five blue glass slabs on graphite linked by thin light lines that converge on a single amber point",
       narrativeLead: "A simple conversation in front. A connected company behind it.",
       stepsLabel: "How Minino Jarvis operates",
       proofAriaLabel: "Behind the conversation",
