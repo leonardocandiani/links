@@ -6,7 +6,8 @@ export const siteUiByLocale = {
       title: "Leonardo Candiani | IA, produtos e sistemas que operam empresas",
       description: "Leonardo Candiani: liderança em IA, produtos e educação corporativa. Conheça o Minino Jarvis, projetos open source e conteúdo sobre tecnologia aplicada.",
       jobTitle: "Líder de inteligência artificial e cofundador da SixQuasar",
-      ogLocale: "pt_BR"
+      ogLocale: "pt_BR",
+      ogImageAlt: "Leonardo Candiani: construo a inteligência que faz empresas agirem. Páginas do site em perspectiva sobre fundo claro."
     },
     layout: { skipLink: "Pular para o conteúdo" },
     header: {
@@ -102,7 +103,8 @@ export const siteUiByLocale = {
       title: "Leonardo Candiani | AI leadership, products, and business systems",
       description: "Leonardo Candiani: AI leadership, products and corporate education. Explore Minino Jarvis, open-source projects and applied technology videos.",
       jobTitle: "AI leader and SixQuasar cofounder",
-      ogLocale: "en_US"
+      ogLocale: "en_US",
+      ogImageAlt: "Leonardo Candiani: I build the intelligence that helps companies act. Site pages in perspective on a light background."
     },
     layout: { skipLink: "Skip to content" },
     header: {
