@@ -9,10 +9,11 @@ type Props = {
 };
 
 const { locale, ui } = Astro.props;
-const { title, description, jobTitle, ogLocale } = ui.seo;
+const { title, description, jobTitle, ogLocale, ogImageAlt } = ui.seo;
 const siteUrl = Astro.site!;
 const canonical = new URL(Astro.url.pathname, siteUrl);
-const ogImage = new URL("/images/leonardo-portrait-wide.webp", siteUrl);
+// cartão 1200x630 em JPEG: é o formato que X, WhatsApp, LinkedIn e Facebook leem sem recorte nem recusa
+const ogImage = new URL(locale === "pt-BR" ? "/images/og-pt.jpg" : "/images/og-en.jpg", siteUrl);
 const portugueseUrl = new URL("/", siteUrl);
 const englishUrl = new URL("/en/", siteUrl);
 const alternateLocale = locale === "pt-BR" ? "en_US" : "pt_BR";
@@ -59,12 +60,17 @@ const personJsonLd = {
     <meta property="og:url" content={canonical.toString()} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage.toString()} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:locale" content={ogLocale} />
     <meta property="og:locale:alternate" content={alternateLocale} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage.toString()} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     <title>{title}</title>
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd)} />
   </head>
