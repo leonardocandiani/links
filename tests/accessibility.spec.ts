@@ -109,3 +109,29 @@ test("mantém alvos de toque com pelo menos 44 por 44 pixels", async ({ page }, 
 
   expect(undersizedTargets).toEqual([]);
 });
+
+test("mantém a timeline lateral com contraste AA em tom claro e escuro", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "A timeline só existe com mouse e a partir de 80rem.");
+  // 1280px é o limite em que a timeline some; 1440px garante que ela existe e o teste não passa vazio
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+
+  const rail = page.locator(".k-rail");
+  await expect(rail).toBeVisible();
+  // plus-darker/plus-lighter misturam com o fundo (só no Safari) e o axe devolve "incompleto" em vez de medir.
+  // Em normal a medida é a pior hipótese: a mistura só escurece sobre claro e clareia sobre escuro.
+  await page.addStyleTag({ content: ".k-rail { mix-blend-mode: normal !important; }" });
+
+  for (const alvo of ["#jarvis", "#cultura", null]) {
+    await page.evaluate((seletor) => {
+      window.scrollTo({ top: seletor ? document.querySelector(seletor)!.getBoundingClientRect().top + window.scrollY + 10 : 0, behavior: "instant" });
+    }, alvo);
+    await page.waitForTimeout(400);
+    // o desfoque por distância é só visual; com filter o axe pula o elemento e o teste passaria sem medir nada
+    await page.evaluate(() => document.querySelectorAll(".k-rail-tab").forEach((aba) => ((aba as HTMLElement).style.filter = "none")));
+
+    const results = await new AxeBuilder({ page }).include(".k-rail").withRules(["color-contrast"]).analyze();
+    const piores = results.violations.flatMap((v) => v.nodes.map((n) => n.any[0]?.data?.contrastRatio));
+    expect(piores, `timeline abaixo de 4,5:1 em ${alvo ?? "topo"} (tom ${await page.evaluate(() => document.documentElement.dataset.tone)})`).toEqual([]);
+  }
+});

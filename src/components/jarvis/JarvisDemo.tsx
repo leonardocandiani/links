@@ -219,6 +219,9 @@ export default function JarvisDemo({ locale = "pt-BR" }: Props) {
                   <div className="jarvis-idle">
                     <strong>{ui.idle.title}</strong>
                     <p>{ui.idle.copy}</p>
+                    <button type="button" className="jarvis-idle-cta" onClick={() => startScenario(scenarioList[0])}>
+                      {ui.idle.cta}
+                    </button>
                   </div>
                 ) : null}
 
@@ -364,7 +367,7 @@ const styles = `
     min-height: 3.5rem;
     padding: 0 1.1rem;
     border-bottom: 1px solid rgb(244 240 233 / 12%);
-    font-size: .66rem;
+    font-size: .6875rem;
     letter-spacing: .04em;
   }
 
@@ -403,7 +406,7 @@ const styles = `
   .jarvis-kicker {
     margin: 0 0 .6rem;
     color: #90adbf;
-    font-size: .68rem;
+    font-size: .6875rem;
     text-transform: uppercase;
     letter-spacing: .1em;
   }
@@ -472,7 +475,7 @@ const styles = `
     border-radius: .5rem;
     background: rgb(244 240 233 / 7%);
     color: #90adbf;
-    font: .62rem ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: .6875rem ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   .jarvis-scenario strong {
@@ -519,6 +522,7 @@ const styles = `
 
   .jarvis-compose button,
   .jarvis-approval-footer button,
+  .jarvis-idle-cta,
   .jarvis-ask-again {
     min-width: 44px;
     min-height: 44px;
@@ -583,7 +587,7 @@ const styles = `
     border-radius: 999px;
     background: #dfe9ee;
     color: #171513;
-    font: 700 .65rem ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: 700 .6875rem ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   .jarvis-phone-header strong,
@@ -599,12 +603,12 @@ const styles = `
   .jarvis-phone-header small {
     margin-top: .12rem;
     color: rgb(244 240 233 / 64%);
-    font-size: .62rem;
+    font-size: .6875rem;
   }
 
   .jarvis-secure {
     color: #90adbf;
-    font-size: .54rem;
+    font-size: .6875rem;
   }
 
   .jarvis-thread {
@@ -620,6 +624,11 @@ const styles = `
     margin: 7rem auto 0;
     color: rgb(244 240 233 / 66%);
     text-align: center;
+  }
+
+  .jarvis-idle-cta {
+    margin-top: 1rem;
+    padding: 0 1.1rem;
   }
 
   .jarvis-idle strong {
@@ -664,12 +673,12 @@ const styles = `
     border-radius: .6rem;
     background: rgb(244 240 233 / 3%);
     color: #dfe9ee;
-    font-size: .68rem;
+    font-size: .6875rem;
   }
 
   .jarvis-thinking small {
     color: rgb(244 240 233 / 38%);
-    font: .55rem ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: .6875rem ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   .jarvis-pixels {
@@ -711,10 +720,16 @@ const styles = `
     border: 1px solid rgb(244 240 233 / 12%);
     border-radius: 999px;
     color: #dfe9ee;
-    font-size: .55rem;
+    font-size: .6875rem;
     opacity: 0;
     transform: translateY(.3rem);
     animation: jarvis-item-in 280ms ease forwards;
+  }
+
+  /* o <small> do navegador reduz a 83% do pai (9,2px aqui): o tempo herda os 11px da lista */
+  .jarvis-tools li small,
+  .jarvis-backstage li small {
+    font-size: inherit;
   }
 
   .jarvis-tools li::before {
@@ -754,7 +769,7 @@ const styles = `
 
   .jarvis-answer-copy p {
     color: rgb(244 240 233 / 76%);
-    font-size: .68rem;
+    font-size: .6875rem;
     opacity: 0;
     transform: translateY(.25rem);
     animation: jarvis-item-in 320ms ease forwards;
@@ -773,14 +788,14 @@ const styles = `
     border-radius: 999px;
     background: rgb(144 173 191 / 10%);
     color: #90adbf;
-    font-size: .5rem;
+    font-size: .6875rem;
   }
 
   .jarvis-approval p,
   .jarvis-success p,
   .jarvis-unsupported p {
     color: rgb(244 240 233 / 64%);
-    font-size: .66rem;
+    font-size: .6875rem;
   }
 
   .jarvis-approval-footer {
@@ -793,7 +808,7 @@ const styles = `
 
   .jarvis-approval-footer span {
     color: #90adbf;
-    font-size: .5rem;
+    font-size: .6875rem;
   }
 
   .jarvis-approval-footer button {
@@ -826,7 +841,7 @@ const styles = `
     border-radius: .5rem;
     background: rgb(144 173 191 / 8%);
     color: #f4f0e9;
-    font-size: .66rem;
+    font-size: .6875rem;
     opacity: 0;
     transform: translateY(.3rem);
     animation: jarvis-item-in 280ms ease forwards;
@@ -834,7 +849,7 @@ const styles = `
 
   .jarvis-tasks small {
     color: #90adbf;
-    font: .5rem ui-monospace, SFMono-Regular, Menlo, monospace;
+    font: .6875rem ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   .jarvis-success {
@@ -911,7 +926,7 @@ const styles = `
     padding: .55rem .6rem;
     border-bottom: 1px solid rgb(244 240 233 / 12%);
     color: #dfe9ee;
-    font-size: .52rem;
+    font-size: .6875rem;
   }
 
   .jarvis-backstage ul {
@@ -927,7 +942,7 @@ const styles = `
     padding: .4rem;
     border-radius: .42rem;
     background: rgb(244 240 233 / 4%);
-    font-size: .5rem;
+    font-size: .6875rem;
     opacity: 0;
     transform: translateY(.25rem);
     animation: jarvis-item-in 240ms ease forwards;
@@ -945,7 +960,7 @@ const styles = `
     display: block;
     padding: 0 .65rem .65rem;
     color: rgb(244 240 233 / 48%);
-    font-size: .5rem;
+    font-size: .6875rem;
     line-height: 1.6;
   }
 
