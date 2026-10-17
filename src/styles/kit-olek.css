@@ -42,6 +42,8 @@
 
   --tone-fg: #000;
   --tone-soft: #999;
+  /* texto inativo da timeline: passa de 4,5:1 até sobre o azul claro #e6edf2 da seção de cultura (o #999 dava 2,8:1 no branco) */
+  --tone-dim: #666;
   --tone-softest: #9996;
   --tone-invert: 0;
   --tone-fade: #f5f5f5;
@@ -57,6 +59,7 @@
 html[data-tone="dark"] {
   --tone-fg: #fff;
   --tone-soft: #fffc;
+  --tone-dim: #9a9a9a;
   --tone-softest: #fff6;
   --tone-invert: 1;
   --tone-fade: #101010;
@@ -175,7 +178,7 @@ html[data-engine="flow"] .k-rail {
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: var(--tone-soft);
+  color: var(--tone-dim);
   font-family: "Inter Variable", system-ui, sans-serif;
   font-size: 14px;
   font-variation-settings: "opsz" 14, "wght" 500;
@@ -183,20 +186,23 @@ html[data-engine="flow"] .k-rail {
   white-space: nowrap;
   cursor: pointer;
   transition:
-    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* hover: a timeline inteira desembaça pra dar pra ler onde clicar; a aba
-   sob o cursor fica cheia, as outras a 70% */
-.k-rail:hover .k-rail-tab {
-  filter: none !important;
-  opacity: 0.7 !important;
+/* a aba da seção atual e a que está sob o cursor ficam na cor cheia; as demais
+   ficam em --tone-dim, que já passa de 4,5:1 (antes a distinção era opacidade) */
+.k-rail-tab[aria-current="true"] {
+  color: var(--tone-fg);
 }
 
-.k-rail:hover .k-rail-tab:hover,
-.k-rail:hover .k-rail-tab[aria-current="true"] {
-  opacity: 1 !important;
+/* hover: a timeline inteira desembaça pra dar pra ler onde clicar */
+.k-rail:hover .k-rail-tab {
+  filter: none !important;
+}
+
+.k-rail:hover .k-rail-tab:hover {
+  color: var(--tone-fg);
 }
 
 .k-rail-tab:focus-visible {

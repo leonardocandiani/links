@@ -31,6 +31,7 @@ type JarvisUiCopy = {
   idle: {
     title: string;
     copy: string;
+    cta: string;
   };
   thinking: {
     title: string;
@@ -229,7 +230,8 @@ export const jarvisUiByLocale = {
     },
     idle: {
       title: "Faça uma pergunta de negócio",
-      copy: "O Jarvis responde com contexto e uma próxima ação."
+      copy: "O Jarvis responde com contexto e uma próxima ação.",
+      cta: "Ver um exemplo"
     },
     thinking: {
       title: "Consultando a empresa",
@@ -314,7 +316,8 @@ export const jarvisUiByLocale = {
     },
     idle: {
       title: "Ask a business question",
-      copy: "Jarvis answers with context and a next action."
+      copy: "Jarvis answers with context and a next action.",
+      cta: "See an example"
     },
     thinking: {
       title: "Checking the company",

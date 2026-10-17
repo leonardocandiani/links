@@ -240,7 +240,6 @@ function buildRail(sections, onPick) {
         const q = Math.abs(index - active);
         const blur = Math.min(2, Math.max(0, q - 0.5) * 1.5);
         tab.style.filter = blur ? `blur(${blur.toFixed(2)}px)` : "";
-        tab.style.opacity = q < 0.5 ? "1" : "0.5";
         tab.setAttribute("aria-current", q < 0.5 ? "true" : "false");
       });
     }

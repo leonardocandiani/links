@@ -870,6 +870,24 @@ test("apresenta o Minino Jarvis como case e não como hero", async ({ page }) =>
   await expect(demo).toHaveAttribute("data-step", "idle");
 });
 
+test("o estado vazio da demo do Jarvis oferece uma ação principal", async ({ page }) => {
+  for (const [rota, rotulo] of [["/", /Ver um exemplo/i], ["/en/", /See an example/i]] as const) {
+    await page.goto(rota);
+
+    const jarvis = page.locator("#jarvis");
+    const demo = jarvis.locator(".jarvis-demo");
+    await jarvis.scrollIntoViewIfNeeded();
+    await expect(demo).toHaveAttribute("data-step", "idle");
+
+    const acao = demo.locator(".jarvis-idle").getByRole("button", { name: rotulo });
+    await expect(acao).toBeVisible();
+    await acao.click();
+    // sai do estado vazio; os passos seguintes já têm teste próprio e dependem de tempo
+    await expect(demo).not.toHaveAttribute("data-step", "idle");
+    await expect(demo.locator(".jarvis-idle")).toHaveCount(0);
+  }
+});
+
 test("mantém a experiência completa do Jarvis com reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
