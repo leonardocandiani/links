@@ -77,7 +77,8 @@ export const siteUiByLocale = {
       oneStar: "1 estrela",
       manyStars: "{count} estrelas",
       dateLocale: "pt-BR",
-      keepwrightDescription: null
+      keepwrightDescription: null,
+      leisDescription: null
     },
     presence: {
       kicker: "Conteúdo, comunidade e bastidores",
@@ -174,7 +175,8 @@ export const siteUiByLocale = {
       oneStar: "1 star",
       manyStars: "{count} stars",
       dateLocale: "en-US",
-      keepwrightDescription: "A Claude Code skill that applies high-quality architecture to any Git project. Structured rules, CI/CD with OAuth auto-review, portable validators, and stack-aware deployment."
+      keepwrightDescription: "A Claude Code skill that applies high-quality architecture to any Git project. Structured rules, CI/CD with OAuth auto-review, portable validators, and stack-aware deployment.",
+      leisDescription: "Working laws that Claude Code obeys, with rule, hook, validation and measurement. A Claude Code plugin, in Portuguese."
     },
     presence: {
       kicker: "Content, community, and the work behind it",

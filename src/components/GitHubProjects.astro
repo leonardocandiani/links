@@ -37,6 +37,10 @@ function formatDescription(repository: GitHubRepository) {
     return ui.keepwrightDescription;
   }
 
+  if (repository.name === "leis" && ui.leisDescription) {
+    return ui.leisDescription;
+  }
+
   return repository.description;
 }
 ---
