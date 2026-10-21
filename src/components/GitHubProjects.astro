@@ -1,5 +1,6 @@
 ---
 import githubSnapshot from "../data/github-snapshot.json";
+import ContributionSkyline from "./skyline/ContributionSkyline";
 import type { GitHubRepository, GitHubSnapshot } from "../types/site";
 import type { SiteUiCopy } from "../data/ui";
 
@@ -11,6 +12,7 @@ const { ui } = Astro.props;
 
 const snapshot = githubSnapshot as GitHubSnapshot;
 const repositories = snapshot.repositories;
+const contributions = snapshot.contributions;
 const featuredToneByIndex = ["ink", "sky", "cotton"] as const;
 const githubProfileUrl = "https://github.com/leonardocandiani";
 
@@ -61,6 +63,22 @@ function formatDescription(repository: GitHubRepository) {
         </a>
       </div>
     </div>
+
+    {
+      contributions && (
+        <div class="github-skyline" data-reveal>
+          <ContributionSkyline
+            client:visible={{ rootMargin: "200px" }}
+            data={contributions.days}
+            endDate={contributions.end}
+            unit={ui.skyline.unit}
+            unitPlural={ui.skyline.unitPlural}
+            labels={ui.skyline.labels}
+            locale={ui.dateLocale}
+          />
+        </div>
+      )
+    }
 
     {
       repositories.length === 0 ? (
@@ -145,6 +163,10 @@ function formatDescription(repository: GitHubRepository) {
   .github-shell {
     display: grid;
     gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .github-skyline {
+    min-width: 0;
   }
 
   .github-heading {

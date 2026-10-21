@@ -973,3 +973,90 @@ test("marca os sete reveals editoriais quando entram na viewport", async ({ page
     await expect(element).toHaveAttribute("data-visible", "true");
   }
 });
+
+test("o skyline do GitHub hidrata, desenha o ano da conta e alterna as vistas", async ({ page }) => {
+  const contributions = (githubSnapshot as GitHubSnapshot).contributions;
+
+  expect(contributions, "o snapshot precisa trazer o calendário de contribuições").toBeDefined();
+  const total = contributions!.days.reduce((sum, day) => sum + day.count, 0);
+  const consoleErrors: string[] = [];
+
+  // o WebKit loga como erro a chave interactive-widget da meta viewport do site, que ele ainda não conhece
+  page.on("console", (message) => {
+    if (message.type() === "error" && !/interactive-widget/.test(message.text())) consoleErrors.push(message.text());
+  });
+  page.on("pageerror", (error) => consoleErrors.push(error.message));
+
+  for (const [route, locale, heading, toggle, announce] of [
+    ["/", "pt-BR", /contribuições no último ano/, /mapa de calor/i, /contribui/i],
+    ["/en/", "en-US", /contributions in the last year/, /heat map/i, /contribution/i]
+  ] as const) {
+    await page.goto(route);
+
+    const card = page.locator(".github-skyline");
+    const stage = card.locator(".skyline-stage");
+    // Altura que o motor escreve no palco: a reservada por CSS não conta, ela existe antes do desenho.
+    // Cada leitura reposiciona o cartão, porque imagens lazy acima dele ainda podem empurrar a página.
+    const stageHeight = async () => {
+      await stage.scrollIntoViewIfNeeded();
+
+      return stage.evaluate((node) => parseFloat((node as HTMLElement).style.height) || 0);
+    };
+
+    await card.scrollIntoViewIfNeeded();
+    await expect(card.getByRole("heading", { level: 3 })).toHaveText(heading);
+    await expect(card.getByRole("heading", { level: 3 })).toContainText(new Intl.NumberFormat(locale).format(total));
+
+    // hidratou e o skyline subiu do mapa plano: o motor leva o palco para a altura da vista 3D
+    await expect(stage).toHaveAttribute("data-reserve", "true");
+    await expect.poll(stageHeight, { timeout: 10_000 }).toBeGreaterThan(165);
+    await expect
+      .poll(async () => (await stageHeight()) === (await page.waitForTimeout(500).then(stageHeight)), { timeout: 5_000 })
+      .toBe(true);
+
+    // o canvas desenhou o ano: uma fração relevante dos pixels tem tinta
+    await expect
+      .poll(
+        () =>
+          card.locator("canvas").evaluate((node) => {
+            const canvas = node as HTMLCanvasElement;
+            const data = canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data;
+            let painted = 0;
+
+            for (let i = 3; i < data.length; i += 4) if (data[i] > 0) painted++;
+
+            return painted / (canvas.width * canvas.height);
+          }),
+        { timeout: 8_000 }
+      )
+      .toBeGreaterThan(0.05);
+
+    // teclado: setas leem os dias e o leitor de tela recebe o anúncio
+    await card.locator("canvas").focus();
+    await page.keyboard.press("ArrowLeft");
+    await expect(card.getByRole("tooltip")).toContainText(/\d{4}/);
+    await expect(card.locator("[aria-live='polite']")).toHaveText(announce);
+
+    // legenda: com mouse os níveis são botões que isolam a atividade; no toque é só a chave de cores
+    const swatch = card.locator(".skyline-swatch").nth(3);
+
+    if (await swatch.isVisible()) {
+      await swatch.click();
+      await expect(swatch).toHaveAttribute("aria-pressed", "true");
+      await swatch.click();
+      await expect(swatch).toHaveAttribute("aria-pressed", "false");
+    } else {
+      await expect(card.locator(".skyline-key-cell")).toHaveCount(5);
+    }
+
+    // seletor: o mapa plano é bem mais baixo que o skyline
+    const heightIn3d = await stageHeight();
+    const flat = card.getByRole("button", { name: toggle });
+
+    await flat.click();
+    await expect(flat).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(stageHeight, { timeout: 5_000 }).toBeLessThan(heightIn3d - 20);
+  }
+
+  expect(consoleErrors).toEqual([]);
+});

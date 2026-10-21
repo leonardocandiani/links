@@ -3,14 +3,17 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { normalizeRepositories } from "./github-data.mjs";
+import { normalizeContributions, normalizeRepositories } from "./github-data.mjs";
 
 const endpoint = "https://api.github.com/users/leonardocandiani/repos?per_page=100&sort=pushed";
+// Página pública do calendário de contribuições. A API REST não tem esse dado e o GraphQL pede token;
+// a página devolve o mesmo total do perfil, sem segredo nenhum no build.
+const contributionsEndpoint = "https://github.com/users/leonardocandiani/contributions";
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const snapshotPath = resolve(projectRoot, "src/data/github-snapshot.json");
 
 /**
- * @typedef {{ ok: boolean, status: number, json?: () => Promise<unknown> }} GitHubResponse
+ * @typedef {{ ok: boolean, status: number, json?: () => Promise<unknown>, text?: () => Promise<string> }} GitHubResponse
  * @typedef {{
  *   fetchImpl?: (url: string, init: { headers: Record<string, string> }) => Promise<GitHubResponse>,
  *   targetPath?: string,
@@ -45,9 +48,11 @@ export async function syncGitHubSnapshot({
     }
 
     const repositories = normalizeRepositories(await response.json());
+    const contributions = await syncContributions({ fetchImpl, targetPath, logger });
     const snapshot = await writeSnapshot(targetPath, {
       syncedAt: now().toISOString(),
-      repositories
+      repositories,
+      ...(contributions ? { contributions } : {})
     });
 
     logger.log(`GitHub snapshot sincronizado: ${repositories.length} repositórios.`);
@@ -70,6 +75,37 @@ export async function syncGitHubSnapshot({
         )}).`
       );
     }
+  }
+}
+
+// O calendário é enfeite da vitrine: se falhar, mantém o último válido em vez de derrubar o build.
+async function syncContributions({ fetchImpl, targetPath, logger }) {
+  try {
+    const response = await fetchImpl(contributionsEndpoint, {
+      headers: { Accept: "text/html", "User-Agent": "leonardo-candiani-site" }
+    });
+
+    if (!response.ok) {
+      throw new Error(`GitHub respondeu ${response.status}`);
+    }
+
+    const contributions = normalizeContributions(await response.text());
+    validateContributions(contributions);
+
+    return contributions;
+  } catch (contributionsError) {
+    const previous = await readSnapshot(targetPath).then(
+      (snapshot) => snapshot.contributions,
+      () => undefined
+    );
+
+    logger.warn(
+      `Falha ao sincronizar contribuições (${formatError(contributionsError)}). ${
+        previous ? "Mantendo o calendário do snapshot anterior." : "Sem calendário no snapshot."
+      }`
+    );
+
+    return previous;
   }
 }
 
@@ -108,6 +144,28 @@ function validateSnapshot(snapshot) {
       throw new Error("snapshot contém repositório inválido.");
     }
   }
+
+  if (snapshot.contributions !== undefined) {
+    validateContributions(snapshot.contributions);
+  }
+}
+
+function validateContributions(contributions) {
+  if (
+    !contributions ||
+    typeof contributions !== "object" ||
+    !isCalendarDate(contributions.end) ||
+    !Array.isArray(contributions.days) ||
+    !contributions.days.every(
+      (day) => day && isCalendarDate(day.date) && Number.isInteger(day.count) && day.count > 0 && day.date <= contributions.end
+    )
+  ) {
+    throw new Error("snapshot tem calendário de contribuições inválido.");
+  }
+}
+
+function isCalendarDate(value) {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
 }
 
 function isSnapshotRepository(repository) {

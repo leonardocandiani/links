@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { GitHubRepository } from "../src/types/site";
-import { normalizeRepositories } from "./github-data.mjs";
+import { normalizeContributions, normalizeRepositories } from "./github-data.mjs";
 import { syncGitHubSnapshot } from "./sync-github.mjs";
 
 const kritRepository = {
@@ -300,6 +300,131 @@ describe("syncGitHubSnapshot", () => {
         })
       ).rejects.toThrow(/GitHub API respondeu 403.*snapshot local é inválido.*snapshot contém repositório inválido/s);
     }
+  });
+});
+
+// HTML mínimo no formato da página de contribuições: um <td> por dia e um <tool-tip> ligado por id.
+function calendarHtml(counts: number[], { declared }: { declared?: number | string } = {}) {
+  const start = Date.UTC(2025, 9, 19);
+  const cells = counts.map((count, index) => {
+    const date = new Date(start + index * 86400000).toISOString().slice(0, 10);
+    const label = count === 0 ? "No contributions" : count === 1 ? "1 contribution" : `${count} contributions`;
+
+    return (
+      `<td tabindex="0" data-date="${date}" id="day-${index}" data-level="1" class="ContributionCalendar-day"></td>` +
+      `<tool-tip for="day-${index}" popover="manual" class="sr-only">${label} on October 19th.</tool-tip>`
+    );
+  });
+  const total = declared ?? counts.reduce((sum, count) => sum + count, 0);
+
+  return `<h2>\n  ${total}\n  contributions\n  in the last year\n</h2><table>${cells.join("")}</table>`;
+}
+
+const yearOfCounts = (pattern: number[]) => Array.from({ length: 368 }, (_, index) => pattern[index % pattern.length]);
+
+describe("normalizeContributions", () => {
+  it("lê os dias, ordena, descarta os vazios e marca o último dia coberto", () => {
+    const result = normalizeContributions(calendarHtml(yearOfCounts([0, 1, 12, 0])));
+
+    expect(result.end).toBe("2026-10-21");
+    expect(result.days.every((day) => day.count > 0)).toBe(true);
+    expect(result.days.slice(0, 2)).toEqual([
+      { date: "2025-10-20", count: 1 },
+      { date: "2025-10-21", count: 12 }
+    ]);
+    expect([...result.days].sort((a, b) => a.date.localeCompare(b.date))).toEqual(result.days);
+  });
+
+  it("aceita total declarado com separador de milhar", () => {
+    const counts = yearOfCounts([1000, 2000]);
+    const total = counts.reduce((sum, count) => sum + count, 0).toLocaleString("en-US");
+
+    expect(() => normalizeContributions(calendarHtml(counts, { declared: total }))).not.toThrow();
+  });
+
+  it("recusa quando o total declarado não bate com a soma dos dias", () => {
+    expect(() => normalizeContributions(calendarHtml(yearOfCounts([1, 2]), { declared: 7 }))).toThrow(/não bate/);
+  });
+
+  it("recusa calendário com poucos dias, sinal de que o HTML mudou", () => {
+    expect(() => normalizeContributions(calendarHtml([1, 2, 3]))).toThrow(/mínimo esperado/);
+  });
+
+  it("recusa tooltip em formato desconhecido em vez de contar zero", () => {
+    const html = calendarHtml(yearOfCounts([1])).replace("1 contribution on", "uma contribuição em");
+
+    expect(() => normalizeContributions(html)).toThrow(/formato desconhecido/);
+  });
+
+  it("recusa página vazia", () => {
+    expect(() => normalizeContributions("")).toThrow(/vazia/);
+  });
+});
+
+describe("syncGitHubSnapshot com calendário", () => {
+  const route = (calendar: () => Promise<unknown>) => async (url: string) =>
+    url.includes("api.github.com")
+      ? { ok: true, status: 200, json: async () => [kritRepository] }
+      : ((await calendar()) as { ok: boolean; status: number; text?: () => Promise<string> });
+
+  it("grava o calendário no snapshot", async () => {
+    const snapshotPath = await createSnapshot(fallbackSnapshot);
+    const html = calendarHtml(yearOfCounts([0, 3]));
+
+    await syncGitHubSnapshot({
+      fetchImpl: route(async () => ({ ok: true, status: 200, text: async () => html })),
+      targetPath: snapshotPath,
+      now: () => new Date("2026-10-21T12:00:00.000Z"),
+      logger
+    });
+
+    const snapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
+
+    expect(snapshot.contributions.end).toBe("2026-10-21");
+    expect(snapshot.contributions.days.length).toBeGreaterThan(100);
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
+
+  it("mantém o calendário anterior quando só ele falha, e ainda atualiza os repositórios", async () => {
+    const previous = { end: "2026-09-01", days: [{ date: "2026-08-30", count: 4 }] };
+    const snapshotPath = await createSnapshot({ ...fallbackSnapshot, contributions: previous } as typeof fallbackSnapshot);
+
+    const result = await syncGitHubSnapshot({
+      fetchImpl: route(async () => ({ ok: false, status: 429 })),
+      targetPath: snapshotPath,
+      logger
+    });
+
+    const snapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
+
+    expect(result.usedFallback).toBe(false);
+    expect(snapshot.repositories[0].name).toBe("krit");
+    expect(snapshot.contributions).toEqual(previous);
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("Mantendo o calendário do snapshot anterior"));
+  });
+
+  it("segue sem calendário quando ele falha e não havia um antes", async () => {
+    const snapshotPath = await createSnapshot(fallbackSnapshot);
+
+    await syncGitHubSnapshot({
+      fetchImpl: route(async () => ({ ok: true, status: 200, text: async () => "<html>mudou</html>" })),
+      targetPath: snapshotPath,
+      logger
+    });
+
+    const snapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
+
+    expect(snapshot.contributions).toBeUndefined();
+    expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining("Sem calendário no snapshot"));
+  });
+
+  it("rejeita snapshot de fallback com calendário inválido", async () => {
+    const invalid = { end: "2026-09-01", days: [{ date: "2026-08-30", count: 0 }] };
+    const snapshotPath = await createSnapshot({ ...fallbackSnapshot, contributions: invalid } as typeof fallbackSnapshot);
+
+    await expect(
+      syncGitHubSnapshot({ fetchImpl: async () => ({ ok: false, status: 403 }), targetPath: snapshotPath, logger })
+    ).rejects.toThrow(/calendário de contribuições inválido/);
   });
 });
 

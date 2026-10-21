@@ -59,9 +59,22 @@ export type GitHubRepository = {
   createdAt: string;
 };
 
+export type GitHubContributionDay = {
+  date: string;
+  count: number;
+};
+
+export type GitHubContributions = {
+  /** Último dia coberto, `AAAA-MM-DD`. */
+  end: string;
+  /** Só os dias com atividade; os que faltam valem zero. */
+  days: GitHubContributionDay[];
+};
+
 export type GitHubSnapshot = {
   syncedAt: string;
   repositories: GitHubRepository[];
+  contributions?: GitHubContributions;
 };
 
 export type SiteContent = {
