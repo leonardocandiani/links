@@ -1,6 +1,8 @@
 ---
 import githubSnapshot from "../data/github-snapshot.json";
 import ContributionSkyline from "./skyline/ContributionSkyline";
+import { buildRepositoryJourney } from "../data/github-journey";
+import GitHubJourney from "./GitHubJourney.astro";
 import type { GitHubRepository, GitHubSnapshot } from "../types/site";
 import type { SiteUiCopy } from "../data/ui";
 
@@ -20,6 +22,8 @@ const githubProfileUrl = "https://github.com/leonardocandiani";
 // viram destaque e os quatro seguintes entram na lista
 const featuredRepositories: GitHubRepository[] = repositories.slice(0, 3);
 const recentRepositories = repositories.slice(3, 7);
+// uma linha do tempo só faz sentido com pelo menos três meses para atravessar
+const journey = buildRepositoryJourney(repositories, { locale: ui.dateLocale });
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat(ui.dateLocale, {
@@ -149,6 +153,8 @@ function formatDescription(repository: GitHubRepository) {
               </div>
             </div>
           )}
+
+          {journey.stops.length >= 3 && <GitHubJourney journey={journey} ui={ui.journey} languageFallback={ui.languageFallback} />}
         </>
       )
     }
@@ -158,6 +164,8 @@ function formatDescription(repository: GitHubRepository) {
 <style>
   .github-projects {
     background: var(--color-paper);
+    /* a linha do tempo ocupa a largura da janela; clip não cria rolagem e não quebra o sticky */
+    overflow-x: clip;
   }
 
   .github-shell {

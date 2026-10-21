@@ -1,0 +1,65 @@
+---
+import "./github-journey.css";
+import type { RepositoryJourney } from "../data/github-journey";
+import type { SiteUiCopy } from "../data/ui";
+
+type Props = {
+  journey: RepositoryJourney;
+  ui: SiteUiCopy["github"]["journey"];
+  languageFallback: string;
+};
+
+const { journey, ui, languageFallback } = Astro.props;
+
+function formatCount(count: number) {
+  return count === 1 ? ui.oneProject : ui.manyProjects.replace("{count}", String(count));
+}
+---
+
+<div class="journey" data-journey style={`--stops:${journey.stops.length}`}>
+  <div class="journey-pin">
+    <div class="journey-view" role="group" aria-label={ui.regionLabel} tabindex="0">
+      <div class="journey-track">
+        <div class="journey-intro">
+          <h3 class="journey-title">
+            <span class="journey-big">{journey.total}</span>
+            <span class="journey-lead">{ui.intro.replace("{months}", String(journey.months))}</span>
+          </h3>
+          <p class="journey-hint journey-hint-pin">{ui.hintPin}</p>
+          <p class="journey-hint journey-hint-swipe">{ui.hintSwipe}</p>
+        </div>
+
+        <ol class="journey-stops">
+          {
+            journey.stops.map((stop, index) => (
+              <li class="journey-stop" data-side={index % 2 === 0 ? "up" : "down"}>
+                <span class="journey-dot" aria-hidden="true" />
+                <div class="journey-card">
+                  <time class="journey-month" datetime={stop.key}>
+                    {stop.label}
+                  </time>
+                  <p class="journey-count">{formatCount(stop.count)}</p>
+                  <ul class="journey-repos">
+                    {stop.repositories.map((repository) => (
+                      <li>
+                        <a href={repository.url} target="_blank" rel="noopener noreferrer">
+                          {repository.name}
+                        </a>
+                        <span>{repository.language ?? languageFallback}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <span class="journey-line" aria-hidden="true"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import "../scripts/journey";
+</script>

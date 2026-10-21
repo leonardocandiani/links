@@ -106,6 +106,14 @@ export const siteUiByLocale = {
           canvasFlat: "mapa de calor",
           canvasSkyline: "skyline em 3D"
         }
+      },
+      journey: {
+        intro: "projetos abertos em {months} meses",
+        regionLabel: "Linha do tempo dos projetos open source, mês a mês",
+        hintPin: "Role a página para atravessar os meses",
+        hintSwipe: "Deslize para o lado para ver os meses",
+        oneProject: "1 projeto",
+        manyProjects: "{count} projetos"
       }
     },
     presence: {
@@ -232,6 +240,14 @@ export const siteUiByLocale = {
           canvasFlat: "heat map",
           canvasSkyline: "3D skyline"
         }
+      },
+      journey: {
+        intro: "open-source projects in {months} months",
+        regionLabel: "Timeline of open-source projects, month by month",
+        hintPin: "Scroll the page to travel through the months",
+        hintSwipe: "Swipe sideways to see the months",
+        oneProject: "1 project",
+        manyProjects: "{count} projects"
       }
     },
     presence: {

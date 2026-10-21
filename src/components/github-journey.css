@@ -1,0 +1,299 @@
+/* Linha do tempo do GitHub, mês a mês. Os seletores .journey-* são só deste componente. */
+.journey {
+  --stop-w: clamp(17rem, 23vw, 21rem);
+  --stop-gap: clamp(3rem, 7vw, 6.5rem);
+  --journey-h: min(40rem, 76svh);
+  --r: 1;
+  min-width: 0;
+  /* o fundo da seção é fixo (paper); sem isto o texto herda a cor do tom do kit e some quando ele vira escuro */
+  color: var(--color-ink);
+}
+
+.journey-title {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.journey-big {
+  display: block;
+  font-size: clamp(5.5rem, 14vw, 10rem);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.045em;
+  line-height: .85;
+}
+
+.journey-lead {
+  display: block;
+  max-width: 14ch;
+  margin-top: 1rem;
+  font-size: clamp(1.35rem, 1.1rem + .9vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.journey-hint {
+  margin: 1.5rem 0 0;
+  color: var(--color-muted);
+  font-size: .875rem;
+  line-height: 1.3;
+}
+
+.journey-hint-pin {
+  display: none;
+}
+
+.journey-stops {
+  display: flex;
+  gap: var(--stop-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey-month {
+  display: block;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.2rem);
+  font-weight: 690;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* só a primeira letra: "maio de 2026" vira "Maio de 2026", sem maiúscula no "de" */
+.journey-month::first-letter {
+  text-transform: uppercase;
+}
+
+.journey-count {
+  margin: .6rem 0 0;
+  color: var(--color-muted);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.journey-repos {
+  display: grid;
+  gap: .15rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey-repos li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 .6rem;
+}
+
+.journey-repos a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 1.05rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.journey-repos span {
+  color: var(--color-muted);
+  font-size: .8125rem;
+}
+
+.journey-dot {
+  display: block;
+  width: .7rem;
+  height: .7rem;
+  border-radius: 50%;
+  background: var(--color-ink);
+}
+
+.journey-line {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .journey-repos a:hover {
+    text-decoration-line: underline;
+    text-decoration-thickness: .08em;
+    text-underline-offset: .18em;
+  }
+}
+
+/* Fileira que se arrasta: toque, reduced motion, tela estreita ou sem JavaScript. */
+.journey-view {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-block: .5rem 1.5rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+}
+
+.journey-view::-webkit-scrollbar {
+  display: none;
+}
+
+.journey-track {
+  display: flex;
+  align-items: stretch;
+  gap: 1.25rem;
+  width: max-content;
+}
+
+.journey-intro,
+.journey-stop {
+  flex: 0 0 min(78vw, 19rem);
+  scroll-snap-align: start;
+}
+
+.journey-stops {
+  gap: 1.25rem;
+}
+
+.journey-stop {
+  position: relative;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.journey-stop .journey-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: 0 -50%;
+}
+
+.journey-line {
+  display: none;
+}
+
+/* Pinned: a seção fixa na tela e a rolagem vertical atravessa os meses. O JS liga data-live. */
+@media (min-width: 64rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .journey[data-live] {
+    width: 100vw;
+    height: calc(100svh + var(--travel, 120vw));
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .journey[data-live] .journey-pin {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-items: center;
+    height: 100svh;
+    padding-top: 5rem;
+    box-sizing: border-box;
+    overflow: clip;
+    -webkit-mask-image: linear-gradient(90deg, transparent 1rem, #000 6rem, #000 calc(100% - 3rem), transparent);
+    mask-image: linear-gradient(90deg, transparent 1rem, #000 6rem, #000 calc(100% - 3rem), transparent);
+  }
+
+  .journey[data-live] .journey-view {
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .journey[data-live] .journey-track {
+    position: relative;
+    align-items: center;
+    gap: var(--stop-gap);
+    height: var(--journey-h);
+    padding-inline: var(--space-page);
+    transform: translate3d(calc(var(--p, 0) * var(--travel, 0px) * -1), 0, 0);
+    will-change: transform;
+  }
+
+  .journey[data-live] .journey-intro {
+    flex: 0 0 clamp(17rem, 26vw, 25rem);
+    align-self: center;
+  }
+
+  .journey[data-live] .journey-hint-pin {
+    display: block;
+  }
+
+  .journey[data-live] .journey-hint-swipe {
+    display: none;
+  }
+
+  .journey[data-live] .journey-stops {
+    align-self: stretch;
+    gap: var(--stop-gap);
+  }
+
+  .journey[data-live] .journey-stop {
+    flex: 0 0 var(--stop-w);
+    padding: 0;
+    border-top: 0;
+  }
+
+  .journey[data-live] .journey-dot {
+    top: 50%;
+    z-index: 1;
+    width: .8rem;
+    height: .8rem;
+    translate: -50% -50%;
+    scale: var(--r);
+  }
+
+  /* A haste é a borda do próprio cartão: ela cresce junto com o conteúdo, de um a cinco repositórios. */
+  .journey[data-live] .journey-card {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border-left: 1px solid var(--color-ink);
+    opacity: var(--r);
+    transform: translateY(calc((1 - var(--r)) * var(--rise)));
+  }
+
+  .journey[data-live] [data-side="up"] .journey-card {
+    --rise: 1.5rem;
+    bottom: 50%;
+    padding: .25rem 0 1.5rem 1.5rem;
+  }
+
+  .journey[data-live] [data-side="down"] .journey-card {
+    --rise: -1.5rem;
+    top: 50%;
+    padding: 1.5rem 0 .25rem 1.5rem;
+  }
+
+  .journey[data-live] .journey-repos a {
+    min-height: 0;
+    padding-block: .2rem;
+  }
+
+  .journey[data-live] .journey-line {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    display: block;
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  .journey[data-live] .journey-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-ink);
+    transform: scaleX(var(--fill, 0));
+    transform-origin: left;
+  }
+}
+
+/* a partir de 80rem a navegação lateral fixa do site ocupa o canto esquerdo: a faixa some antes de chegar nela */
+@media (min-width: 80rem) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .journey[data-live] .journey-pin {
+    -webkit-mask-image: linear-gradient(90deg, transparent 7rem, #000 14rem, #000 calc(100% - 3rem), transparent);
+    mask-image: linear-gradient(90deg, transparent 7rem, #000 14rem, #000 calc(100% - 3rem), transparent);
+  }
+}

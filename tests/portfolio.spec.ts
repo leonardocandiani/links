@@ -1,5 +1,6 @@
 import { expect, test, type Locator } from "@playwright/test";
 import githubSnapshot from "../src/data/github-snapshot.json" with { type: "json" };
+import { buildRepositoryJourney } from "../src/data/github-journey";
 import type { GitHubSnapshot } from "../src/types/site";
 
 const siteHeading = (text: string) => new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
@@ -1059,4 +1060,98 @@ test("o skyline do GitHub hidrata, desenha o ano da conta e alterna as vistas", 
   }
 
   expect(consoleErrors).toEqual([]);
+});
+
+test("a linha do tempo do GitHub atravessa os meses por rolagem no desktop e por deslize no toque", async ({ page }, testInfo) => {
+  const expected = buildRepositoryJourney(snapshot.repositories, { locale: "pt-BR" });
+
+  expect(expected.stops.length, "o snapshot precisa ter ao menos três meses de lançamentos").toBeGreaterThanOrEqual(3);
+  await page.goto("/");
+
+  const journey = page.locator(".journey");
+  const stops = journey.locator(".journey-stop");
+
+  await expect(journey).toHaveAttribute("data-live", "");
+  await expect(stops).toHaveCount(expected.stops.length);
+  await expect(stops.locator("time")).toHaveText(expected.stops.map((stop) => stop.label));
+  await expect(journey.locator(".journey-big")).toHaveText(String(expected.total));
+  await expect(journey.locator(".journey-lead")).toHaveText(`projetos abertos em ${expected.months} meses`);
+
+  const links = journey.locator(".journey-repos a");
+
+  await expect(links).toHaveCount(expected.total);
+  expect(await links.evaluateAll((nodes) => nodes.map((node) => (node as HTMLAnchorElement).href))).toEqual(
+    expected.stops.flatMap((stop) => stop.repositories.map((repository) => repository.url))
+  );
+
+  if (testInfo.project.name === "desktop") {
+    // pinado: a rolagem vertical empurra a faixa para a esquerda e cada mês aparece em ordem
+    const at = (progress: number) =>
+      page.evaluate((value) => {
+        const root = document.querySelector(".journey") as HTMLElement;
+        const top = root.getBoundingClientRect().top + scrollY;
+
+        scrollTo({ top: top + (root.offsetHeight - innerHeight) * value, behavior: "instant" });
+      }, progress);
+    const read = () =>
+      page.evaluate(() => {
+        const root = document.querySelector(".journey") as HTMLElement;
+        const transform = new DOMMatrix(getComputedStyle(document.querySelector(".journey-track")!).transform);
+
+        return {
+          progress: Number(root.style.getPropertyValue("--p")),
+          travel: parseFloat(root.style.getPropertyValue("--travel")),
+          fill: Number(root.style.getPropertyValue("--fill")),
+          shift: transform.m41,
+          pinTop: document.querySelector(".journey-pin")!.getBoundingClientRect().top,
+          reveal: [...document.querySelectorAll<HTMLElement>(".journey-stop")].map((stop) => Number(stop.style.getPropertyValue("--r"))),
+          overflowX: document.documentElement.scrollWidth - innerWidth
+        };
+      });
+
+    await at(0);
+    await expect.poll(async () => (await read()).travel).toBeGreaterThan(500);
+    await expect.poll(async () => (await read()).reveal.at(-1)).toBe(0);
+
+    await at(0.5);
+    await expect.poll(async () => Math.round((await read()).progress * 100)).toBe(50);
+
+    const middle = await read();
+
+    expect(middle.shift).toBeCloseTo(-middle.travel * 0.5, -1);
+    expect(Math.abs(middle.pinTop)).toBeLessThan(2);
+    expect(middle.reveal[0]).toBe(1);
+    expect(middle.reveal.at(-1)).toBeLessThan(1);
+
+    await at(1);
+    // a rolagem para num pixel fracionário no fim, então 0,99 já é o mês inteiro à vista
+    await expect.poll(async () => (await read()).reveal.every((value) => value >= 0.99)).toBe(true);
+
+    const end = await read();
+
+    expect(end.fill).toBeGreaterThanOrEqual(0.99);
+    expect(end.shift).toBeCloseTo(-end.travel, -1);
+    expect(end.overflowX).toBeLessThanOrEqual(0);
+
+    // teclado: focar um mês fora da tela leva a rolagem até ele
+    await at(0);
+    await links.last().focus();
+    await expect.poll(async () => links.last().evaluate((node) => Math.round(node.getBoundingClientRect().left))).toBeGreaterThan(0);
+    expect(await links.last().evaluate((node) => node.getBoundingClientRect().right)).toBeLessThanOrEqual(page.viewportSize()!.width);
+  } else {
+    // toque: fileira que se desliza, sem fixar a página e com alvos de 44px
+    const view = journey.locator(".journey-view");
+
+    await expect(view).toHaveAttribute("tabindex", "0");
+    expect(await view.evaluate((node) => node.scrollWidth > node.clientWidth + 100)).toBe(true);
+    expect(await journey.evaluate((node) => (node as HTMLElement).offsetHeight < innerHeight * 1.2)).toBe(true);
+
+    for (const height of await links.evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height))) {
+      expect(height).toBeGreaterThanOrEqual(44);
+    }
+
+    await view.evaluate((node) => node.scrollTo({ left: node.scrollWidth, behavior: "instant" }));
+    await expect.poll(() => links.last().evaluate((node) => node.getBoundingClientRect().right <= innerWidth + 1)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  }
 });
