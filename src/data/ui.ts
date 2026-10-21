@@ -78,7 +78,35 @@ export const siteUiByLocale = {
       manyStars: "{count} estrelas",
       dateLocale: "pt-BR",
       keepwrightDescription: null,
-      leisDescription: null
+      leisDescription: null,
+      skyline: {
+        unit: "contribuição",
+        unitPlural: "contribuições",
+        labels: {
+          title: "{count} {unit} no último ano",
+          viewGroup: "Vista do gráfico",
+          viewFlat: "Mapa de calor plano",
+          viewSkyline: "Skyline em 3D",
+          statTotal: "Total em 1 ano",
+          statBusiest: "Dia mais cheio",
+          statLongest: "Maior sequência",
+          statCurrent: "Sequência atual",
+          day: "dia",
+          days: "dias",
+          none: "nenhuma",
+          to: "a",
+          on: "em",
+          less: "Menos",
+          more: "Mais",
+          levels: ["Sem contribuições", "Leve", "Moderado", "Intenso", "Máximo"],
+          highlight: "Destacar: {level}",
+          hintFlat: "Toque ou passe o mouse sobre um dia · setas para explorar",
+          hintSkyline: "Arraste para girar · duplo clique para voltar",
+          canvas: "{count} {unit} entre {range}, em {view}. Use as setas para ler cada dia.",
+          canvasFlat: "mapa de calor",
+          canvasSkyline: "skyline em 3D"
+        }
+      }
     },
     presence: {
       kicker: "Conteúdo, comunidade e bastidores",
@@ -176,7 +204,35 @@ export const siteUiByLocale = {
       manyStars: "{count} stars",
       dateLocale: "en-US",
       keepwrightDescription: "A Claude Code skill that applies high-quality architecture to any Git project. Structured rules, CI/CD with OAuth auto-review, portable validators, and stack-aware deployment.",
-      leisDescription: "Working laws that Claude Code obeys, with rule, hook, validation and measurement. A Claude Code plugin, in Portuguese."
+      leisDescription: "Working laws that Claude Code obeys, with rule, hook, validation and measurement. A Claude Code plugin, in Portuguese.",
+      skyline: {
+        unit: "contribution",
+        unitPlural: "contributions",
+        labels: {
+          title: "{count} {unit} in the last year",
+          viewGroup: "Chart view",
+          viewFlat: "Flat heat map",
+          viewSkyline: "3D skyline",
+          statTotal: "1 year total",
+          statBusiest: "Busiest day",
+          statLongest: "Longest streak",
+          statCurrent: "Current streak",
+          day: "day",
+          days: "days",
+          none: "none",
+          to: "to",
+          on: "on",
+          less: "Less",
+          more: "More",
+          levels: ["No contributions", "Light", "Moderate", "Heavy", "Heaviest"],
+          highlight: "Highlight: {level}",
+          hintFlat: "Tap or hover a day · arrow keys to explore",
+          hintSkyline: "Drag to orbit · double-click to reset",
+          canvas: "{count} {unit} between {range}, shown as a {view}. Use the arrow keys to read individual days.",
+          canvasFlat: "heat map",
+          canvasSkyline: "3D skyline"
+        }
+      }
     },
     presence: {
       kicker: "Content, community, and the work behind it",
